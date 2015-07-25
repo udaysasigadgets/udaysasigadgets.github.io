@@ -1,0 +1,25 @@
+<?xml version='1.0'?>
+<custombuttons xmlns="http://toolbar.google.com/custombuttons/">
+<button>
+	<site>http://udaysasi-gadgets.googlecode.com/svn/trunk/globalIndexWatchHelp.html</site>
+	<title>Uday&#39;s Global Index Watch</title>
+	<description>Snapshot of major stock market indices of the world. Covers most of american, european, asian and australian markets. (Data provided by Yahoo! Finance)</description>
+	<gadget width="320" height="200" whole-dropdown="true">http://udaysasi-gadgets.googlecode.com/svn/trunk/globalIndexWatch.xml</gadget>
+	<icon mode="base64" type="image/x-icon">
+Qk2mAgAAAAAAADYAAAAoAAAAEAAAAA0AAAABABgAAAAAAAAAAADEDgAAxA4AAAAAAAAAAAAA67t2
++t+7+t+5+t+2+Nu0+Nu0+t61+t6199uw99uw99mt99mt99mt99mt99mtzplL8MqX+Pj7397n5ubm
+5+bn5+bn5+bn5+bn5+bn5+bn5+bn5+bn5+bn5eTl+/v70KZm8M2f7Oz4b2/tzMv37ezs5+fo+fj2
+6uro5+fn9/b26enp7Ovr9/b25OTk8/Pz0KZm8s+h+fn1n57gbW321dTh5OPd0tHrxcTh4eHd5uXm
+3t7e4N/f5uXm2tna9fX10KZm9NGj9vXz4+Llt7fwdXXtsbHva2rzXV3y19bt9fX17Ozr6+vr9fX1
+5eTl8/Pz0KZm8tCi9vb22tnZ6unlkpHsY2LxwsHosrHmbm7v0tLmqani1dTi5uXm2tna9fX10KZm
+9taq9fX05OPk9vX16ejs397q9vb17u3qm5vpcXH3UVDxp6j39fX15eTl8/Py0Kdn9ter9vb129vb
+6ejp4uHi4N/g6ejp4N/f3NzfwsHvwcHlbWzyt7bournh9/bz06tv9NKm9vb34eHh8/Pz6enp5ubm
+8/Pz5+fn5eXl9PT06ennx8fsS0v6U1Lx8fH206tv9tSn9vb23Nvc6ejp4uLi4uLi6ejp4uHi4eDh
+6ejp5OPi09LhRET3T07x7u721K1y+Nis9vb33Nvc6enp4uLi4eHh6enp4ODg4N/g6enp4eHh397i
+u7vqo6Ph9PT21q9299it/f388vLy8PDw8vLy8vLy8vLy8fHx8vLy8PDw8vLy8vLy9PTy+Pfy/f39
+2LN8986U+t+2+d2199uy99qv99es99ms9tar8s+i782g89Ci78ua78qX7MeS6sWO06NZ
+	</icon>
+	<update>http://udaysasi-gadgets.googlecode.com/svn/trunk/globalIndexWatchButton.xml</update>
+	<search>http://www.google.com/search?q={query}</search>	
+</button>
+</custombuttons>

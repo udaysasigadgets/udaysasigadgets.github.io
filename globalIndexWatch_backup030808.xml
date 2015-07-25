@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+<ModulePrefs 
+	title="Global Index Watch" 
+	description="Snapshot of major stock market indices of the world. Covers most of american, european, asian and australian markets. (Data provided by Yahoo! Finance)"
+	author="Uday Kumar Pyda - Sunnyvale, CA"
+	author_email="udaysasi+feedback@gmail.com"
+	author_affiliation="UdaySasi"
+	author_link="http://www.udaysasi.com"
+	directory_title="Uday's Global Index Watch"
+	title_url="http://udaysasi.googlepages.com/globalIndexWatchHelp.html"
+	scrolling="false"
+	singleton="false"
+	screenshot="http://udaysasi.googlepages.com/globalIndexWatchScreenshot.png"
+	thumbnail="http://udaysasi.googlepages.com/globalIndexWatchThumbnail.png"
+>
+	<Require feature="analytics"/>
+	<Require feature="minimessage"/>
+	<Require feature="dynamic-height"/>	
+	<Require feature="setprefs" /> 		
+</ModulePrefs>
+<UserPref name="showstrength" datatype="hidden" default_value="0" />
+<UserPref name="region" 
+       display_name="Show Market Indices"
+       datatype="enum"
+       default_value="-1">
+    <EnumValue value="1" display_value="Americas"/>
+    <EnumValue value="2" display_value="Europe"/>
+    <EnumValue value="3" display_value="Asia Pacific"/>
+    <EnumValue value="-1" display_value="All"/>   
+</UserPref>
+<UserPref name="hidecols" 
+       display_name="Hide Columns"
+       datatype="enum"
+       default_value="2">
+    <EnumValue value="1" display_value="Change"/>
+    <EnumValue value="2" display_value="Percent Change"/>
+    <EnumValue value="-1" display_value="None"/>   
+</UserPref>
+
+
+<Content type="html"><![CDATA[
+
+<style type="text/css">
+	a { color:#0000DD;}
+	a:visited { color:#0000DD;}
+
+	a.link { text-decoration:none; color:#000000;}
+	a.link:visited { color:#000000;}
+
+	.fixedtable { table-layout: fixed; width:100%}
+
+	.fixedtable td.dynamic {
+		empty-cells: show;
+		overflow: hidden;	
+		text-overflow:ellipsis;
+		white-space: nowrap;
+	}  
+</style>
+
+<script type="text/javascript">
+	var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+	document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+	</script>
+	<script type="text/javascript">
+	var pageTracker = _gat._getTracker("UA-1214589-10");
+	pageTracker._initData();
+	pageTracker._trackPageview();
+</script>
+
+<script language="Javascript">
+
+var am=new _IG_Prefs(__MODULE_ID__);var at="^DJI,^GSPC,^IXIC,^GSPTSE,^MERV,^BVSP,^IPSA,^MXX,";var au="^FTSE,^IETP,^FCHI,^GDAXI,^SMSI,^MIBTEL,^AEX,^SSMI,^PSI20,^BFX,^ISEQ,^ATX,^STOXX50E,";var ax="^BSESN,^NSEI,^SSEC,^JKSE,^KLSE,^N225,^STI,^KS11,^TWII,^HSI,^PSI,^CSE,^TA100,^AORD,^NZ50";var aY=am.getInt("region");var aq;if(aY==1)aq=at;else if(aY==2)aq=au;else if(aY==3)aq=ax;else aq=at+au+ax;var ah=H(aq);var aP="http://finance.yahoo.com/d?s=";var az=5;var aQ='al';var aD=new Date().getTime();var av="0";var ap=am.getInt("showstrength");var ay=new Array();for(var u=0;u<ah.length;u++){D("Saving "+v(ah[u].al)+"<br>");ay[ah[u].al]=_IG_GetImageUrl("http://udaysasi.googlepages.com/"+v(ah[u].al)+".gif");}function v(aE){aE=aE.toLowerCase();aE=aE.replace(/[^a-zA-Z 0-9]+/g,"");return aE;};function sSD(){if(ap==0){_gel('sCD__MODULE_ID__').style.display='';_gel('strHorLine__MODULE_ID__').style.display='';ap=1;am.set("showstrength",1);}else{_gel('sCD__MODULE_ID__').style.display='none';_gel('strHorLine__MODULE_ID__').style.display='none';ap=0;am.set("showstrength",0);}_IG_AdjustIFrameHeight();};function Z(aH){var aA="";for(var g=0;g<aH.length;g++){aA+=aH[g].al+",";}return aA;};function Y(aH){var aA="";for(var g=0;g<aH.length;g++){aA+=aH[g].al+"|"+aH[g].bM+"|"+aH[g].bO+",";}return aA;};function H(an){var aW=new Array();an=an.replace(/ /g,",");var bz=an.split(",");for(var d=0;d<bz.length;d++){var aJ=bz[d];aJ=aJ.toUpperCase();if(aJ==""){continue;}aW.push(new K(aJ,"Loading..","0","0","(0%)"));}return aW;};function K(al,name,aU,aS,aN){this.al=al;this.name=name;this.aU=aU;this.aS=aS;this.aN=aN;};function G(){var bo=new Array();for(u=0;u<ah.length;u++){bo=bo.concat(ah[u].al);}return bo;};var aF=1;function C(){var bo=G();if(bo.length==0){return;}var al="";for(var h=0;h<bo.length-1;h++){al+=bo[h]+",";}al+=bo[h];aD=new Date().getTime();var bi=aP+al+"&f=snk1c1k2&dummy="+aD;_IG_FetchContent(bi,_IG_Callback(J));if(aF>100){aF=1;}try{clearTimeout(av);}catch(e){}if(az!= -1){av=setTimeout("C();",az*1000);}};function O(an){var x=0;while(an.indexOf("\"",x)>=0){var y=an.indexOf("\"",x);var z=an.indexOf("\"",y+1);var w=an.indexOf(",",y);if(w>y&&w<z){an=an.substring(0,w)+"."+an.substring(w+1);}x=z+1;}return an;};function J(aZ){az=60;var result=aZ;try{var by=new RegExp("\n");var quotes=new Array();quotes=result.split(by);var bJ=0,bE=0,bD=0,bG=0,bF=0,bH=0;var bg=0,bj=0,bm=0,bk=0,bl=0,bh=0;for(var c=0;c<quotes.length;c++){var al=Q(c);if(al==""){continue;}var bv=_gel(al+"NameSpan__MODULE_ID__");var bp=_gel(al+"PriceSpan__MODULE_ID__");var aO=_gel(al+"ChangeSpan__MODULE_ID__");var aK=_gel(al+"PercentSpan__MODULE_ID__");var bK=_gel(al+"Span__MODULE_ID__");var row=_gel(al+"Row__MODULE_ID__");var bw=quotes[c];var ao=O(bw).split(",");var bC=ao[0];var ar=ao[1];ar=I(ar);if(al==ar){ar="Invalid al";}ar=ar.toUpperCase();bv.innerHTML=ar;U(c,ar);var aj=A(ao[2]);aj=X(aj);aj=t(aj);var ak=A(ao[3]);ak=t(ak);try{aj=parseFloat(aj);if(aj>0.1){aj=f(aj);aj=m(aj);}}catch(e){aj="N/A";}var aT=ao[4].indexOf("-");if(aT==1){aT=ao[4].indexOf("-",2);}var ai=ao[4].substring(aT+1,ao[4].length-2);ai=A(ai);ai=t(ai);ai=V(ai);try{ai=parseFloat(ai);if(aj>0.1){ai=f(ai);ai=m(ai);}}catch(e){ai="N/A";}bp.innerHTML=aj;var bx=T(c);R(c,aj);if(isNaN(ak)){ak="N/A";}else{if(aj>0.1){ak=f(ak);ak=m(ak);}}P(c,ak);if(ak!='N/A'&&ak>=0){ak="+"+ak;}aO.innerHTML=ak;if(isNaN(ai)){ai="N/A";}else{ai=f(ai);ai=m(ai);if(ai>=0){ai="+"+ai;}}if(ai< -3){bg++;}else{if(ai< -1){bj++;}else{if(ai<0){bm++;}else{if(ai>3){bh++;}else{if(ai>1){bk++;}else{bl++;}}}}}F(c,ai);aK.innerHTML="("+ai+"%)";if(parseFloat(ak)<0){aO.style.color="#990000";aK.style.color="#990000";}else{aO.style.color="#009900";aK.style.color="#009900";}}var aC=bg+bj+bm+bl+bk+bh;bJ=f(bg*100/aC);bE=f(bj*100/aC);bD=f(bm*100/aC);bF=f(bl*100/aC);bG=f(bk*100/aC);bH=f(bh*100/aC);_gel("n59__MODULE_ID__").style.width=bJ+"%";_gel("n59__MODULE_ID__").title=bg+" of "+aC+" indices down over 3%";_gel("n25__MODULE_ID__").style.width=bE+"%";_gel("n25__MODULE_ID__").title=bj+" of "+aC+" indices down between 1% and 3%";_gel("n02__MODULE_ID__").style.width=bD+"%";_gel("n02__MODULE_ID__").title=bm+" of "+aC+" indices down between 0% and 1%";_gel("p02__MODULE_ID__").style.width=bF+"%";_gel("p02__MODULE_ID__").title=bl+" of "+aC+" indices up between 0% and 1%";_gel("p25__MODULE_ID__").style.width=bG+"%";_gel("p25__MODULE_ID__").title=bk+" of "+aC+" indices up between 1% and 3%";_gel("p59__MODULE_ID__").style.width=bH+"%";_gel("p59__MODULE_ID__").title=bh+" of "+aC+" indices up over 3%";}catch(e){D(e);}};function T(c){return ah[c].aU;};function R(c,bu){ah[c].aU=bu;};function F(c,bn){ah[c].aN=bn;};function P(c,bs){ah[c].aS=bs;};function Q(c){if(c<ah.length){return ah[c].al;}else{return "";}};function U(c,bA){ah[c].name=bA;};function I(an){return an.substring(1,an.length-1);};function V(an){return an.replace(/^\s*|\s*$/g,"");};function B(){if(ap==1){_gel('sCD__MODULE_ID__').style.display='';_gel('strHorLine__MODULE_ID__').style.display='';}var bb=am.getInt("hidecols");var aR="",aM="";if(bb==1)aR="none";if(bb==2)aM="none";var header="<table class=\"fixedtable\" align=center style=\"table-layout: fixed; border:0;  font-family: arial,sans-serif;\" width=\"100%\" id=\"contentTable\" cellspacing=0 cellpadding=1>";var footer="</table>";var as="";var bgcolor="ffffff";for(i=0;i<ah.length;i++){if(i%2==1)bgcolor="ffffff";else bgcolor="f5f5f5";as+="<tr id=\""+ah[i].al+"Row__MODULE_ID__\" bgcolor=\""+bgcolor+"\" >";as+="<td width=\"30px\" style=\"padding-right: 3px\" align=\"center\"><img src=\""+ay[ah[i].al]+"\" width=\"21\" height=\"14\" border=\"1\"/></td>";as+="<td width=\"100%\" class=\"dynamic\" nowrap style=\"display:\" align=\"left\"><font size=\"-1\"><a class=\"link\" href=\"http://finance.yahoo.com/q?s="+ah[i].al+"\" target=\"blank\"><span style=\"display:\" id=\""+ah[i].al+"NameSpan__MODULE_ID__\">"+ah[i].name+"</span></a></font></td>";as+="<td width=\"75px\" style=\"padding-right: 0.5em;\" align=\"right\"><font size=\"-1\"><span id=\""+ah[i].al+"PriceSpan__MODULE_ID__\">"+ah[i].aU+"</span></font></td>";as+="<td width=\"65px\" style=\"display:"+aR+";padding-right: 0.5em;\" align=\"right\" nowrap><font size=\"-1\"><span id=\""+ah[i].al+"ChangeSpan__MODULE_ID__\">"+ah[i].aS+"</span></font></td>";as+="<td width=\"65px\" align=\"right\" style=\"display:"+aM+"\" nowrap><font size=\"-1\"><span id=\""+ah[i].al+"PercentSpan__MODULE_ID__\">"+ah[i].aN+"</span></font></td>";as+="</tr>";}_gel("cD__MODULE_ID__").innerHTML=header+as+footer;_IG_AdjustIFrameHeight();try{clearTimeout(av);}catch(e){}C();};function f(bP){var bf=2;var bt=Math.round(bP*Math.pow(10,bf))/Math.pow(10,bf);return bt;};function ac(an){an=an.replace("\n","").replace("\r","");if(an.indexOf("\"")== -1){return an;}else{return an.substring(1,an.length-1);}};function m(n){var aw=""+n;if(aw.indexOf(".")== -1){aw+=".00";}else{if(aw.substring(aw.indexOf(".")+1).length==1){aw+="0";}}return aw;};function ae(aH){if(aH.length==0){return aH;}var bd=new Array();var aI=new Array();for(var l=0;l<aH.length;l++){aI.push(aH[l].al);}aI.sort();for(var h=0;h<aI.length;h++){for(var o=0;o<aH.length;o++){if(aI[h]==aH[o].al){bd.push(aH[o]);}}}return bd;};function L(be,col){aQ=col;var exp='aB[l].'+col;var aB=new Array();var bL=new Array();var aI=new Array();for(k=0;k<be.length;k++)aB.push(be[k]);for(var l=0;l<aB.length;l++){if(parseFloat(eval(exp)))aI.push(parseFloat(eval(exp)));else aI.push(eval(exp));}if(col=='aU'||col=='aS'||col=='aN'){try{aI.sort(M);}catch(e){aI.sort();}}else aI.sort();for(var h=0;h<aI.length;h++){for(var l=0;l<aB.length;l++){if(bL.contains(aB[l]))continue;if(parseFloat(aI[h])){if(parseFloat(aI[h])==parseFloat(eval(exp))){bL.push(aB[l]);}}else{if(aI[h]==eval(exp)){bL.push(aB[l]);}}}}aB=bL;return aB;};function M(a,b){if(a-b)return a-b;else return true;};function aa(col){ah=L(ah,col);B();};function A(an){var aL=an.indexOf("<b>");var bc=an.lastIndexOf("</b>");if(aL== -1){return an;}var aj=an.substring(aL+3,bc);return aj;};function t(an){var aG=an.indexOf("<i>");var ba=an.lastIndexOf("</i>");if(aG== -1){return an;}var aj=an.substring(aG+3,ba);return aj;};function X(an){var aX=an.indexOf("<img");if(aX== -1){return an;}var bN=an.indexOf(">",aX);var aj=an.substring(0,aX)+an.substring(bN+1);return aj;};function ad(a,b){var bR=a.length;var bq=(a.length+b.length>20)?(20-a.length):b.length;if(bq!=b.length){b=b.substring(0,bq)+"..";}var bQ=b+" ("+a+")";return bQ;};function ab(bS){var bI=bS.split(" ");var r="";for(i=0;i<bI.length;i++){var s=bI[i].toLowerCase();for(j=0;j<s.length;j++){if(j==0){r+=s.charAt(j).toUpperCase();}else{r+=s.charAt(j);}}r+=" ";}r=r.substring(0,r.length-1);return r;};Array.prototype.contains=function(bB){for(var i=0;i<this.length;i++)if(this[i]==bB)return true;return false;};function D(an){};_IG_RegisterOnloadHandler(B); 
+ 
+</script>
+
+<div id="cD__MODULE_ID__" style="border:1px solid #FFFFFF; display:" width="100%"><font size="-1" style="font-family: arial,sans-serif;">Loading Global Market Indices.. Please wait..</font></div>
+&nbsp;&nbsp;<font size="-1" style="font-family: arial,sans-serif"><a href="javascript:void(0);" onClick="sSD();" title="Show/Hide">Strength</a></font>
+&nbsp;&nbsp;<font size="-1" style="font-family: arial,sans-serif"><a href="http://udaysasi.googlepages.com/globalIndexWatchHelp.html" target="globalindexwatchhelp">Help</a></font>
+&nbsp;&nbsp;<font size="-1" style="font-family: arial,sans-serif"><a href="http://www.google.com/ig/directory?url=http://udaysasi.googlepages.com/quickStockWatch.xml" target="quickstockwatchdetail">Quick Stock Watch</a></font>
+<span id="myContainer__MODULE_ID__"></span>
+<hr align="center" size="1" width="90%" noshade>
+<table width="90%" align="center" id="sCD__MODULE_ID__" style="display:none">
+	<tr>
+		<td width="100%">
+			<table align="center" border=0 cellpadding=0 cellspacing=0 width="100%">
+				<tr height="15px">
+					<td id="n59__MODULE_ID__" style="background-color: #992020;width:0%" title=""></td>
+					<td id="n25__MODULE_ID__" style="background-color: #CC4949;width:0%" title=""></td>
+					<td id="n02__MODULE_ID__" style="background-color: #FF8383;width:0%" title=""></td>
+					<td id="p02__MODULE_ID__" style="background-color: #83FF83;width:0%" title=""></td>
+					<td id="p25__MODULE_ID__" style="background-color: #49CC49;width:0%" title=""></td>
+					<td id="p59__MODULE_ID__" style="background-color: #209920;width:0%" title=""></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<hr id="strHorLine__MODULE_ID__" align="center" size="1" width="90%" style="display:none;" noshade>
+
+<font size="-1" style="font-family: arial,sans-serif" color="#AAAAAA">(Data provided by Yahoo! Finance)</font>
+
+<div id="logDiv__MODULE_ID__" style="display:"></div>
+
+]]></Content>
+</Module>

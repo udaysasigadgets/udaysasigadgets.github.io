@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+<ModulePrefs 
+	title="Live Traffic" 
+	description="Display current news in telugu. Ability to choose the news type to be displayed (Data provided by Yahoo! India)"
+	author="Uday Kumar Pyda - Sunnyvale, CA"
+	author_email="udaysasi+feedback@gmail.com"
+	author_affiliation="UdaySasi"
+	author_link="http://www.udaysasi.com"
+	directory_title="Uday's Telugu News"
+	screenshot="http://udaysasi-gadgets.googlecode.com/svn/trunk/personalizedNewsScreenshot.png"
+	thumbnail="http://udaysasi-gadgets.googlecode.com/svn/trunk/personalizedNewsThumbnail.png"	
+>
+	<Require feature="dynamic-height"/>	
+</ModulePrefs>	
+<UserPref name="city" 
+       display_name="City/Metro Area"
+       datatype="enum"
+       default_value="sanfrancisco">
+	<EnumValue value="albany" display_value="Albany, NY"/>
+	<EnumValue value="atlanta" display_value="Atlanta, GA"/>
+	<EnumValue value="austin" display_value="Austin, TX"/>
+	<EnumValue value="baltimore" display_value="Baltimore, VA"/>
+	<EnumValue value="birmingham" display_value="Birmingham, AL"/>
+	<EnumValue value="boston" display_value="Boston, MA"/>
+	<EnumValue value="charlotte" display_value="Charlotte, NC"/>
+	<EnumValue value="chicago" display_value="Chicago, IL"/>
+	<EnumValue value="cincinnati" display_value="Cincinnati, OH"/>
+	<EnumValue value="cleveland" display_value="Cleveland, OH"/>
+	<EnumValue value="columbus" display_value="Columbus, OH"/>
+	<EnumValue value="dallas" display_value="Dallas, TX"/>
+	<EnumValue value="denver" display_value="Denver, CO"/>
+	<EnumValue value="detroit" display_value="Detroit, MI"/>
+	<EnumValue value="ftmyers" display_value="Ft Myers, FL"/>
+	<EnumValue value="greensbro" display_value="Greensbro, NC"/>
+	<EnumValue value="hartford" display_value="Hartford, CT"/>
+	<EnumValue value="houston" display_value="Houston, TX"/>
+	<EnumValue value="indianapolis" display_value="Indianapolis, IN"/>
+	<EnumValue value="jacksonville" display_value="Jacksonville, FL"/>
+	<EnumValue value="kansascity" display_value="Kansas City, KS"/>
+	<EnumValue value="lasvegas" display_value="Las Vegas, NV"/>
+	<EnumValue value="losangeles" display_value="Los Angeles, CA"/>
+	<EnumValue value="louisville" display_value="Louisville, KY"/>
+	<EnumValue value="miami" display_value="Miami, FL"/>
+	<EnumValue value="milwaukee" display_value="Milwaukee, WI"/>
+	<EnumValue value="minneapolis" display_value="Minneapolis, MN"/>
+	<EnumValue value="nashville" display_value="Nashville, TN"/>
+	<EnumValue value="neworleans" display_value="New Orleans, LA"/>
+	<EnumValue value="newyork" display_value="New York City, NY"/>
+	<EnumValue value="norfolk" display_value="Norfolk, VA"/>
+	<EnumValue value="oklahomacity" display_value="Oklahoma City, OK"/>
+	<EnumValue value="orlando" display_value="Orlando, FL"/>
+	<EnumValue value="philadelphia" display_value="Philadelphia, PA"/>
+	<EnumValue value="phoenix" display_value="Phoenix, AZ"/>
+	<EnumValue value="pittsburgh" display_value="Pittsburgh, PA"/>
+	<EnumValue value="portland" display_value="Portland, OR"/>
+	<EnumValue value="providence" display_value="Providence, RI"/>
+	<EnumValue value="raleighdurham" display_value="Raleigh, NC"/>
+	<EnumValue value="richmond" display_value="Richmond, VA"/>
+	<EnumValue value="sanfrancisco" display_value="San Francisco, CA"/>
+	<EnumValue value="sacramento" display_value="Sacramento, CA"/>
+	<EnumValue value="saltlakecity" display_value="Salt Lake City, UT"/>
+	<EnumValue value="sanantonio" display_value="San Antonio, TX"/>
+	<EnumValue value="sandiego" display_value="San Diego, CA"/>
+	<EnumValue value="seattle" display_value="Seattle, WA"/>
+	<EnumValue value="stlouis" display_value="St Louis, MO"/>
+	<EnumValue value="tampa" display_value="Tampa, FL"/>
+	<EnumValue value="tuscon" display_value="Tuscon, AZ"/>
+	<EnumValue value="tulsa" display_value="Tulsa, OK"/>
+	<EnumValue value="washingtondc" display_value="Washington, DC"/>    
+</UserPref>	
+<UserPref name="freeways" display_name="Only Freeways"/>
+<Content type="html"><![CDATA[
+<script language="Javascript">
+
+var prefs__MODULE_ID__ = new _IG_Prefs(__MODULE_ID__); 
+var baseURL__MODULE_ID__ = ''; 
+var city__MODULE_ID__ = prefs__MODULE_ID__.getString("city"); 
+var freewayStr__MODULE_ID__ = prefs__MODULE_ID__.getString("freeways"); 
+baseURL__MODULE_ID__ = 'http://cityrss.traffic.com/feeds/rss_' + city__MODULE_ID__; 
+var newDate__MODULE_ID__ = new Date().getTime(); 
+var reloadId__MODULE_ID__ = 'liveTraffic'; 
+var newsItemArr__MODULE_ID__ = new Array(); 
+var freewayArray__MODULE_ID__ = new Array(); 
+//writeLog__MODULE_ID__("freewayStr__MODULE_ID__ : "+freewayStr__MODULE_ID__);
+freewayStr__MODULE_ID__ = freewayStr__MODULE_ID__.replace(/ /g, ",");
+//writeLog__MODULE_ID__("freewayStr__MODULE_ID__ after substitution : "+freewayStr__MODULE_ID__);
+var freeways__MODULE_ID__ = freewayStr__MODULE_ID__.split(","); 
+//writeLog__MODULE_ID__("freeways__MODULE_ID__ array : "+freeways__MODULE_ID__);
+for(var p = 0; p < freeways__MODULE_ID__.length; p++) {
+   var freeway = "" + trim__MODULE_ID__(freeways__MODULE_ID__[p]) 
+   if(freeway != "") 
+   	freewayArray__MODULE_ID__.push(freeway); 
+   }
+//writeLog__MODULE_ID__("Number of selections : "+freewayArray__MODULE_ID__);
+var expand__MODULE_ID__ = _IG_GetImageUrl("http://udaysasi-gadgets.googlecode.com/svn/trunk/expand.gif"); 
+var collapse__MODULE_ID__ = _IG_GetImageUrl("http://udaysasi-gadgets.googlecode.com/svn/trunk/collapse.gif"); 
+function NI__MODULE_ID__(title, link, description, jamfactor) {
+   this.title = title; 
+   this.link = link; 
+   this.description = description; 
+   this.jamfactor = jamfactor;
+   }
+function cS__MODULE_ID__() {
+   var feedURL = ''; 
+   newDate__MODULE_ID__ = new Date().getTime(); 
+   if(baseURL__MODULE_ID__.indexOf('?') !=- 1) 
+   	feedURL = baseURL__MODULE_ID__ + "&dummy=" + newDate__MODULE_ID__; 
+   else 
+   	feedURL = baseURL__MODULE_ID__ + "?dummy=" + newDate__MODULE_ID__; 
+   _IG_FetchXmlContent(feedURL, _IG_Callback(pRC__MODULE_ID__)); 
+   writeLog__MODULE_ID__("Called server"); 
+   }
+function pRC__MODULE_ID__(r) {
+   writeLog__MODULE_ID__("Received response"); 
+   try {
+      var iL = r.getElementsByTagName("item"); 
+      newsItemArr__MODULE_ID__ = new Array(); 
+      for (var i = 0; i < iL.length ; i++) {
+         var nodeList = iL.item(i).childNodes; 
+         var title = '', link = '', description = '', jamfactor = '';; 
+         for (var j = 0; j < nodeList.length ; j++) {
+            var node = nodeList.item(j); 
+            if (node.nodeName == "title") {
+               title = node.firstChild.nodeValue; 
+               var jCharIndex = title.toUpperCase().indexOf(": JAMFACTOR");
+               if(jCharIndex!=-1) {
+               	jamfactor = title.substring(jCharIndex+12);
+              		title = title.substring(0, jCharIndex);              		
+              		}
+               }
+            if (node.nodeName == "link") {
+               link = node.firstChild.nodeValue; 
+               }
+            if (node.nodeName == "description") {
+               description = node.firstChild.nodeValue; 
+               }
+            }
+         if(freewayArray__MODULE_ID__.length == 0) 
+         	newsItemArr__MODULE_ID__ = newsItemArr__MODULE_ID__.concat(new NI__MODULE_ID__(title, link, description, jamfactor)); 
+         else {
+            for(var p = 0; p < freewayArray__MODULE_ID__.length; p++) {
+               //writeLog__MODULE_ID__("Checking "+title+" for "+'-'+freewayArray__MODULE_ID__[p]);
+               if(title.indexOf('-' + freewayArray__MODULE_ID__[p]) !=- 1) {
+                  newsItemArr__MODULE_ID__ = newsItemArr__MODULE_ID__.concat(new NI__MODULE_ID__(title, link, description, jamfactor)); 
+                  break; 
+                  }
+               }
+            }
+         }
+      pNC__MODULE_ID__(); 
+      }
+   catch(e) {
+      }
+   
+   }
+function pNC__MODULE_ID__() {
+   var header = '<table align=center style="border:0; font-family: Arial" width="100%" id="contentTable" cellspacing=0 cellpadding=3>'; 
+   var footer = '</table>'; 
+   var contentText = ''; 
+   if(newsItemArr__MODULE_ID__.length == 0) 
+   	contentText = '<tr><td>Oops.. Unable to retrieve real-time traffic information at this time. Please check your preferences for incorrect entries. If the preferences are set correctly, try refreshing this page.</td></tr>'; 
+   for (i = 0; i < newsItemArr__MODULE_ID__.length; i++) {
+      contentText += '<tr style="background:#ffffff;">'; 
+      contentText += '<td align="left"><a href="javascript:toggleDetail(' + i + ');"><img id="icon' + i + '" src="'+expand__MODULE_ID__+'" border="0"></a>&nbsp;<font size="-1"><a href="' + newsItemArr__MODULE_ID__[i].link + '" target="new">' + newsItemArr__MODULE_ID__[i].title + '</a>&nbsp&nbsp<span style="background-color:'+jamFactorColor(newsItemArr__MODULE_ID__[i].jamfactor)+'" title="Jam Factor : '+newsItemArr__MODULE_ID__[i].jamfactor+'">&nbsp;&nbsp;&nbsp;&nbsp;</span></font></td>'; 
+      contentText += '</tr>'; 
+      contentText += '<tr id="description' + i + '" style="background:#ffffff;display:none;"><td align="left" style="padding-left:15px"><font size="-1">' + newsItemArr__MODULE_ID__[i].description + '</font></td>'; 
+      contentText += '</tr>'; 
+      }
+   _gel('newsContentDiv').innerHTML = header + contentText + footer; 
+   _IG_AdjustIFrameHeight(); 
+   }
+function trim__MODULE_ID__(str) {
+   return str.replace(/^\s*|\s*$/g,"");
+   }
+function jamFactorColor(x) {
+	x = parseFloat(x);
+   var g = Math.round((10 - x) * 25.5); 
+   var r = Math.round(x * 25.5); 
+   var color = "#" + decToHex(r) + decToHex(g) + "00"; 
+   return color; 
+   }
+function decToHex(decNum) {
+   var hexNum = "" + decConvertToBase(decNum, 16); 
+   if(hexNum.length == 1) 
+   	hexNum = "0" + hexNum; 
+   return hexNum; 
+   }
+function decConvertToBase(num, base) {
+   var newNum = ""; 
+   var result = num; 
+   var remainder = 0; 
+   if(result == 0) 
+   	return "0"; 
+   while (result > 0) {
+      result = Math.floor(num / base); 
+      remainder = num % base; 
+      num = result; 
+      if (remainder >= 10) {
+         if (remainder == 10) remainder = 'A'; 
+         if (remainder == 11) remainder = 'B'; 
+         if (remainder == 12) remainder = 'C'; 
+         if (remainder == 13) remainder = 'D'; 
+         if (remainder == 14) remainder = 'E'; 
+         if (remainder == 15) remainder = 'F'; 
+         }
+      // just append the next remainder to the beginning of the string
+      newNum = "" + remainder + newNum; 
+      }; 
+   return newNum; 
+   }   
+function toggleDetail(i) {
+   var detailObj = _gel("description" + i); 
+   var iconObj = _gel("icon" + i); 
+   if(detailObj.style.display == "none") {
+      detailObj.style.display = ""; 
+      iconObj.src = collapse__MODULE_ID__; 
+      }
+   else {
+      detailObj.style.display = "none"; 
+      iconObj.src = expand__MODULE_ID__; 
+      }
+   _IG_AdjustIFrameHeight(); 
+   }
+function writeLog__MODULE_ID__(str) {
+   //_gel("loggerDiv").innerHTML += str+'<br>';
+   //_IG_AdjustIFrameHeight();
+   //alert(str);
+   }
+_IG_RegisterOnloadHandler(cS__MODULE_ID__); 
+reloadId__MODULE_ID__ = window.setInterval("cS__MODULE_ID__();", 60000); 
+
+</script>
+<div id="newsContentDiv" width="100%"><font size="-1" style="; font-family: Arial"><img src="http://udaysasi-gadgets.googlecode.com/svn/trunk/loading-spin.gif">&nbsp;&nbsp;Loading traffic information.. Please wait..</font></div>
+<div id="loggerDiv"></div>
+]]></Content>
+</Module>

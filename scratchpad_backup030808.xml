@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+<ModulePrefs 
+	title="Scratch Pad" 
+	description="Looking for a scratch pad on your homepage? Here it is.. Write down whatever you want and never worry about saving it.."
+	author="Uday Kumar Pyda - Sunnyvale, CA"
+	author_email="udaysasi+feedback@gmail.com"
+	author_affiliation="UdaySasi"
+	author_link="http://www.udaysasi.com"
+	directory_title="Uday's Scratch Pad"
+	render_inline="required"
+	screenshot="http://udaysasi.googlepages.com/scratchpadScreenshot.png"
+	thumbnail="http://udaysasi.googlepages.com/scratchpadThumbnail.png"	
+>
+	<Require feature="analytics"/>
+</ModulePrefs>
+
+<UserPref name="content" default_value="This is your personalized scratchpad. Click here to start using it. Write down all you want and never worry about saving it.." datatype="hidden"/>
+<UserPref name="savetime" default_value="-- Never used --" datatype="hidden"/>
+
+<Content type="html"><![CDATA[
+<script>
+  _IG_Analytics("UA-1214589-7", "/Scratchpad");
+</script>
+<script language="Javascript">
+var prefs__MODULE_ID__ = new _IG_Prefs(__MODULE_ID__);
+var bM__MODULE_ID__ = 'Click here to use this tool';
+function pS__MODULE_ID__()	{ _gel('spanname').innerHTML = cTH__MODULE_ID__(prefs__MODULE_ID__.getString("content")); _gel('savetimediv').innerHTML = 'Last saved on '+prefs__MODULE_ID__.getString("savetime"); }	
+function mE__MODULE_ID__()	{	var tO = _gel('textname');	var sO = _gel('spanname'); var str = cTT__MODULE_ID__(sO.innerHTML);	if(str==bM__MODULE_ID__) str = ''; tO.value=str; sO.style.display = 'none'; tO.style.display = '';	tO.focus();	tO.value += ''; }
+function mUE__MODULE_ID__(){ var tO = _gel('textname');	var sO = _gel('spanname');	var str = cTH__MODULE_ID__(tO.value); if(t__MODULE_ID__(str)=='') str = bM__MODULE_ID__; tO.style.display = 'none';	sO.style.display = ''; var dt = new Date();	var savetime = dt.toLocaleString(); try {	prefs__MODULE_ID__.set("content", cTH__MODULE_ID__(tO.value));	prefs__MODULE_ID__.set("savetime", savetime); sO.innerHTML=str;	_gel('savetimediv').innerHTML = 'Last saved on '+prefs__MODULE_ID__.getString("savetime"); }catch(e) {	_gel('scratchpaderrordiv').innerHTML = '<font style="color:#BB0000">Content not saved as it exceeded allowed limit</font>'; _gel('scratchpaderrordiv').style.display = ''; setTimeout("javascript:cED__MODULE_ID__();", 5000); } }
+function cTH__MODULE_ID__(str) { return str.replace(/\n/g, "<BR>"); }
+function cTT__MODULE_ID__(str) {	return str.replace(/<BR>/g, "\n"); }
+function cED__MODULE_ID__() {	_gel('scratchpaderrordiv').style.display = 'none';	_gel('scratchpaderrordiv').innerHTML = ''; }
+function t__MODULE_ID__(str){ return str.replace(/^\s*|\s*$/g,"");}
+_IG_RegisterOnloadHandler(pS__MODULE_ID__);
+</script>
+<span style="background:#ffffff; font-family: Tahoma; font-size: 9pt; display:" id="spanname" onclick="javascript:mE__MODULE_ID__();">Loading.. Please wait..</span>
+<textarea rows="15" id="textname" style="font-family: Tahoma; font-size: 9pt; display:none; width:100%; height:100%" onblur="javascript:mUE__MODULE_ID__();">Loading.. Please wait..</textarea>
+<p>
+<div id="scratchpaderrordiv" style="font-family: Tahoma; font-size: 7pt;"></div>
+<div id="savetimediv" style="font-family: Tahoma; font-size: 7pt;">Loading..</div>
+]]></Content>
+</Module>

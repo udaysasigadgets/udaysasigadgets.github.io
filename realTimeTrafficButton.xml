@@ -1,0 +1,16 @@
+<?xml version='1.0'?>
+<custombuttons xmlns="http://toolbar.google.com/custombuttons/">
+<button>
+<site>http://udaysasi-gadgets.googlecode.com/svn/trunk/realTimeTraffic.xml</site>
+<title>Uday&#39;s Real-time Traffic</title>
+<description>Displays real-time traffic information in over 50 cities in the United States. Ability to choose freeways to monitor. A great tool for people whose daily commute depends on traffic (Data provided by Traffic.com)</description>
+<gadget width="320" height="200" whole-dropdown="true">http://udaysasi-gadgets.googlecode.com/svn/trunk/realTimeTraffic.xml</gadget>
+	<icon mode="base64" type="image/x-icon">
+R0lGODlhEAAQAHAAACH5BAEAAAsALAAAAAAQABAAgwAAADNm/8wAAJkAAP8zZsyZAP//mf/MAJn/
+M2aZM8z/mQAAAAAAAAAAAAAAAAAAAARDcMkJKpiY2p1lDRt4YRsgCGVXDSdRdV51WvAXvuRWGGlW
+FYcDb6QCAIU4HwBk4ImUpV4OgEDQaoBEVZGEVq+wBScTAQA7
+	</icon>
+	<update>http://udaysasi-gadgets.googlecode.com/svn/trunk/realTimeTrafficButton.xml</update>
+	<search>http://www.google.com/search?q={query}</search>
+</button>
+</custombuttons>

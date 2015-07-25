@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+<ModulePrefs 
+	title="Dilbert Comics" 
+	description="Displays a random dilbert comic to start your day with a giggle - Courtesy : Dilbert.com"
+	author="Uday Kumar Pyda - Sunnyvale, CA"
+	author_email="udaysasi+feedback@gmail.com"
+	author_affiliation="UdaySasi"
+	author_link="http://www.udaysasi.com"
+	directory_title="Uday's Dilbert Comics"
+	screenshot="http://udaysasi-gadgets.googlecode.com/svn/trunk/dilbertComicsScreenshot.png"
+	thumbnail="http://udaysasi-gadgets.googlecode.com/svn/trunk/dilbertComicsThumbnail.png"	
+>
+	<Require feature="dynamic-height"/>	
+	<Require feature="analytics"/>	
+</ModulePrefs>	
+<Content type="html"><![CDATA[
+
+<style type="text/css">
+  a { color:#0000DD;}
+  a:visited { color:#0000DD;}
+</style>
+<script type="text/javascript">
+	var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+	document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+	var pageTracker = _gat._getTracker("UA-1214589-14");
+	pageTracker._initData();
+pageTracker._trackPageview();
+</script>
+
+<script language="Javascript">
+var baseURL = '';
+var image = new Image();
+var DAY, MONTH, YEAR;
+var slideshow = 0;
+var slideshowId;
+var randomDate = getDate();
+function getDate()
+{
+	var newDate = new Date().getTime();
+	var year="1993", month="01", date="01";
+	var yearmin=1999, yearmax=2007, monthmin=1, monthmax=12, datemin=1, datemax=31;
+	year = ""+Math.floor(Math.random() * (yearmax - yearmin + 1) + yearmin);	
+	month = ""+Math.floor(Math.random() * (monthmax - monthmin + 1) + monthmin);
+	if(month.length==1)
+		month="0"+month;
+	date = ""+Math.floor(Math.random() * (datemax - datemin + 1) + datemin);
+	if(date.length==1)
+		date="0"+date;
+	writeLog("Random Date : Y:"+year+" M:"+month+" D:"+date);
+	DAY = date;
+	MONTH=month;
+	YEAR=year;
+	return year+""+month+""+date;
+}
+
+function nextImage() {
+	if(slideshow==1) {
+		clearInterval(slideshowId);
+		slideshow = 0;
+		_gel("control").innerHTML = "Play";
+	}
+	displayImage();
+}
+
+function displayImage()
+{
+	document.getElementById("loadingDiv").style.display='';
+	randomDate = getDate();
+	image = new Image();
+	image.src="http://dilbert-comics.googlecode.com/svn/trunk/dilbertColor"+randomDate+".gif";
+	writeLog("Requesting to load image : "+image.src);
+	image.onload = function (evt) {
+		writeLog("Image "+image.src+"loaded completely - Height:"+image.height+" and Width:"+image.width);
+		assignImage();
+	}	
+	image.onerror = function(evt) {
+		writeLog("Image "+image.src+"NOT FOUND");
+		displayImage();
+	}
+	
+}
+
+function assignImage()
+{
+	//image = new Image();
+	//image.src = "http://dilbert-comics.googlecode.com/svn/trunk/dilbertColor19930102.gif";
+	
+	//image.onload = function(evt) {
+		writeLog("Image loaded :"+image.src);
+		document.getElementById("part1").style.backgroundImage="url('"+image.src+"')";
+		document.getElementById("part2").style.backgroundImage="url('"+image.src+"')";
+		document.getElementById("part3").style.backgroundImage="url('"+image.src+"')";
+		document.getElementById("part1").style.display='';
+		document.getElementById("part2").style.display='';
+		document.getElementById("part3").style.display='';
+		document.getElementById("loadingDiv").style.display='none';
+		//var spanpos = getPosition(document.getElementById("container"));
+		//writeLog("Span co-ordinates :"+spanpos.x+" and "+spanpos.y);
+	//}
+	_gel("dateContent").innerHTML = "Posted on "+MONTH+"/"+DAY+"/"+YEAR;
+	_IG_AdjustIFrameHeight();
+	document.getElementById("container").onclick = function() {
+		var baseUrl = 'http://dilbert.com/';
+		window.open(baseUrl+randomDate.substring(0,4)+'-'+randomDate.substring(4,6)+'-'+randomDate.substring(6));
+	}
+}
+
+function shareComic()
+{
+	window.location='mailto:?subject=Here is a cool Dilbert comic&body='+image.src;
+}
+
+function getPosition(e)
+{
+  var left = 0;
+  var top  = 0;
+
+  while (e.offsetParent){
+	 left += e.offsetLeft;
+	 top  += e.offsetTop;
+	 e     = e.offsetParent;
+  }
+
+  left += e.offsetLeft;
+  top  += e.offsetTop;
+
+  return {x:left, y:top};
+}
+
+function playPause()
+{
+	if(slideshow==0) {
+		displayImage();
+		slideshowId = setInterval("displayImage();",30000);
+		slideshow=1;
+		_gel("control").innerHTML = "Pause";
+	}
+	else {				
+		clearInterval(slideshowId);
+		slideshow = 0;
+		_gel("control").innerHTML = "Play";
+	}
+}
+
+function writeLog(str) {
+  //_gel("logDiv").innerHTML += str+'<br>';
+  //_IG_AdjustIFrameHeight();
+}
+
+_IG_AdjustIFrameHeight();
+_IG_RegisterOnloadHandler(displayImage);
+</script>
+<div id="logDiv"></div>
+<div id="loadingDiv" style="display:"><font size="-1" style="; font-family: Arial"><img src="http://udaysasi-gadgets.googlecode.com/svn/trunk/loading-spin.gif">&nbsp;&nbsp;Loading comic strip.. Please wait..</font></div>
+<table align="center" border="0">
+	<tr>
+		<td>
+			<span align="center" id="container" style="cursor:pointer">
+				<div id="part1" style="display:none;width:178px;height:175px; background-image:url('http://dilbert-comics.googlecode.com/svn/trunk/dilbertColor20071221.gif'); background-position: -1px -1px;" ></div>
+				<div id="part2" style="display:none;width:178px;height:175px; background-image:url('http://dilbert-comics.googlecode.com/svn/trunk/dilbertColor20071221.gif'); background-position: -192px -1px;" ></div>
+				<div id="part3" style="display:none;width:178px;height:175px; background-image:url('http://dilbert-comics.googlecode.com/svn/trunk/dilbertColor20071221.gif'); background-position: -383px -1px;" ></div>
+			</span>
+		</td>
+	</tr>
+</table>
+<hr align="center" size="1" width="100%" noshade>
+<font size="-1"><span id="dateContent"></span>
+&nbsp;&nbsp;<a href="javascript:void(0);" onClick="nextImage();">New</a></font>
+&nbsp;&nbsp;<font size="-1" style="font-family: arial,sans-serif"><a href="http://udaysasi-gadgets.googlecode.com/svn/trunk/udaysModules.html" target="gadgetspage">My gadgets</a></font>
+&nbsp;&nbsp;<font size="-1" style="font-family: arial,sans-serif"><a href="javascript:void(0);" onClick="shareComic();" title="Share this comic strip via e-mail">Share</a></font>
+&nbsp;&nbsp;<font size="-1" style="font-family: arial,sans-serif"><a href="javascript:void(0);" onClick="playPause();" title="Play/Pause"><span id="control">Play</span></a></font>
+]]></Content>
+</Module>

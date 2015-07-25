@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+<ModulePrefs 
+	title="IPL 2008 Cricket Live scores" 
+	description="Displays real-time scores and updates from the Indian Premier League 2008 T20 cricket tournment"
+	author="Uday Kumar Pyda - Sunnyvale, CA"
+	author_email="udaysasi+feedback@gmail.com"
+	author_affiliation="UdaySasi"
+	author_link="http://www.udaysasi.com"
+	title_url="http://ipl-t20-2008.blogspot.com"
+	directory_title="Uday's IPL 2008 Live scores"
+	screenshot="http://udaysasi.googlepages.com/iplScoresScreenshot.png"
+	thumbnail="http://udaysasi.googlepages.com/iplScoresThumbnail.png"		
+>
+	<Require feature="dynamic-height"/>	
+	<Require feature="analytics"/>
+</ModulePrefs>	
+<UserPref name="numItems" 
+       display_name="Number of Items"
+       datatype="enum"
+       default_value="5">
+    <EnumValue value="1" display_value="1"/>
+    <EnumValue value="2" display_value="2"/>
+    <EnumValue value="3" display_value="3"/>
+    <EnumValue value="5" display_value="5"/>
+    <EnumValue value="10" display_value="10"/>
+</UserPref>	
+<Content type="html"><![CDATA[
+
+<style type="text/css">
+  a { color:#0000DD;}
+  a:visited { color:#0000DD;}
+  body { font-family: arial,sans;}
+</style>
+
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-1214589-19";
+urchinTracker();
+</script>
+
+<script language="Javascript">
+
+var prefs__MODULE_ID__ = new _IG_Prefs(__MODULE_ID__); 
+var numItems__MODULE_ID__ = prefs__MODULE_ID__.getInt("numItems"); 
+var baseURL__MODULE_ID__ = ''; 
+baseURL__MODULE_ID__ = 'http://www.iplt20.com/FileSystem/xmlfiles/Scores/calendar_new.xml'; 
+var newDate__MODULE_ID__ = new Date().getTime(); 
+var reloadId__MODULE_ID__ = 'iplScores'; 
+var iplMatchArray__MODULE_ID__ = new Array(); 
+var expand__MODULE_ID__ = _IG_GetImageUrl("http://udaysasi.googlepages.com/expand.gif"); 
+var collapse__MODULE_ID__ = _IG_GetImageUrl("http://udaysasi.googlepages.com/collapse.gif"); 
+var teams= new Array()
+teams["1105"]="Bangalore Royal Challengers";
+teams["1106"]="Kolkata Knight Riders";
+teams["1107"]="Kings XI Punjab";
+teams["1108"]="Chennai Super Kings";
+teams["1109"]="Delhi Daredevils";
+teams["1110"]="Rajasthan Royals";
+teams["1101"]="Mumbai Indians";
+teams["1112"]="Deccan Chargers";
+
+function Match__MODULE_ID__(matchId, teamA, teamB, matchVenue, matchDate, matchTime, matchNumber, matchFile, matchResult, teamScores, matchScoreCard, matchStatus, currentScore, currentOver) {
+   this.matchId = matchId; 
+   this.teamA = teamA; 
+   this.teamB = teamB; 
+   this.matchVenue = matchVenue;
+   this.matchDate = matchDate;
+   this.matchTime = matchTime;
+   this.matchNumber = matchNumber;
+   this.matchFile = matchFile;
+   this.matchResult = matchResult;
+   this.teamScores = teamScores;
+   this.matchScoreCard = matchScoreCard;
+   this.matchStatus = matchStatus;
+   this.currentScore = currentScore;
+   this.currentOver = currentOver;
+   }
+function cS__MODULE_ID__() {
+   var feedURL = ''; 
+   newDate__MODULE_ID__ = new Date().getTime(); 
+   
+   /*
+   if(baseURL__MODULE_ID__.indexOf('?') !=- 1) 
+   	feedURL = baseURL__MODULE_ID__ + "&no-cache=" + newDate__MODULE_ID__; 
+   else 
+   	feedURL = baseURL__MODULE_ID__ + "?no-cache=" + newDate__MODULE_ID__; 
+   */
+   feedURL = baseURL__MODULE_ID__;
+   _IG_FetchXmlContent(feedURL, _IG_Callback(pRC__MODULE_ID__),{refreshInterval:60}); 
+   writeLog__MODULE_ID__("Called server"); 
+   }
+function pRC__MODULE_ID__(r) {
+   writeLog__MODULE_ID__("Received response "+r); 
+   try {
+      var matchList = r.getElementsByTagName("match"); 
+      writeLog__MODULE_ID__("Count : "+matchList.length);
+      iplMatchArray__MODULE_ID__ = new Array(); 
+      var matchId='', teamA='', teamB='', matchVenue='', matchDate='', matchTime='', matchNumber='', matchFile='', matchResult='', teamScores='', matchScoreCard='', matchStatus='', currentScore='', currentOver='';
+      var seriesId = '';
+      for (var i = matchList.length-1; i >=0 ; i--) {
+      	writeLog__MODULE_ID__("Looking at object "+i);
+      	if(iplMatchArray__MODULE_ID__.length>=numItems__MODULE_ID__)
+      		break;
+      	var matchNode = matchList.item(i);
+      	matchId = matchNode.getAttribute("match_Id");
+      	teamAId = matchNode.getAttribute("teama_Id");
+      	teamBId = matchNode.getAttribute("teamb_Id");      	
+      	//if(teamAId!=null && teamAId!="")
+      	//	teamA = teams[""+teamAId];
+      	//else
+      		teamA = matchNode.getAttribute("teama");
+      	//if(teamBId!=null && teamBId!="")
+      	//	teamB = teams[""+teamBId];
+      	//else      		
+      		teamB = matchNode.getAttribute("teamb");
+      	
+      	matchVenue = matchNode.getAttribute("venue");
+      	matchDate = matchNode.getAttribute("matchdate");
+      	matchTime = matchNode.getAttribute("matchtime");
+      	matchNumber = matchNode.getAttribute("matchnumber");
+      	matchFile = matchNode.getAttribute("matchfile");
+      	matchResult = matchNode.getAttribute("matchresult");
+      	teamScores = matchNode.getAttribute("teamscores");
+      	matchStatus = matchNode.getAttribute("delayed");
+      	currentScore = matchNode.getAttribute("currentscore");
+      	currentOver = matchNode.getAttribute("currentover");
+      	seriesId = matchNode.getAttribute("series_Id");
+			if(matchStatus=="") //Match yet to begin
+				continue;
+      	if(seriesId!="108")
+      		continue
+			
+			//Match in progress or ended	
+
+			iplMatchArray__MODULE_ID__[iplMatchArray__MODULE_ID__.length] = new Match__MODULE_ID__(matchId, teamA, teamB, matchVenue, matchDate, matchTime, matchNumber, matchFile, matchResult, teamScores, matchScoreCard, matchStatus, currentScore, currentOver);
+			writeLog__MODULE_ID__("teamA : "+teamA+" and teamB : "+teamB+". Bucket count : "+iplMatchArray__MODULE_ID__.length);	
+
+      }
+      pMC__MODULE_ID__(); 
+   }
+   catch(e) {
+   }
+   
+}
+function pMC__MODULE_ID__() {
+	writeLog__MODULE_ID__("Inside pMC__MODULE_ID__");
+   var header = '<table align=center style="border:0; font-family: Arial" width="100%" id="contentTable" cellspacing=0 cellpadding=3>'; 
+   var footer = '</table>'; 
+   var contentText = ''; 
+   if(iplMatchArray__MODULE_ID__.length == 0) 
+   	contentText = '<tr><td>Oops.. Unable to retrieve real-time scores at this time. Please check back after few minutes or try refreshing this page.</td></tr>'; 
+   for (i = 0; i < iplMatchArray__MODULE_ID__.length; i++) {
+      contentText += '<tr style="background:#ffffff;">'; 
+      var c = '';
+      if(iplMatchArray__MODULE_ID__[i].matchResult=="")
+      	c = '<font size="-1"><b>' + iplMatchArray__MODULE_ID__[i].teamA + ' Vs '+iplMatchArray__MODULE_ID__[i].teamB+'</b> ['+iplMatchArray__MODULE_ID__[i].currentScore+' in '+iplMatchArray__MODULE_ID__[i].currentOver+' overs]</font>';
+      else
+      	c = '<font size="-1"><b>' + iplMatchArray__MODULE_ID__[i].teamA + ' Vs '+iplMatchArray__MODULE_ID__[i].teamB+'</b> ['+iplMatchArray__MODULE_ID__[i].matchResult+']</font>';
+      contentText += '<td align="left"><a href="javascript:void(0)" onClick="javascript:toggleDetail(' + i + ');"><img id="icon' + i + '" src="'+expand__MODULE_ID__+'" border="0"></a>&nbsp;<a target="iplScores" href="http://www.iplt20.com/FileSystem/xmlfiles/Scores/'+iplMatchArray__MODULE_ID__[i].matchFile+'.html">'+c+'</a></td>'; 
+      contentText += '</tr>'; 
+      contentText += '<tr id="description' + i + '" style="background:#ffffff;display:none;"><td align="left" style="padding-left:15px;padding-right:15px">';
+      //Write all the content here
+		contentText += '<table border="0" style="border:1px solid #0000AA" width="100%">'
+		contentText += '	<tr>'
+		contentText += '		<td align="right"><font size="-1"><b>Date</b> : </font></td>'
+		contentText += '		<td align="left"><font size="-1">'+iplMatchArray__MODULE_ID__[i].matchDate+'</font></td>'
+		contentText += '	</tr>'
+		contentText += '	<tr>'
+		contentText += '		<td align="right"><font size="-1"><b>Time</b> : </font></td>'
+		contentText += '		<td align="left"><font size="-1">'+iplMatchArray__MODULE_ID__[i].matchTime+'</font></td>'
+		contentText += '	</tr>'
+		contentText += '	<tr>'
+		contentText += '		<td align="right"><font size="-1"><b>Venue</b> : </font></td>'
+		contentText += '		<td align="left"><font size="-1">'+iplMatchArray__MODULE_ID__[i].matchVenue+'</font></td>'
+		contentText += '	</tr>'
+		contentText += '	<tr>'
+		contentText += '		<td align="right"><font size="-1"><b>Result</b> : </font></td>'
+		contentText += '		<td align="left"><font size="-1">'+iplMatchArray__MODULE_ID__[i].matchResult+'</font></td>'
+		contentText += '	</tr>'
+		contentText += '	<tr>'
+		contentText += '		<td align="right"><font size="-1"><b>Scores</b> : </font></td>'
+		contentText += '		<td align="left"><font size="-1">'+iplMatchArray__MODULE_ID__[i].teamScores.replace(", ", "<br>")+'</font></td>'
+		contentText += '	</tr>'
+		contentText += '</table>';
+      contentText += '</td>'; 
+      contentText += '</tr>'; 
+      }
+   _gel('matchContentDiv').innerHTML = header + contentText + footer; 
+   _gel('updateDate').innerHTML = 'Last updated : '+(new Date());
+   _IG_AdjustIFrameHeight(); 
+   }
+function trim__MODULE_ID__(str) {
+   return str.replace(/^\s*|\s*$/g,"");
+   }
+function toggleDetail(i) {
+   var detailObj = _gel("description" + i); 
+   var iconObj = _gel("icon" + i); 
+   if(detailObj.style.display == "none") {
+      detailObj.style.display = ""; 
+      iconObj.src = collapse__MODULE_ID__; 
+      }
+   else {
+      detailObj.style.display = "none"; 
+      iconObj.src = expand__MODULE_ID__; 
+      }
+   _IG_AdjustIFrameHeight(); 
+   }
+function writeLog__MODULE_ID__(str) {
+   //_gel("loggerDiv").innerHTML += str+'<br>';
+   //_IG_AdjustIFrameHeight();
+   //alert(str);
+   }
+_IG_RegisterOnloadHandler(cS__MODULE_ID__); 
+reloadId__MODULE_ID__ = window.setInterval("cS__MODULE_ID__();", 60000); 
+
+</script>
+<div id="matchContentDiv" width="100%"><font size="-1" style="; font-family: Arial"><img src="http://udaysasi.googlepages.com/loading-spin.gif">&nbsp;&nbsp;Loading IPL 2008 Live scores.. Please wait..</font></div>
+<hr align="center" size="1" width="95%" noshade>
+<font size="-1" style="font-family: arial,sans-serif" color="#AAAAAA" id="updateDate"></font>
+&nbsp;&nbsp;<font size="-1" style="font-family: arial,sans-serif"><a href="http://udaysasi.googlepages.com/udaysModules.html" target="gadgetspage">My gadgets</a></font>
+<div id="loggerDiv"></div>
+
+]]></Content>
+</Module>

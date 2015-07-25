@@ -1,0 +1,1085 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+<ModulePrefs 
+	title="Quick Stock Watch" 
+	description="This is a simple Stock Quotes module. Works for over 30 international markets - Argentina, Australia, Austria, Belgium, Brazil, Canada, China, Denmark, Egypt, France, Germany, Hong Kong, India, Israel, Italy, Japan, Jakarta, Korea, Malaysia, Mexico, Netherlands, New Zealand, Norway, Singapore, Spain, Sweden, Switzerland, Taiwan, Turkey, UK, United States and more.. You can watch the up/down ticks of your favorite stocks at desired intervals (Data provided by Yahoo! Finance)"
+	author="Uday Kumar Pyda - Sunnyvale, CA"
+	author_email="udaysasi+feedback@gmail.com"
+	author_affiliation="UdaySasi"
+	author_link="http://www.udaysasi.com"
+	directory_title="Uday's Quick Stock Watch"
+	render_inline="required"
+	scrolling="true"
+	screenshot="http://udaysasi.googlepages.com/quickStockWatchScreenshot.png"
+	thumbnail="http://udaysasi.googlepages.com/quickStockWatchThumbnail.png"
+>
+	<Require feature="analytics"/>
+	<Require feature="minimessage"/>
+</ModulePrefs>
+<UserPref name="flashing" 
+       display_name="Highlighting"
+       datatype="enum"
+       default_value="1">
+    <EnumValue value="1" display_value="On"/>
+    <EnumValue value="0" display_value="Off"/>
+</UserPref>
+<UserPref name="refreshrate" 
+       display_name="Refresh every"
+       datatype="enum"
+       default_value="15">
+    <EnumValue value="-1" display_value="No refresh"/>
+    <EnumValue value="5" display_value="5 seconds"/>
+    <EnumValue value="15" display_value="15 seconds"/>
+    <EnumValue value="30" display_value="30 seconds"/>
+    <EnumValue value="60" display_value="1 minute"/>
+    <EnumValue value="300" display_value="5 minutes"/>
+    <EnumValue value="900" display_value="15 minutes"/>
+</UserPref>
+<UserPref name="showchart" 
+       display_name="Show Charts"
+       datatype="enum"
+       default_value="1">
+    <EnumValue value="0" display_value="None"/>
+    <EnumValue value="1" display_value="1 day"/>
+    <EnumValue value="5" display_value="5 day"/>   
+</UserPref>
+<UserPref name="showname" 
+       display_name="Stock Name"
+       datatype="enum"
+       default_value="1">
+    <EnumValue value="1" display_value="Show"/>
+    <EnumValue value="0" display_value="Hide"/>
+</UserPref>
+<UserPref name="tickers" datatype="hidden" default_value="CYNO|100|31.50,SMCI|100|11.00,PTNR|200|16.60"/>
+<UserPref name="promo0" datatype="hidden" default_value="1" />
+<UserPref name="promo1" datatype="hidden" default_value="1" />
+<UserPref name="shownews" datatype="hidden" default_value="0" />
+<UserPref name="showstrength" datatype="hidden" default_value="0" />
+<Content type="html"><![CDATA[
+<style type="text/css">
+  a { color:#0000DD;}
+  a:visited { color:#0000DD;}
+</style>
+
+<script language="Javascript">
+
+var prefs__MODULE_ID__ = new _IG_Prefs(__MODULE_ID__);
+var minmsg__MODULE_ID__ = new _IG_MiniMessage(__MODULE_ID__);
+if (prefs__MODULE_ID__.getInt("promo0") == 1) {
+    var message0 = minmsg__MODULE_ID__.createDismissibleMessage("02/02/07 : Click on any stock name/price for more info", dismissMessage__MODULE_ID__(0));
+    message0.style.backgroundColor = "#cdeefa";
+    message0.style.color = "#0000aa";
+}
+if (prefs__MODULE_ID__.getInt("promo1") == 1) {
+    var message1 = minmsg__MODULE_ID__.createDismissibleMessage("02/06/07 : Option for 5-day charts added in Settings", dismissMessage__MODULE_ID__(1));
+    message1.style.backgroundColor = "#cdeefa";
+    message1.style.color = "#0000aa";
+}
+var strTickers__MODULE_ID__ = prefs__MODULE_ID__.getString("tickers");
+printDebug__MODULE_ID__('Original value : '+strTickers__MODULE_ID__);
+strTickers__MODULE_ID__ = convertToNewFormat__MODULE_ID__(strTickers__MODULE_ID__);
+printDebug__MODULE_ID__('New format value : '+strTickers__MODULE_ID__);
+var stockTickers__MODULE_ID__ = convertToArray2__MODULE_ID__(strTickers__MODULE_ID__);
+var baseURL__MODULE_ID__ = "http://finance.yahoo.com/d?s=";
+var flashing__MODULE_ID__ = prefs__MODULE_ID__.getInt("flashing");
+var showchart__MODULE_ID__ = prefs__MODULE_ID__.getInt("showchart");
+var refreshrate__MODULE_ID__ = prefs__MODULE_ID__.getInt("refreshrate");
+var showname__MODULE_ID__ = prefs__MODULE_ID__.getInt("showname");
+var sortcol__MODULE_ID__ = 'symbol';
+var cURL__MODULE_ID__ = "http://ichart.finance.yahoo.com/t?s=";
+if (showchart__MODULE_ID__ == 5) {
+    cURL__MODULE_ID__ = "http://ichart.finance.yahoo.com/v?s=";
+}
+var newDate__MODULE_ID__ = new Date().getTime();
+var reloadId__MODULE_ID__ = "0";
+stockTickers__MODULE_ID__ = sortArray__MODULE_ID__(stockTickers__MODULE_ID__);
+
+var newsReloadId__MODULE_ID__ = "0";
+var showNews__MODULE_ID__ = prefs__MODULE_ID__.getInt("shownews");
+var showStrength__MODULE_ID__ = prefs__MODULE_ID__.getInt("showstrength");
+function NI__MODULE_ID__(title, link, time){ this.title = title;this.link = link;this.time = time;}
+var newsURL__MODULE_ID__ = 'http://finance.yahoo.com/rss/headline?s=';
+var nIA__MODULE_ID__ = new Array();
+
+var staticImgUrl = _IG_GetImageUrl("http://udaysasi.googlepages.com/delete.gif"); 
+
+function cNS__MODULE_ID__()
+{ 
+	var feedURL = ''; 
+	newDate__MODULE_ID__ = new Date().getTime(); 
+	feedURL = newsURL__MODULE_ID__+convertToString__MODULE_ID__(stockTickers__MODULE_ID__)+"&dummy="+newDate__MODULE_ID__; 
+	_IG_FetchXmlContent(feedURL, _IG_Callback(pNR__MODULE_ID__)); 
+}
+function pNR__MODULE_ID__(r)
+{  
+	try 
+	{ 
+		var iL = r.getElementsByTagName("item");	
+		nIA__MODULE_ID__ = new Array(); 
+		for (var i = 0; i < iL.length ; i++)  
+		{ 
+			if(i>=4) 
+				break; 
+			var nodeList = iL.item(i).childNodes; 
+			var title = '', link='', diff; 
+			for (var j = 0; j < nodeList.length ; j++)  
+			{ 
+				var node = nodeList.item(j); 
+				if (node.nodeName == "title") 
+				{ 
+					title = node.firstChild.nodeValue; 
+					title = title.substring(0, title.indexOf('(')-1);
+				} 
+				if (node.nodeName == "link") 
+				{ 
+					link = node.firstChild.nodeValue; 
+				}
+				if (node.nodeName == "pubDate") 
+				{ 
+					var newdate = new Date(node.firstChild.nodeValue);
+					var curdate = new Date(new Date().toGMTString());
+					diff = (curdate-newdate)/1000;
+					if(diff<60)
+						diff = diff+' sec ago';
+					else if(diff<60*60)
+						diff = Math.floor(diff/60) + ' min ago';
+					else if(diff<60*60*24)
+						diff = Math.floor((diff/3600))+' hr '+Math.floor((diff%3600)/60)+' min ago';
+					else{
+						var days = Math.floor((diff/86400));
+						diff = days+(days>1?' days ago':' day ago');
+					}
+				}				
+			} 
+			nIA__MODULE_ID__ = nIA__MODULE_ID__.concat(new NI__MODULE_ID__(title, link, diff)); 
+		} 
+		
+		pNT__MODULE_ID__();	 
+	}
+	catch(e){ }   
+	
+	newsReloadId__MODULE_ID__ = setTimeout("cNS__MODULE_ID__();", 60000);	
+}
+
+function pNT__MODULE_ID__()
+{
+	var header = ''; 
+	var footer = ''; 
+	var contentText = '';  
+	if(nIA__MODULE_ID__.length==0) 
+		contentText = 'No news available for stocks in your watchlist'; 
+	for (i=0;i<nIA__MODULE_ID__.length;i++) 
+		contentText+='<li><a href="'+nIA__MODULE_ID__[i].link+'" target="newsT"><font size="-1">'+nIA__MODULE_ID__[i].title+'</font></a><font size="-1" color="#AAAAAA"> - '+nIA__MODULE_ID__[i].time+'</font></li>'; 		
+	
+	_gel('nCD__MODULE_ID__').innerHTML = header+contentText+footer;	
+}
+function sND__MODULE_ID__()
+{
+	clearTimeout(newsReloadId__MODULE_ID__);
+	if(showNews__MODULE_ID__==0)
+	{
+		_gel('nCD__MODULE_ID__').innerHTML = 'Loading news on stocks in your watch list..';
+		_gel('nCD__MODULE_ID__').style.display = '';
+		_gel('newsHorLine__MODULE_ID__').style.display = '';
+		cNS__MODULE_ID__();
+		showNews__MODULE_ID__ = 1;		
+		prefs__MODULE_ID__.set("shownews", 1);
+	}
+	else
+	{
+		_gel('nCD__MODULE_ID__').style.display = 'none';		
+		_gel('nCD__MODULE_ID__').innerHTML = '';		
+		_gel('newsHorLine__MODULE_ID__').style.display = 'none';		
+		showNews__MODULE_ID__ = 0;
+		prefs__MODULE_ID__.set("shownews", 0);
+	}
+}
+function sSD__MODULE_ID__()
+{
+	if(showStrength__MODULE_ID__==0)
+	{
+		_gel('sCD__MODULE_ID__').style.display = '';
+		_gel('strHorLine__MODULE_ID__').style.display = '';
+		showStrength__MODULE_ID__ = 1;		
+		prefs__MODULE_ID__.set("showstrength", 1);
+	}
+	else
+	{
+		_gel('sCD__MODULE_ID__').style.display = 'none';		
+		_gel('strHorLine__MODULE_ID__').style.display = 'none';		
+		showStrength__MODULE_ID__ = 0;
+		prefs__MODULE_ID__.set("showstrength", 0);
+	}
+}
+
+function convertToString__MODULE_ID__(arr) {
+    var returnString = "";
+    for (var g = 0; g < arr.length; g++) {
+        returnString += arr[g].symbol + ",";
+    }
+    return returnString;
+}
+
+function convertToString2__MODULE_ID__(arr) {
+    var returnString = "";
+    for (var g = 0; g < arr.length; g++) {
+        returnString += arr[g].symbol + "|" + arr[g].numshares + "|" + arr[g].buyprice + ",";
+    }
+    return returnString;	
+}
+
+function convertToArray__MODULE_ID__(str) {
+    var returnArray = new Array();
+    str = str.replace(/ /g, ",");
+    var ticks = str.split(",");
+    ticks.sort();
+    for (var d = 0; d < ticks.length; d++) {
+        var curTicker = ticks[d];
+        curTicker = curTicker.toUpperCase();
+        if (curTicker == "") {
+            continue;
+        }
+        returnArray.push(new StockTicker__MODULE_ID__(curTicker, "Loading..", "0", "0", "(0%)"));
+    }
+    return returnArray;
+}
+
+function convertToNewFormat__MODULE_ID__(str) {
+	if(str.indexOf("|")!=-1)
+		return str;
+    var returnString = "";
+    str = str.replace(/ /g, ",");
+    var ticks = str.split(",");
+    ticks.sort();
+    for (var d = 0; d < ticks.length; d++) {
+        var curTicker = ticks[d];
+        curTicker = curTicker.toUpperCase();
+        if (curTicker == "") {
+            continue;
+        }
+        returnString += curTicker + "|0|0.00,";        
+    }
+    return returnString;		
+}
+
+function convertToArray2__MODULE_ID__(str) {
+    var returnArray = new Array();
+    printDebug__MODULE_ID__('str value before : '+str);
+    str = str.replace(/ /g, ",");
+    printDebug__MODULE_ID__('str value after : '+str);
+    var ticks = str.split(",");
+    ticks.sort();
+    for (var d = 0; d < ticks.length; d++) {
+        var curTicker = ticks[d];
+        curTicker = curTicker.toUpperCase();
+        var curTickerData = curTicker.split("|");
+        if (curTickerData[0] == "") {
+            continue;
+        }
+        returnArray.push(new StockTicker__MODULE_ID__(curTickerData[0], "Loading..", "0", "0", "(0%)", curTickerData[1], curTickerData[2]));
+    }
+    return returnArray;
+}
+
+function StockTicker__MODULE_ID__(symbol, name, price, change, percent, numshares, buyprice) {
+    this.symbol = symbol;
+    this.name = name;
+    this.price = price;
+    this.change = change;
+    this.percent = percent;
+    this.numshares = numshares;
+    this.buyprice = buyprice;
+}
+function getSymbolArray__MODULE_ID__() {
+    var sa = new Array();
+    for (u = 0; u < stockTickers__MODULE_ID__.length; u++) {
+        sa = sa.concat(stockTickers__MODULE_ID__[u].symbol);
+    }
+    return sa;
+}
+function callServer__MODULE_ID__() {
+    var sa = getSymbolArray__MODULE_ID__();
+    if (sa.length == 0) {
+        return;
+    }
+    var symbol = "";
+    for (var h = 0; h < sa.length - 1; h++) {
+        symbol += sa[h] + ",";
+    }
+    symbol += sa[h];
+    newDate__MODULE_ID__ = new Date().getTime();
+    var financeURL = baseURL__MODULE_ID__ + symbol + "&f=snk1c1k2&dummy=" + newDate__MODULE_ID__;
+    _IG_FetchContent(financeURL, _IG_Callback(responseText__MODULE_ID__));
+}
+function fixCommas__MODULE_ID__(str) {
+    var x = 0;
+    while (str.indexOf("\"", x) >= 0) {
+        var y = str.indexOf("\"", x);
+        var z = str.indexOf("\"", y + 1);
+        var w = str.indexOf(",", y);
+        if (w > y && w < z) {
+            str = str.substring(0, w) + "." + str.substring(w + 1);
+        }
+        x = z + 1;
+    }
+    return str;
+}
+function responseText__MODULE_ID__(responseString) {
+    var result = responseString;
+    try {
+        var myregexp = new RegExp("\n");
+        var quotes = new Array();
+        quotes = result.split(myregexp);
+        var n59p = 0, n25p = 0, n02p = 0, p25p = 0, p02p = 0, p59p = 0;
+        var n59c = 0, n25c = 0, n02c = 0, p25c = 0, p02c = 0, p59c = 0;
+        var totalGainLoss = 0, portfolioValue = 0;
+        var totalGainLossSpan2 = _gel("TotalGainLossSpan2");
+        var portfolioValueSpan2 = _gel("PortfolioValueSpan2");
+        for (var c = 0; c < quotes.length; c++) {
+            var symbol = getSymbol__MODULE_ID__(c);
+            if (symbol == "") {
+                continue;
+            }
+            var nameSpan = _gel(symbol + "NameSpan");
+            var priceSpan = _gel(symbol + "PriceSpan");
+            var changeSpan = _gel(symbol + "ChangeSpan");
+            var percentSpan = _gel(symbol + "PercentSpan");
+            var tickerSpan = _gel(symbol + "Span");
+            
+            var tickerSpan2 = _gel(symbol + "Span2");
+            //var nameSpan2 = _gel(symbol + "NameSpan2");
+            var gainlossSpan2 = _gel(symbol + "GainLossSpan2");            
+            
+            var row = _gel(symbol + "Row");
+            var curQuote = quotes[c];
+            var curQuoteDetail = fixCommas__MODULE_ID__(curQuote).split(",");
+            var curQuoteTicker = curQuoteDetail[0];
+            var curQuoteName = curQuoteDetail[1];
+            curQuoteName = getRefinedName__MODULE_ID__(curQuoteName);
+            if (symbol == curQuoteName) {
+                curQuoteName = "Invalid symbol";
+            }
+            curQuoteName = getInitCaps__MODULE_ID__(curQuoteName);
+            nameSpan.innerHTML = curQuoteName;
+            //nameSpan2.innerHTML = curQuoteName;
+            if (showname__MODULE_ID__ == 0) {
+                tickerSpan.firstChild.setAttribute("title", curQuoteName);
+                tickerSpan2.firstChild.setAttribute("title", curQuoteName);
+            }
+            setName__MODULE_ID__(c, curQuoteName);
+            var curQuotePrice = removeBold__MODULE_ID__(curQuoteDetail[2]);
+            curQuotePrice = rcs__MODULE_ID__(curQuotePrice);
+            curQuotePrice = removeItalics__MODULE_ID__(curQuotePrice);
+            var curQuoteChange = removeBold__MODULE_ID__(curQuoteDetail[3]);
+            curQuoteChange = removeItalics__MODULE_ID__(curQuoteChange);
+            try {
+                curQuotePrice = parseFloat(curQuotePrice);
+                if (curQuotePrice > 0.1) {
+                    curQuotePrice = roundNumber__MODULE_ID__(curQuotePrice);
+                    curQuotePrice = round2Decimals__MODULE_ID__(curQuotePrice);
+                }
+            }
+            catch (e) {
+                curQuotePrice = "N/A";
+            }
+            var dashIndex = curQuoteDetail[4].indexOf("-");
+            if (dashIndex == 1) {
+                dashIndex = curQuoteDetail[4].indexOf("-", 2);
+            }
+            var curQuotePercentChange = curQuoteDetail[4].substring(dashIndex + 1, curQuoteDetail[4].length - 2);
+            curQuotePercentChange = removeBold__MODULE_ID__(curQuotePercentChange);
+            curQuotePercentChange = removeItalics__MODULE_ID__(curQuotePercentChange);
+            curQuotePercentChange = trim__MODULE_ID__(curQuotePercentChange);
+            try {
+                curQuotePercentChange = parseFloat(curQuotePercentChange);
+                if (curQuotePrice > 0.1) {
+                    curQuotePercentChange = roundNumber__MODULE_ID__(curQuotePercentChange);
+                    curQuotePercentChange = round2Decimals__MODULE_ID__(curQuotePercentChange);
+                }
+            }
+            catch (e) {
+                curQuotePercentChange = "N/A";
+            }
+            priceSpan.innerHTML = curQuotePrice;
+            
+            var curQuoteOldPrice = getPrice__MODULE_ID__(c);
+            if (curQuoteOldPrice != "N/A" && curQuotePrice != "N/A" && flashing__MODULE_ID__ == 1) {
+                if (curQuoteOldPrice > curQuotePrice) {
+                    row.style.background = "#FF0000";
+                } else {
+                    if (curQuoteOldPrice < curQuotePrice) {
+                        row.style.background = "#00FF00";
+                    } else {
+                        row.style.background = "#FFFFFF";
+                    }
+                }
+            }
+            setTimeout("javascript:cst__MODULE_ID__('" + symbol + "');", 200);
+            setPrice__MODULE_ID__(c, curQuotePrice);
+            if (isNaN(curQuoteChange)) {
+                curQuoteChange = "N/A";
+            } else {
+                if (curQuotePrice > 0.1) {
+                    curQuoteChange = roundNumber__MODULE_ID__(curQuoteChange);
+                    curQuoteChange = round2Decimals__MODULE_ID__(curQuoteChange);
+                }
+            }
+            setChange__MODULE_ID__(c, curQuoteChange);
+                if (curQuoteChange != 'N/A' && curQuoteChange >= 0) {
+                    curQuoteChange = "+" + curQuoteChange;
+                }
+            changeSpan.innerHTML = curQuoteChange;
+            if (isNaN(curQuotePercentChange)) {
+                curQuotePercentChange = "N/A";
+            } else {
+                curQuotePercentChange = roundNumber__MODULE_ID__(curQuotePercentChange);
+                curQuotePercentChange = round2Decimals__MODULE_ID__(curQuotePercentChange);
+                if (curQuotePercentChange >= 0) {
+                    curQuotePercentChange = "+" + curQuotePercentChange;
+                }
+            }
+            if (curQuotePercentChange < -3) {
+                n59c++;
+            } else {
+                if (curQuotePercentChange < -1) {
+                    n25c++;
+                } else {
+                    if (curQuotePercentChange < 0) {
+                        n02c++;
+                    } else {
+                        if (curQuotePercentChange > 3) {
+                            p59c++;
+                        } else {
+                            if (curQuotePercentChange > 1) {
+                                p25c++;
+                            } else {
+                                p02c++;
+                            }
+                        }
+                    }
+                }
+            }
+            setPercentChange__MODULE_ID__(c, "(" + curQuotePercentChange + ")");
+            percentSpan.innerHTML = "(" + curQuotePercentChange + "%)";
+            if (parseFloat(curQuoteChange) < 0) {
+                changeSpan.style.color = "#990000";
+                percentSpan.style.color = "#990000";
+            } else {
+                changeSpan.style.color = "#009900";
+                percentSpan.style.color = "#009900";
+            }
+            
+			var gainLossValue = 0;
+			var buyPrice = getBuyPrice__MODULE_ID__(c);
+			var numShares = getNumShares__MODULE_ID__(c);
+			if (isNaN(buyPrice))
+				buyPrice = 0;
+			if (isNaN(numShares))
+				numShares = 0;	
+			if (isNaN(curQuotePrice))
+				curQuotePrice = 0;				
+			gainLossValue = (curQuotePrice-buyPrice)*numShares;			
+			gainLossValue = roundNumber__MODULE_ID__(gainLossValue);
+			gainLossValue = round2Decimals__MODULE_ID__(gainLossValue);
+            gainlossSpan2.innerHTML = gainLossValue;
+            if(parseFloat(gainLossValue) < 0)
+            	gainlossSpan2.style.color = "#990000";
+            else if(parseFloat(gainLossValue) > 0)
+            	gainlossSpan2.style.color = "#009900";
+			else            	
+            	gainlossSpan2.style.color = "#000000";
+            totalGainLoss = parseFloat(totalGainLoss) + parseFloat(gainLossValue);
+            portfolioValue = parseFloat(portfolioValue) + parseFloat(curQuotePrice*numShares);            
+        }
+        totalGainLoss = roundNumber__MODULE_ID__(totalGainLoss);
+        totalGainLoss = round2Decimals__MODULE_ID__(totalGainLoss);
+        totalGainLossSpan2.innerHTML = totalGainLoss;
+		if(parseFloat(totalGainLoss) < 0)
+			totalGainLossSpan2.style.color = "#990000";
+		else if(parseFloat(totalGainLoss) > 0)
+			totalGainLossSpan2.style.color = "#009900";
+		else            	
+			totalGainLossSpan2.style.color = "#000000";        
+
+        portfolioValue = roundNumber__MODULE_ID__(portfolioValue);
+        portfolioValue = round2Decimals__MODULE_ID__(portfolioValue);
+        portfolioValueSpan2.innerHTML = portfolioValue;
+        
+        var total = n59c + n25c + n02c + p02c + p25c + p59c;
+        n59p = roundNumber__MODULE_ID__(n59c * 100 / total);
+        n25p = roundNumber__MODULE_ID__(n25c * 100 / total);
+        n02p = roundNumber__MODULE_ID__(n02c * 100 / total);
+        p02p = roundNumber__MODULE_ID__(p02c * 100 / total);
+        p25p = roundNumber__MODULE_ID__(p25c * 100 / total);
+        p59p = roundNumber__MODULE_ID__(p59c * 100 / total);
+        _gel("n59").style.width = n59p + "%";
+        _gel("n59").title = n59c+" of "+total+" stocks in your watchlist down over 3%";
+        _gel("n25").style.width = n25p + "%";
+        _gel("n25").title = n25c+" of "+total+" stocks in your watchlist down between 1% and 3%";
+        _gel("n02").style.width = n02p + "%";
+        _gel("n02").title = n02c+" of "+total+" stocks in your watchlist down between 0% and 1%";
+        _gel("p02").style.width = p02p + "%";
+        _gel("p02").title = p02c+" of "+total+" stocks in your watchlist up between 0% and 1%";
+        _gel("p25").style.width = p25p + "%";
+        _gel("p25").title = p25c+" of "+total+" stocks in your watchlist up between 1% and 3%";
+        _gel("p59").style.width = p59p + "%";
+        _gel("p59").title = p59c+" of "+total+" stocks in your watchlist up over 3%";
+    }
+    catch (e) {
+    }
+    if (refreshrate__MODULE_ID__ != -1) {
+        reloadId__MODULE_ID__ = setTimeout("callServer__MODULE_ID__();", refreshrate__MODULE_ID__ * 1000);
+    }
+}
+function cst__MODULE_ID__(symbol) {
+    var symbolSpan = _gel(symbol + "Row");
+    symbolSpan.style.background = "#FFFFFF";
+}
+function getPrice__MODULE_ID__(c) {
+    return stockTickers__MODULE_ID__[c].price;
+}
+function setPrice__MODULE_ID__(c, newPrice) {
+    stockTickers__MODULE_ID__[c].price = newPrice;
+}
+function setPercentChange__MODULE_ID__(c, newPercent) {
+    stockTickers__MODULE_ID__[c].percent = newPercent;
+}
+function getSymbol__MODULE_ID__(c) {
+    if (c < stockTickers__MODULE_ID__.length) {
+        return stockTickers__MODULE_ID__[c].symbol;
+    } else {
+        return "";
+    }
+}
+function setName__MODULE_ID__(c, newName) {
+    stockTickers__MODULE_ID__[c].name = newName;
+}
+function setChange__MODULE_ID__(c, newChange) {
+    stockTickers__MODULE_ID__[c].change = newChange;
+}
+function getNumShares__MODULE_ID__(c) {
+    return stockTickers__MODULE_ID__[c].numshares;
+}
+function getBuyPrice__MODULE_ID__(c) {
+    return stockTickers__MODULE_ID__[c].buyprice;
+}
+function setBuyPrice__MODULE_ID__(c, newBuyPrice) {
+    stockTickers__MODULE_ID__[c].buyprice = newBuyPrice;
+}
+function setNumShares__MODULE_ID__(c, newNumShares) {
+    stockTickers__MODULE_ID__[c].numshares = newNumShares;
+}
+
+function getRefinedName__MODULE_ID__(str) {
+    return str.substring(1, str.length - 1);
+}
+function trim__MODULE_ID__(str) {
+    return str.replace(/^\s*|\s*$/g, "");
+}
+function addStockTicker__MODULE_ID__() {
+    var newTickerString = _gel("ticker").value;
+    if (newTickerString == "Enter Symbol(s)") {
+        return;
+    }
+    _gel("ticker").setAttribute("autocomplete", "off");
+    newTickerString = newTickerString.replace(/ /g, ",");
+    var newTickerArray = newTickerString.split(",");
+    var sa = getSymbolArray__MODULE_ID__();
+    for (var d = 0; d < newTickerArray.length; d++) {
+        var currentTicker = newTickerArray[d];
+        currentTicker = currentTicker.toUpperCase();
+        if (currentTicker == "") {
+            continue;
+        }
+        var symbolPresent = false;
+        for (var g = 0; g < stockTickers__MODULE_ID__.length; g++) {
+            if (stockTickers__MODULE_ID__[g].symbol == currentTicker) {
+                symbolPresent = true;
+            }
+        }
+        if (symbolPresent) {
+            continue;
+        }
+        stockTickers__MODULE_ID__.push(new StockTicker__MODULE_ID__(currentTicker, "Loading..", "0", "0", "0", "0", "0.00"));
+    }
+    prefs__MODULE_ID__.set("tickers", convertToString2__MODULE_ID__(stockTickers__MODULE_ID__));
+    stockTickers__MODULE_ID__ = sortArray2__MODULE_ID__(stockTickers__MODULE_ID__, sortcol__MODULE_ID__);
+    paintStockTicker__MODULE_ID__();
+    _gel("ticker").value = "";
+}
+function paintStockTicker__MODULE_ID__() {
+	 if(showNews__MODULE_ID__==1)
+	 {
+	 	 _gel('nCD__MODULE_ID__').innerHTML = 'Loading news on stocks in your watch list..';
+		 _gel('nCD__MODULE_ID__').style.display = '';
+		 _gel('newsHorLine__MODULE_ID__').style.display = '';
+	 }
+	 if(showStrength__MODULE_ID__==1)
+	 {
+	 	 _gel('sCD__MODULE_ID__').style.display = '';
+		 _gel('strHorLine__MODULE_ID__').style.display = '';
+	 }	 
+	 clearTimeout(newsReloadId__MODULE_ID__);
+	 cNS__MODULE_ID__();
+		
+    var fsize, nameDisplay;
+    if (showname__MODULE_ID__ == 1) {
+        fsize = "8";
+        nameDisplay = "";
+    } else {
+        fsize = "9";
+        nameDisplay = "none";
+    }
+    var header = "<table align=center style=\"border:0;  font-family: arial,sans-serif;\" width=\"100%\" id=\"contentTable\" cellspacing=0 cellpadding=1>";
+     header+= "<tr>";
+     header+="<td align=left>&nbsp;</td>";
+ 	 header+="<td align=left><a title=\"Click to sort by symbol\" href=\"javascript:void(0);\" onclick=\"javascript:sortByColumn__MODULE_ID__('symbol');\"><font size=\"-1\"><b>Sym</b></font></td>";
+	 header+="<td align=left style=\"display:" + nameDisplay + "\" ><a title=\"Click to sort by name\" href=\"javascript:void(0);\" onclick=\"javascript:sortByColumn__MODULE_ID__('name');\"><font size=\"-1\"><b>Name</b></a></font></td>";
+	 header+="<td align=right><a title=\"Click to sort by price\" href=\"javascript:void(0);\" onclick=\"javascript:sortByColumn__MODULE_ID__('price');\"><font size=\"-1\"><b>Price</b></a>&nbsp;</font></td>";
+	 header+="<td align=right><a title=\"Click to sort by price change\" href=\"javascript:void(0);\" onclick=\"javascript:sortByColumn__MODULE_ID__('change');\"><font size=\"-1\"><b>Chng</b></a></font></td>";
+	 header+="<td align=right nowrap><a title=\"Click to sort by percentage change\" href=\"javascript:void(0);\" onclick=\"javascript:sortByColumn__MODULE_ID__('percent');\"><font size=\"-1\"><b>%Chng</b></a></font></td>";
+     header+="</tr>";
+    
+    var footer = "</table>";
+    var contentText = "";
+    for (i = 0; i < stockTickers__MODULE_ID__.length; i++) {
+        contentText += "<tr id=\"" + stockTickers__MODULE_ID__[i].symbol + "Row\" style=\"background:#ffffff;\" onMouseOver=\"highlightColor__MODULE_ID__(this);showChart__MODULE_ID__('" + stockTickers__MODULE_ID__[i].symbol + "')\" onMouseOut=\"unhighlightColor__MODULE_ID__(this);hideChart__MODULE_ID__('" + stockTickers__MODULE_ID__[i].symbol + "')\">";
+        contentText += "<td style=\"padding-right: 3px\" width=\"1%\" align=\"center\" title=\"Delete " + stockTickers__MODULE_ID__[i].symbol + "\"><img src=\""+staticImgUrl+"\" onClick=\"javascript:deleteStockTicker__MODULE_ID__(" + i + ")\"/></td>";
+        contentText += "<td width=\"2%\" align=left><font size=\"-1\"><span id=\"" + stockTickers__MODULE_ID__[i].symbol + "Span\"><a href=\"http://finance.yahoo.com/q?s=" + stockTickers__MODULE_ID__[i].symbol + "\" target=\"blank\">" + stockTickers__MODULE_ID__[i].symbol + "</a></span></font></td>";
+        contentText += "<td style=\"display:" + nameDisplay + "\" width=\"0%\" align=left onClick=\"callMoreData__MODULE_ID__('" + stockTickers__MODULE_ID__[i].symbol + "')\" ><font size=\"-1\"><span style=\"display:" + nameDisplay + "\" id=\"" + stockTickers__MODULE_ID__[i].symbol + "NameSpan\">" + stockTickers__MODULE_ID__[i].name + "</span></font></td>";
+        contentText += "<td width=\"25%\" align=right onClick=\"callMoreData__MODULE_ID__('" + stockTickers__MODULE_ID__[i].symbol + "')\" ><font size=\"-1\"><span id=\"" + stockTickers__MODULE_ID__[i].symbol + "PriceSpan\">" + stockTickers__MODULE_ID__[i].price + "</span></font></td>";
+        contentText += "<td width=\"12%\" align=right nowrap onClick=\"callMoreData__MODULE_ID__('" + stockTickers__MODULE_ID__[i].symbol + "')\" ><font size=\"-1\"><span id=\"" + stockTickers__MODULE_ID__[i].symbol + "ChangeSpan\">" + stockTickers__MODULE_ID__[i].change + "</span></font></td>";
+        contentText += "<td width=\"12%\" align=right nowrap onClick=\"callMoreData__MODULE_ID__('" + stockTickers__MODULE_ID__[i].symbol + "')\" ><font size=\"-1\"><span id=\"" + stockTickers__MODULE_ID__[i].symbol + "PercentSpan\">" + stockTickers__MODULE_ID__[i].percent + "</span></font></td>";
+        contentText += "</tr>";
+        contentText += "<tr><td></td><td></td><td colspan=\"4\" align=\"left\" style=\"width:100%\"><div style=\"position: relative; height: 100%\";><div id=\"" + stockTickers__MODULE_ID__[i].symbol + "chartDiv\" style=\"position:absolute;display:none;border:2px double #666666;padding:3px;background:#ffffff;font-size: 8pt;font-family:arial,sans-serif; z-index:3000;\"></div></div></td></tr>";
+    }
+    _gel("cD__MODULE_ID__").innerHTML = header + contentText + footer;
+    paintPortfolio__MODULE_ID__();
+    try {
+        clearTimeout(reloadId__MODULE_ID__);
+    }
+    catch (e) {
+    }
+    callServer__MODULE_ID__();
+}
+
+function paintPortfolio__MODULE_ID__() {
+    var fsize, nameDisplay;
+    if (showname__MODULE_ID__ == 1) {
+        fsize = "8";
+        nameDisplay = "";
+    } else {
+        fsize = "9";
+        nameDisplay = "none";
+    }	
+    var header = "<table align=center style=\"border:0;  font-family: arial,sans-serif;\" width=\"100%\" cellspacing=0 cellpadding=1>";
+	 header+= "<tr>";
+	 header+="<td align=left><a href=\"javascript:void(0);\"><font size=\"-1\"><b>Sym</b></font></a></td>";
+	 //header+="<td align=left style=\"display:" + nameDisplay + "\" ><a href=\"javascript:void(0);\"><font size=\"-1\"><b>Name</b></font></a></td>";
+	 header+="<td align=right><font size=\"-1\"><a href=\"javascript:void(0);\"><b>Shares</b></a></font></td>";
+	 header+="<td align=right><font size=\"-1\"><a href=\"javascript:void(0);\"><b>Buy Price</b></a></font></td>";
+	 header+="<td align=right><font size=\"-1\"><a href=\"javascript:void(0);\"><b>Gain/Loss</b></a></font></td>";
+     header+="</tr>";
+     
+	//var footer = "</table><table align=center style=\"border:0;  font-family: arial,sans-serif;\" width=\"100%\" cellspacing=0 cellpadding=1><tr><td colspan=\"2\" align=\"right\"><hr width=\"60%\" align=\"right\"/></td></tr><tr><td width=\"80%\" align=\"right\"><font size=\"-1\">Total Gain/Loss :</font></td><td width=\"20%\" align=\"right\"><font size=\"-1\"><span id=\"TotalGainLossSpan2\">0.00</span></font></td></tr><tr><td width=\"80%\" align=\"right\"><font size=\"-1\">Portfolio Value :</font></td><td width=\"20%\" align=\"right\"><font size=\"-1\"><span id=\"PortfolioValueSpan2\">0.00</span></font></td></tr></table>";
+	var footer = "<tr><td colspan=\"4\" align=\"right\"><hr width=\"70%\" align=\"right\"/></td></tr><tr><td width=\"80%\" align=\"right\" colspan=\"3\"><font size=\"-1\">Portfolio Value : <b><span id=\"PortfolioValueSpan2\">0.00</span></font></b></td>	<td width=\"20%\" align=\"right\"><font size=\"-1\"><b><span id=\"TotalGainLossSpan2\">0.00</span><b></font></td></tr></table>";
+	var contentText = "";
+
+    for (i = 0; i < stockTickers__MODULE_ID__.length; i++) {
+        contentText += "<tr id=\"" + stockTickers__MODULE_ID__[i].symbol + "PortfolioRow\" style=\"background:#ffffff;\" onMouseOver=\"highlightColor__MODULE_ID__(this);\" onMouseOut=\"unhighlightColor__MODULE_ID__(this);\">";
+        contentText += "<td width=\"2%\" align=left><font size=\"-1\"><span id=\"" + stockTickers__MODULE_ID__[i].symbol + "Span2\"><a href=\"http://finance.yahoo.com/q?s=" + stockTickers__MODULE_ID__[i].symbol + "\" target=\"blank\">" + stockTickers__MODULE_ID__[i].symbol + "</a></span></font></td>";
+        //contentText += "<td style=\"display:" + nameDisplay + "\" width=\"0%\" align=left><font size=\"-1\"><span style=\"display:" + nameDisplay + "\" id=\"" + stockTickers__MODULE_ID__[i].symbol + "NameSpan2\">" + stockTickers__MODULE_ID__[i].name + "</span></font></td>";
+        contentText += "<td width=\"25%\" align=right nowrap><font size=\"-1\"><span id=\"span" + stockTickers__MODULE_ID__[i].symbol + "numshares\" style=\"display:\" onclick='javascript:makeEditable__MODULE_ID__(\""+stockTickers__MODULE_ID__[i].symbol+"numshares\", "+i+");' >" + stockTickers__MODULE_ID__[i].numshares + "</span><input type=\"text\" size=\"4\" style=\"display:none\" id=\"text"+stockTickers__MODULE_ID__[i].symbol+"numshares\" onblur='javascript:makeUnEditable__MODULE_ID__(\""+stockTickers__MODULE_ID__[i].symbol+"numshares\", "+i+",\"numshares\");'></font></td>";
+        contentText += "<td width=\"25%\" align=right nowrap><font size=\"-1\"><span id=\"span" + stockTickers__MODULE_ID__[i].symbol + "buyprice\" style=\"display:\" onclick='javascript:makeEditable__MODULE_ID__(\""+stockTickers__MODULE_ID__[i].symbol+"buyprice\", "+i+");' >" + stockTickers__MODULE_ID__[i].buyprice + "</span><input type=\"text\" size=\"4\" style=\"display:none\" id=\"text"+stockTickers__MODULE_ID__[i].symbol+"buyprice\" onblur='javascript:makeUnEditable__MODULE_ID__(\""+stockTickers__MODULE_ID__[i].symbol+"buyprice\", "+i+",\"buyprice\");'></font></td>";
+        contentText += "<td width=\"25%\" align=right nowrap><font size=\"-1\"><span id=\"" + stockTickers__MODULE_ID__[i].symbol + "GainLossSpan2\">0.00</span></font></td>";
+        contentText += "</tr>";        
+    }
+    _gel("pD__MODULE_ID__").innerHTML = header + contentText + footer;
+    
+}
+
+
+function deleteStockTicker__MODULE_ID__(k) {
+    stockTickers__MODULE_ID__.splice(k, 1);
+    prefs__MODULE_ID__.set("tickers", convertToString2__MODULE_ID__(stockTickers__MODULE_ID__));
+    stockTickers__MODULE_ID__ = sortArray2__MODULE_ID__(stockTickers__MODULE_ID__, sortcol__MODULE_ID__);
+    paintStockTicker__MODULE_ID__();
+}
+function roundNumber__MODULE_ID__(num) {
+    var rlength = 2;
+    var newnumber = Math.round(num * Math.pow(10, rlength)) / Math.pow(10, rlength);
+    return newnumber;
+}
+function highlightColor__MODULE_ID__(highlightRow) {
+    highlightRow.style.background = "#eeeeff";
+}
+function unhighlightColor__MODULE_ID__(highlightRow) {
+    highlightRow.style.background = "#ffffff";
+}
+function showChart__MODULE_ID__(sym) {
+    if (showchart__MODULE_ID__ == 0) {
+        return;
+    }
+    var chartDiv = _gel(sym + "chartDiv");
+    chartDiv.innerHTML = "Loading chart..";
+    chartDiv.style.display = "";
+    chartDiv.innerHTML = "<img src=\"" + cURL__MODULE_ID__ + sym + "\">";
+}
+function hideChart__MODULE_ID__(sym) {
+    if (showchart__MODULE_ID__ == 0) {
+        return;
+    }
+    var chartDiv = _gel(sym + "chartDiv");
+    chartDiv.style.display = "none";
+    chartDiv.innerHTML = "<font size=\"-1\" style=\"font-family: arial,sans-serif;\">Loading chart..</font>";
+}
+function showMoreData__MODULE_ID__(responseString, sym) {
+    hideAllMoreDivs__MODULE_ID__(stockTickers__MODULE_ID__);
+    var chartDiv = _gel(sym + "chartDiv");
+    var content = "<table style=\"font-size: 8pt; font-family: arial,sans-serif;\" width=\"100%\">";
+    var results = responseString.split(",");
+    content += "<tr><td align=\"left\"><b>Open</b></td><td align=\"right\">" + results[1] + "</td></tr>";
+    content += "<tr><td align=\"left\"><b>Previous Close</b></td><td align=\"right\">" + results[2] + "</td></tr>";
+    content += "<tr><td align=\"left\"><b>Volume</b></td><td align=\"right\">" + results[3] + "</td></tr>";
+    content += "<tr><td align=\"left\"><b>Days Range</b></td><td align=\"right\">" + formatData__MODULE_ID__(results[4]) + "</td></tr>";
+    content += "<tr><td align=\"left\"><b>52-week Range</b></td><td align=\"right\">" + formatData__MODULE_ID__(results[5]) + "</td></tr>";
+    content += "<tr><td align=\"left\"><b>Last Trade</b></td><td align=\"right\">" + formatData__MODULE_ID__(results[6]) + " EST</td></tr>";
+    content += "<tr><td align=\"left\"><b>Exchange</b></td><td align=\"right\">" + formatData__MODULE_ID__(results[7]) + "</td></tr>";
+    content += "</table>";
+    chartDiv.innerHTML = "<span style=\"width: 100%; z-index: 1; font-size: 8pt; font-family: arial,sans-serif;\"><table width=\"100%\" style=\"font-size: 8pt; font-family: arial,sans-serif; background-color:#999966;\"><tr style=\"color:#FFFFFF;font-weight:bold\"><td align=\"left\" onClick=\"hideMoreDiv__MODULE_ID__('" + sym + "')\">" + joinString__MODULE_ID__(sym, formatData__MODULE_ID__(results[8])) + "</td><td align=\"right\" width=\"5%\" onClick=\"hideMoreDiv__MODULE_ID__('" + sym + "')\">Close</td></tr></table></span>" + content;
+    chartDiv.style.display = "";
+}
+function hideMoreDiv__MODULE_ID__(sym) {
+    var chartDiv = _gel(sym + "chartDiv");
+    chartDiv.style.display = "none";
+    chartDiv.innerHTML = "";
+}
+function hideAllMoreDivs__MODULE_ID__(arr) {
+    for (var l = 0; l < arr.length; l++) {
+        hideMoreDiv__MODULE_ID__(arr[l].symbol);
+    }
+}
+function callMoreData__MODULE_ID__(sym) {
+    var chartDiv = _gel(sym + "chartDiv");
+    chartDiv.innerHTML = "Loading data..";
+    chartDiv.style.display = "";
+    var financeURL = baseURL__MODULE_ID__ + sym + "&f=sopvmwt1xn&dummy=" + newDate__MODULE_ID__;
+    _IG_FetchContent(financeURL, _IG_Callback(showMoreData__MODULE_ID__, sym));
+}
+function formatData__MODULE_ID__(str) {
+    str = str.replace("\n", "").replace("\r", "");
+    if (str.indexOf("\"") == -1) {
+        return str;
+    } else {
+        return str.substring(1, str.length - 1);
+    }
+}
+function round2Decimals__MODULE_ID__(n) {
+    var stringNumber = "" + n;
+    if (stringNumber.indexOf(".") == -1) {
+        stringNumber += ".00";
+    } else {
+        if (stringNumber.substring(stringNumber.indexOf(".") + 1).length == 1) {
+            stringNumber += "0";
+        }
+    }
+    return stringNumber;
+}
+function sortArray__MODULE_ID__(arr) {
+    if (arr.length == 0) {
+        return arr;
+    }
+    var newArray = new Array();
+    var stA = new Array();
+    for (var l = 0; l < arr.length; l++) {
+        stA.push(arr[l].symbol);
+    }
+    stA.sort();
+    for (var h = 0; h < stA.length; h++) {
+        for (var o = 0; o < arr.length; o++) {
+            if (stA[h] == arr[o].symbol) {
+                newArray.push(arr[o]);
+            }
+        }
+    }
+    return newArray;
+}
+
+function sortArray2__MODULE_ID__(tickcopy, col) {
+	sortcol__MODULE_ID__ = col;
+	
+	var exp = 'tickers[l].'+col;
+
+	var tickers = new Array();
+   var nA = new Array();
+   var stA = new Array();	
+	for(k=0;k<tickcopy.length;k++)
+	   tickers.push(tickcopy[k]);
+
+   for (var l = 0; l < tickers.length; l++) {
+   	if(parseFloat(eval(exp)))
+    		stA.push(parseFloat(eval(exp)));
+    	else
+    		stA.push(eval(exp));
+   }
+
+	if(col=='price' || col=='change' || col=='percent')
+	{
+		try{
+    		stA.sort(sortNumber__MODULE_ID__);
+    	}catch(e) {
+    		stA.sort();
+    	}
+    }
+    else
+    	stA.sort();
+
+    for (var h = 0; h < stA.length; h++) {
+    	for (var l = 0; l < tickers.length; l++) {
+        	if(nA.contains(tickers[l]))
+        		continue;
+        
+        	if(parseFloat(stA[h]))
+        	{
+				if (parseFloat(stA[h]) == parseFloat(eval(exp))) {					
+						nA.push(tickers[l]);
+				}
+			}
+			else
+			{
+				if (stA[h] == eval(exp)) {
+					nA.push(tickers[l]);
+				}
+			}
+        }
+    }
+
+	tickers = nA;
+
+	return tickers;
+}
+function sortNumber__MODULE_ID__(a,b)
+{
+	if(a-b)
+		return a-b;
+	else
+		return true;
+}
+function sortByColumn__MODULE_ID__(col)
+{
+	stockTickers__MODULE_ID__ = sortArray2__MODULE_ID__(stockTickers__MODULE_ID__, col);
+	paintStockTicker__MODULE_ID__();
+}
+
+function removeBold__MODULE_ID__(str) {
+    var boldIndexStart = str.indexOf("<b>");
+    var boldIndexEnd = str.lastIndexOf("</b>");
+    if (boldIndexStart == -1) {
+        return str;
+    }
+    var curQuotePrice = str.substring(boldIndexStart + 3, boldIndexEnd);
+    return curQuotePrice;
+}
+function removeItalics__MODULE_ID__(str) {
+    var italicIndexStart = str.indexOf("<i>");
+    var italicIndexEnd = str.lastIndexOf("</i>");
+    if (italicIndexStart == -1) {
+        return str;
+    }
+    var curQuotePrice = str.substring(italicIndexStart + 3, italicIndexEnd);
+    return curQuotePrice;
+}
+function rcs__MODULE_ID__(str) {
+    var csis = str.indexOf(">");
+    if (csis == -1) {
+        return str;
+    }
+    var curQuotePrice = str.substring(csis + 1);
+    return curQuotePrice;
+}
+function dismissMessage__MODULE_ID__(i) {
+    return function () {
+        prefs__MODULE_ID__.set("promo" + i, 0);
+    };
+}
+function joinString__MODULE_ID__(a, b) {
+    var onelen = a.length;
+    var twolen = (a.length + b.length > 20) ? (20 - a.length) : b.length;
+    if (twolen != b.length) {
+        b = b.substring(0, twolen) + "..";
+    }
+    var res = b + " (" + a + ")";
+    return res;
+}
+function findScreenResolution__MODULE_ID__() {
+    var s, screenResolution, screenWidth;
+    if (self.screen) {
+        screenResolution = screen.width + "x" + screen.height;
+        screenWidth = screen.width;
+    } else {
+        if (self.java) {
+            var j = java.awt.Toolkit.getDefaultToolkit();
+            var s = j.getScreenSize();
+            screenResolution = s.width + "x" + s.height;
+            screenWidth = s.width;
+        }
+    }
+    if (screenWidth <= 800 && showname__MODULE_ID__ == 1) {
+        var logDiv = _gel("qswL__MODULE_ID__");
+        logDiv.innerHTML += "<u>Recommendation</u> : Your browser resolution appears to be " + screenResolution + ". Please hide the stock name from settings for better User experience";
+        logDiv.style.display = "";
+        setTimeout("_gel('qswL__MODULE_ID__').style.display = 'none';", 10000);
+    }
+}
+function cV__MODULE_ID__(val) {
+    var newTickerString = _gel("ticker").value;
+    if (val == 0) {
+        if (newTickerString == "Enter Symbol(s)") {
+            _gel("ticker").value = "";
+            _gel("ticker").style.color = "#000000";
+        }
+    } else {
+        if (newTickerString == "") {
+            _gel("ticker").value = "Enter Symbol(s)";
+            _gel("ticker").style.color = "#AAAAAA";
+        }
+    }
+}
+function getInitCaps__MODULE_ID__(nt) {
+    var sarr = nt.split(" ");
+    var r = "";
+    for (i = 0; i < sarr.length; i++) {
+        var s = sarr[i].toLowerCase();
+        for (j = 0; j < s.length; j++) {
+            if (j == 0) {
+                r += s.charAt(j).toUpperCase();
+            } else {
+                r += s.charAt(j);
+            }
+        }
+        r += " ";
+    }
+    r = r.substring(0, r.length - 1);
+    return r;
+}
+
+Array.prototype.contains = function(element)   {
+	for (var i = 0; i < this.length; i++)
+		if (this[i] == element)
+			return true;
+	return false;
+}
+
+function printDebug__MODULE_ID__(str) {
+	//alert(str);
+	//_gel('debugArea__MODULE_ID__').innerHTML += '<br>'+str; 
+}
+
+var view = "watchlist";
+function toggleView__MODULE_ID__()
+{
+	view = _gel('view').innerHTML.toLowerCase();
+	if(view=='portfolio')
+	{
+		showPortfolio__MODULE_ID__();	
+		_gel('view').innerHTML = 'Watchlist';
+	}
+	else
+	{
+		showWatchlist__MODULE_ID__();						
+		_gel('view').innerHTML = 'Portfolio';
+	}
+	
+}
+
+function showPortfolio__MODULE_ID__()
+{
+	_gel("pD__MODULE_ID__").style.display = '';
+	_gel("cD__MODULE_ID__").style.display = 'none';
+}
+
+function showWatchlist__MODULE_ID__()
+{
+	_gel("pD__MODULE_ID__").style.display = 'none';
+	_gel("cD__MODULE_ID__").style.display = '';
+}
+
+function makeEditable__MODULE_ID__(objname, i)
+{
+	var textObj = _gel('text'+objname);
+	var spanObj = _gel('span'+objname);
+
+	textObj.value=spanObj.innerHTML;
+	spanObj.style.display = 'none';
+	textObj.style.display = '';
+	textObj.focus();
+}
+
+function makeUnEditable__MODULE_ID__(objname, i, attr)
+{
+	var textObj = _gel('text'+objname);
+	var spanObj = _gel('span'+objname);
+	if(textObj.value=='')
+		textObj.value=0;
+
+	var val = textObj.value
+	if (!isNaN(val))
+	{
+		val = roundNumber__MODULE_ID__(val);
+		if(objname.indexOf('buyprice')!=-1)
+			textObj.value = round2Decimals__MODULE_ID__(val);
+	}
+
+	spanObj.innerHTML=textObj.value;
+	textObj.style.display = 'none';
+	spanObj.style.display = '';
+
+	if(attr=='buyprice')
+		setBuyPrice__MODULE_ID__(i, spanObj.innerHTML);
+	else if(attr=='numshares')
+		setNumShares__MODULE_ID__(i, spanObj.innerHTML);
+	paintStockTicker__MODULE_ID__();
+	prefs__MODULE_ID__.set("tickers", convertToString2__MODULE_ID__(stockTickers__MODULE_ID__));
+}
+	
+_IG_RegisterOnloadHandler(paintStockTicker__MODULE_ID__);
+_IG_RegisterOnloadHandler(findScreenResolution__MODULE_ID__);
+
+</script>
+
+<div id="cD__MODULE_ID__" style="border:1px solid #FFFFFF; display:" width="100%"><font size="-1" style="font-family: arial,sans-serif; overflow: hidden;">Loading your watchlist. Please wait...</font></div>
+<div id="pD__MODULE_ID__" style="border:1px solid #FFFFFF; display:none" width="100%"><font size="-1" style="font-family: arial,sans-serif; overflow: hidden;">Loading your portfolio. Please wait...</font></div>
+<br>
+<form action="javascript:addStockTicker__MODULE_ID__();"><input type="text" value="Enter Symbol(s)" name="ticker" id="ticker" size=12 style="color: #AAAAAA" onfocus="cV__MODULE_ID__(0);" onblur="cV__MODULE_ID__(1);">&nbsp;<input type="button" value="Add" onClick="javascript:addStockTicker__MODULE_ID__();"></form>
+&nbsp;&nbsp;<font size="-1" style="font-family: arial,sans-serif"><a href="javascript:void(0);" onClick="sSD__MODULE_ID__();" title="Show/Hide">Strength</a></font>
+&nbsp;&nbsp;<font size="-1" style="font-family: arial,sans-serif"><a href="javascript:void(0);" onClick="sND__MODULE_ID__();" title="Show/Hide">News</a></font>
+&nbsp;&nbsp;<font size="-1" style="font-family: arial,sans-serif"><a href="http://udaysasi.googlepages.com/quickStockWatchHelp.html" target="quickstockwatchhelp">Help</a></font>
+&nbsp;&nbsp;<font size="-1" style="font-family: arial,sans-serif"><a href="javascript:void(0);" onClick="toggleView__MODULE_ID__();"><span id="view">Portfolio</span></a></font>
+<hr align="center" size="1" width="90%" noshade>
+<table width="90%" align="center" id="sCD__MODULE_ID__" style="display:none">
+	<tr>
+		<td width="100%">
+			<table align="center" border=0 cellpadding=0 cellspacing=0 width="100%">
+				<tr height="15px">
+					<td id="n59" style="background-color: #992020;width:0%" title=""></td>
+					<td id="n25" style="background-color: #CC4949;width:0%" title=""></td>
+					<td id="n02" style="background-color: #FF8383;width:0%" title=""></td>
+					<td id="p02" style="background-color: #83FF83;width:0%" title=""></td>
+					<td id="p25" style="background-color: #49CC49;width:0%" title=""></td>
+					<td id="p59" style="background-color: #209920;width:0%" title=""></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<hr id="strHorLine__MODULE_ID__" align="center" size="1" width="90%" style="display:none;" noshade>
+<center><div id="nCD__MODULE_ID__" align="left" style="border:1px solid #FFFFFF; width:90%; display:none; font-family: arial,sans-serif;"></div></center>
+<hr id="newsHorLine__MODULE_ID__" align="center" size="1" width="90%" style="display:none;" noshade>
+
+<div id="qswL__MODULE_ID__" style="display:none; border:1px solid #00ff00; font-size: 8pt; font-family: arial,sans-serif;"></div>
+<font size="-1" style="font-family: arial,sans-serif" color="#AAAAAA">(Data and Charts provided by Yahoo! Finance)</font>
+
+<div id="debugArea__MODULE_ID__" style="display:none; border:1px solid #CC4848; font-size: 8pt; font-family: arial,sans-serif;"></div>
+
+]]></Content>
+</Module>

@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<custombuttons xmlns='http://toolbar.google.com/custombuttons/'>
+  <button>
+    <title>Personalized News</title>
+    <description>Why look all over the internet for the news you are interested in? Create your own personalized news feed using this gadget. Your search query overrides the selected news section. You can also pick an existing news section(Data provided by Yahoo! News)</description>
+    <site>http://www.google.com/ig/directory?url=http%3A%2F%2Fudaysasi.googlepages.com%2FpersonalizedNews.xml</site>
+    <gadget whole-dropdown='true'>http://udaysasi-gadgets.googlecode.com/svn/trunk/personalizedNews.xml</gadget>
+    	<icon mode="base64" type="image/x-icon">
+AAABAAEAEBAQAAAAAAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAwAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAACAAACAAAAAgIAAgAAAAIAAgACAgAAAgICAAMDAwAAAAP8AAP8AAAD//wD/AAAA
+/wD/AP//AAD///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD//wAA4AcAAO/3AADplwAA7/cAAOmXAADv9wAA6ZcA
+AO/3AADoFwAA69cAAOvXAADoFwAA7/cAAOAHAAD//wAA	
+		</icon>
+	<update>http://udaysasi-gadgets.googlecode.com/svn/trunk/personalizedNewsButton.xml</update>
+	<search>http://www.google.com/search?q={query}</search>	
+	</button>
+</custombuttons>

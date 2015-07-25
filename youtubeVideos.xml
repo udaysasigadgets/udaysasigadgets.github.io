@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+<ModulePrefs 
+	title="Youtube Videos" 
+	description="Get list of all videos from youtube"
+	author="Uday Kumar Pyda - Sunnyvale, CA"
+	author_email="udaysasi+feedback@gmail.com"
+	author_affiliation="UdaySasi"
+	author_link="http://www.udaysasi.com"
+	directory_title="Uday's Youtube Videos" 
+>
+	<Require feature="dynamic-height"/>	
+</ModulePrefs>	
+<Content type="html"><![CDATA[
+
+<style type="text/css">
+  a { color:#0000DD;}
+  a:visited { color:#0000DD;}
+</style>
+
+<script language="Javascript">
+var baseURL = 'http://gdata.youtube.com/feeds/api/videos?author=TeluguOldIsGold&max-results=5';
+var feedURL = '';
+var startNum = 1;
+
+function callServer(val) {
+	if(!val) {
+		val = startNum;
+	}
+	startNum = startNum+5;
+	var feedURL = baseURL+'&start-index='+val;
+	_IG_FetchXmlContent(feedURL, _IG_Callback(processContent));
+}
+
+function processContent(data) {
+	try {
+		
+		var totalEl = data.getElementsByTagName("totalResults");
+		var numResults = totalEl.item(0).firstChild.nodeValue;
+		//alert(totalEl.length);
+		
+		var iL = data.getElementsByTagName("entry");
+		//alert('Number of entries : '+iL.length);
+		var html = [''];
+		html.push('Number of videos : '+numResults);
+		html.push('<ul>');
+		for ( var i = 0; i < iL.length; i++) {
+			var nodeList = iL.item(i).childNodes;
+			html.push('<li>');
+			//alert('Number of nodes : '+nodeList.length);
+			for ( var j = 0; j < nodeList.length; j++) {
+				var node = nodeList.item(j);
+				if (node.nodeName == "title") {
+					var title = node.firstChild.nodeValue;
+					html.push(title);
+				}
+				if (node.nodeName == "media:group") {
+					var mediaList = node.childNodes;
+					//alert('Number of media nodes : '+mediaList.length);
+					for(var k=0;k<mediaList.length;k++){						
+						var media = mediaList.item(k);
+						//alert(media.nodeName);
+						if (media.nodeName == "media:thumbnail") {
+							var thumbnail = media.getAttribute('url');
+							if(media.getAttribute('width')=='120') {
+								html.push('<br><img src='+thumbnail+'>');
+								break;
+							}
+						}						
+					}
+				}				
+			}
+			html.push('</li>');
+		}
+		html.push('</ul>');
+		
+		html.push('<a href="javascript:void(0);" onClick="callServer(', 
+															startNum,
+															');">Next 5</a>');
+		var content = html.join(''); 
+		//alert(content);
+		paintContent(content);
+		
+	} catch (e) {
+	}
+}
+function paintContent(c) {
+	_gel('responseContentDiv').innerHTML = c;
+	_IG_AdjustIFrameHeight();
+	_gel('responseContentDiv').innerHTML += '<br>End of results'
+	setTimeout('_IG_AdjustIFrameHeight();', 1000);
+}
+_IG_RegisterOnloadHandler(callServer);
+
+</script>
+
+<div id="responseContentDiv" width="100%"><font size="-1" style="; font-family: Arial"><img src="http://udaysasi.googlepages.com/loading-spin.gif">&nbsp;&nbsp;Loading info.. Please wait..</font></div>
+
+]]></Content>
+
+</Module>

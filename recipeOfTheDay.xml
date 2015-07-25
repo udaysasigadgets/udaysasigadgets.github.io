@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+<ModulePrefs 
+	title="Recipe of the day" 
+	description="Garnish your personalized homepage with a recipe everyday. Great module for all the cooks looking for ideas (Data provided by Yahoo! Food)"
+	author="Uday Kumar Pyda - Sunnyvale, CA"
+	author_email="udaysasi+feedback@gmail.com"
+	author_affiliation="UdaySasi"
+	author_link="http://www.udaysasi.com"
+	directory_title="Uday's Recipe of the day"
+	screenshot="http://www.freewebs.com/udaysasi/recipeOfTheDayScreenshot.png"
+	thumbnail="http://www.freewebs.com/udaysasi/recipeOfTheDayThumbnail.png"	
+>
+	<Require feature="dynamic-height"/>	
+	<Require feature="analytics"/>	
+</ModulePrefs>	
+<Content type="html"><![CDATA[
+
+<!-- ALm6fM1SVNT1c6AAlvf_XVRzKIpods6PJk8qVXtAi3KvNgYF-4rBhY54VyozrNEM_0fUT42yGFMwa-JHn3D4gagIb0wZfQAch1RcMrHs6dvLbqXg_K9ZGIMwOSNmjwmii9IuF6RbHt_ze3AY-ZNch4xKntndoG068nKIsCpcryusOwk7z_h3pgY= -->
+
+<style type="text/css">
+  a { color:#0000DD;}
+  a:visited { color:#0000DD;}
+</style>
+<script type="text/javascript">
+	var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+	document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+	var pageTracker = _gat._getTracker("UA-1214589-15");
+	pageTracker._initData();
+	pageTracker._trackPageview();
+</script>
+
+<script language="Javascript">
+var imgSrc__MODULE_ID__ = "";
+var imgWidth__MODULE_ID__ = "";
+var imgHeight__MODULE_ID__ = "";
+var contentLink__MODULE_ID__ = "";
+var contentDescription__MODULE_ID__ = "";
+var contentTitle__MODULE_ID__ = "";
+var pubDate__MODULE_ID__ = "";
+var baseURL__MODULE_ID__ = 'http://food.yahoo.com/recipes/daily/feed/rss2';
+var feedURL__MODULE_ID__ = '';
+function cS__MODULE_ID__(){ var feedURL = baseURL__MODULE_ID__; _IG_FetchXmlContent(feedURL, _IG_Callback(pRC__MODULE_ID__)); }
+function pRC__MODULE_ID__(r){  try { var iL = r.getElementsByTagName("item"); var iM = r.getElementsByTagName("image"); for (var i = 0; i < iL.length ; i++)  { if(i>1) break; var nodeList = iL.item(i).childNodes;  for (var j = 0; j < nodeList.length ; j++)  { var node = nodeList.item(j); if (node.nodeName == "title") { contentTitle__MODULE_ID__ = node.firstChild.nodeValue; } if (node.nodeName == "link") { contentLink__MODULE_ID__ = node.firstChild.nodeValue; } if (node.nodeName == "description") { contentDescription__MODULE_ID__ = node.firstChild.nodeValue; } if (node.nodeName == "pubDate") { pubDate__MODULE_ID__ = node.firstChild.nodeValue; } } }  for (var i = 0; i < iM.length ; i++)  { if(i>1) break; var nodeList = iM.item(i).childNodes;  for (var j = 0; j < nodeList.length ; j++)  { var node = nodeList.item(j); if (node.nodeName == "url") { imgSrc__MODULE_ID__ = node.firstChild.nodeValue; } if (node.nodeName == "width") { imgWidth__MODULE_ID__ = node.firstChild.nodeValue; } if (node.nodeName == "height") { imgHeight__MODULE_ID__ = node.firstChild.nodeValue; } } } pNC__MODULE_ID__();	 }catch(e){ }   }
+function pNC__MODULE_ID__(){ var header = '<table align=justify style="border:0; font-family: Arial" width="100%" id="contentTable" cellspacing=0 cellpadding=3>'; var footer = '</table>'; var contentText = '';  if(contentTitle__MODULE_ID__.length==0) contentText = '<tr><td>No recipes available at this time. No sooner than Yahoo! publishes a recipe on their page, you would see it here.</td></tr>'; else { contentText+='<tr style="background:#ffffff;">'; contentText+='<td align="justify"><font size="-1"><img border="0" src="'+imgSrc__MODULE_ID__+'" width="'+imgWidth__MODULE_ID__+'" height="'+imgHeight__MODULE_ID__+'" style="float: left"><a href="'+contentLink__MODULE_ID__+'" target="new">'+contentTitle__MODULE_ID__+'</a></font><br>'; contentText+='<font size="-1">'+contentDescription__MODULE_ID__+'</font>';  }  _gel('recipeContentDiv').innerHTML = header+contentText+footer; _IG_AdjustIFrameHeight();}
+_IG_RegisterOnloadHandler(cS__MODULE_ID__);
+</script>
+<div id="recipeContentDiv" width="100%"><font size="-1" style="; font-family: Arial"><img src="http://www.freewebs.com/udaysasi/loading-spin.gif">&nbsp;&nbsp;Loading recipe info.. Please wait..</font></div>
+]]></Content>
+</Module>

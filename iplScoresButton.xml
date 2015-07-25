@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<custombuttons xmlns='http://toolbar.google.com/custombuttons/'>
+  <button>
+    <title>IPL 2008 Live scores</title>
+    <description>Displays real-time scores and updates from the Indian Premier League 2008 T20 tournment</description>
+    <site>http://www.google.com/ig/directory?url=http%3A%2F%2Fudaysasi.googlepages.com%2FiplScores.xml</site>
+    <gadget whole-dropdown='true'>http://udaysasi.googlepages.com/iplScores.xml</gadget>
+    <icon mode="base64" type="image/x-icon">
+R0lGODlhNgA2AKIAAKmCcf///7majMeuo93Nx/Tv7erh3NK+tCH5BAAAAAAALAAAAAA2ADYAAAP/
+CLrc/jDKSau9OGsmTPiEsEmCaAlf+pkjM6SEVaip0TKeWqF0egOCGW3XS7E0hGKAqBwNhL2BRVnY
+5HqG4+RQlGK4ygOS5j1dadmR4HAoW5Lh3wiM1mYEgwPBMItNRHQwN3BFfg4DcGcBBXYZijSGAIhF
+JQVickpojylVcgs8maEfaZ4KgaJFl6UKhKg0qhB5bhaboiETLx+zFLVKpBNXNhiuo40QhJEVqEBW
+AcLDoqsXy9LKttUUrrvYn8ReiNwMxAFPo+EK4zTGnr2hz9jtoes/p+Od2K1G+ZTcj6r1Kt6tguKj
+wYBa3Hok++SvGqgU2xQ8NCctFydgPeZlsChIUALHD7BaBOE3geCiHx0yVfgYQGMEAfvUVTC5sAJA
+Goxs4tSAyhI0FS4buIso4VRNCUpujeiRAQ3RC6eeOoARdIqKkBMCYJVTzlnVc2DDQkgAADs=    
+	</icon>
+	<update>http://udaysasi.googlepages.com/iplScoresButton.xml</update>
+	<search>http://www.google.com/search?q={query}</search>	
+	</button>
+</custombuttons>

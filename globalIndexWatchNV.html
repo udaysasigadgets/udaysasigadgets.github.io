@@ -1,0 +1,658 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:widget="http://www.netvibes.com/ns/">
+    <head>
+
+         <!-- Application Metas -->
+        <title>Uday's Global Index Watch</title>
+        <meta name="author" content="Uday Kumar Pyda" />
+        <meta name="description" content="Snapshot of major stock market indices of the world. Covers most of american, european, asian and australian markets. (Data provided by Yahoo! Finance)" />
+        <meta http-equiv="Content-Script-Type" content="text/javascript" />
+
+        <!-- Application Standalone emulation files -->
+        <link rel="stylesheet" type="text/css"
+            href="http://uwa.netvibes.com/lib/c/UWA/assets/css/standalone.css" />
+        <script type="text/javascript"
+            src="http://uwa.netvibes.com/lib/c/UWA/js/UWA_Standalone_Alone.js"></script>
+		
+        <!-- Application Preferences -->
+        <widget:preferences>
+        	<widget:preference name="title" type="text" label="Title" defaultValue="Uday's Global Index Watch" />
+        	<widget:preference name="showstrength" type="hidden" label="Strength Meter" defaultValue="0"/>
+		    <widget:preference name="region" type="list" label="Markets" defaultValue="-1" onchange="refresh">
+		    	<option value="1" label="Americas"/>
+    			<option value="2" label="Europe"/>
+    			<option value="3" label="Asia Pacific"/>
+    			<option value="-1" label="All"/>  
+		    </widget:preference>
+		    <widget:preference name="hidecols" type="list" label="Hide Columns" defaultValue="2" onchange="refresh">
+		    	<option value="1" label="Change"/>
+    			<option value="2" label="Percent Change"/>
+    			<option value="-1" label="None"/>   
+		    </widget:preference>
+		    <widget:preference name="promo5" type="hidden" label="Welcome Message" defaultValue="0" />  
+        	
+        </widget:preferences>
+        
+         <style type="text/css">
+		  a.linker { color:#0000DD; margin-right:5px;}
+		  a.linker:visited { color:#0000DD; margin-right:5px;}  
+		</style>
+		
+        <!-- Application JavaScript Source -->
+        <script type="text/javascript">
+        //<![CDATA[
+                   
+			var americaStrTickers = "^DJI,^GSPC,^IXIC,^GSPTSE,^MERV,^BVSP,^IPSA,^MXX,";
+			var europeStrTickers = "^FTSE,^IETP,^FCHI,^GDAXI,AEX.AS,^SSMI,^BFX,^ISEQ,^ATX,^STOXX50E,";
+			var asiaStrTickers = "^BSESN,^NSEI,^JKSE,^KLSE,^N225,^STI,^KS11,^TWII,^HSI,PSEI.PS,^CSE,^TA100,^AORD,^NZ50";
+			var baseURL = "http://finance.yahoo.com/d?s=";
+			var refreshrate = 15;
+			var sortcol = 'symbol';
+			var newDate = new Date().getTime();
+			var reloadId = "0";
+			var region, showStrength, stockTickers, strTickers;
+			var staticImgUrl = new Array();
+			function initWidget() {
+				region = widget.getInt("region");			
+				showStrength = widget.getInt("showstrength");
+				if(region==1)
+					strTickers = americaStrTickers;
+				else if(region==2)
+					strTickers = europeStrTickers;
+				else if(region==3)
+					strTickers = asiaStrTickers;
+				else
+					strTickers = americaStrTickers+europeStrTickers+asiaStrTickers;
+					
+				stockTickers = convertToArray(strTickers);
+				staticImgUrl = new Array();
+				for (var u = 0; u < stockTickers.length; u++) {
+					staticImgUrl[getAlphaNumericName(stockTickers[u].symbol)] = "http://udaysasi-gadgets.googlecode.com/svn/trunk/"+getAlphaNumericName(stockTickers[u].symbol)+".gif"; 
+				}
+				
+				var title = widget.getValue("title");
+				if(title!='' && title!="Uday's Global Index Watch")
+					title += ' - Global Index Watch';
+				
+				widget.setTitle(title);
+				
+				if(widget.environment.name=='frame') {
+					var adContent = widget.getElement("#adContent");
+					if(adContent!=null)
+						adContent.destroy();
+				}
+			}
+
+			function getAlphaNumericName(txtString)
+			{
+				txtString = txtString.toLowerCase();
+				txtString = txtString.replace(/[^a-zA-Z 0-9]+/g,"");
+				return txtString;
+			}
+			
+			function gel(id) {
+				return widget.getElement('#'+id);	
+			}
+			
+			showStrengthMeter = function()
+			{
+				if(showStrength==0)
+				{
+					gel('strengthMeter').setStyle('display', '');
+					gel('strHorLine').setStyle('display', '');
+					showStrength = 1;		
+					widget.setValue("showstrength", 1);
+				}
+				else
+				{
+					gel('strengthMeter').setStyle('display', 'none');
+					gel('strHorLine').setStyle('display', 'none');		
+					showStrength = 0;
+					widget.setValue("showstrength", 0);
+				}
+			}
+			
+			function convertToString(arr) {
+			    var returnString = "";
+			    for (var g = 0; g < arr.length; g++) {
+			        returnString += arr[g].symbol + ",";
+			    }
+			    return returnString;
+			}
+
+			function convertToString2(arr) {
+			    var returnString = "";
+			    for (var g = 0; g < arr.length; g++) {
+			        returnString += arr[g].symbol + "|" + arr[g].numshares + "|" + arr[g].buyprice + ",";
+			    }
+			    return returnString;	
+			}
+
+			function convertToArray(str) {
+			    var returnArray = new Array();
+			    str = str.replace(/ /g, ",");
+			    var ticks = str.split(",");
+			    // ticks.sort();
+			    for (var d = 0; d < ticks.length; d++) {
+			        var curTicker = ticks[d];
+			        curTicker = curTicker.toUpperCase();
+			        if (curTicker == "") {
+			            continue;
+			        }
+			        returnArray.push(new StockTicker(curTicker, "Loading..", "0", "0", "(0%)"));
+			    }
+			    return returnArray;
+			}
+
+			function StockTicker(symbol, name, price, change, percent) {
+			    this.symbol = symbol;
+			    this.name = name;
+			    this.price = price;
+			    this.change = change;
+			    this.percent = percent;
+			}
+			function getSymbolArray() {
+			    var sa = new Array();
+			    for (u = 0; u < stockTickers.length; u++) {
+			        sa = sa.concat(stockTickers[u].symbol);
+			    }
+			    return sa;
+			}
+			
+			function callServer() {
+				//getDowData();
+			    var sa = getSymbolArray();
+			    if (sa.length == 0) {
+			        return;
+			    }
+			    var symbol = "";
+			    for (var h = 0; h < sa.length - 1; h++) {
+			        symbol += sa[h] + ",";
+			    }
+			    symbol += sa[h];
+			    var newDate = new Date().getTime(); 
+			    
+			    //symbol = symbol.replace("^DJI", "INDU");
+			    var financeURL = baseURL + symbol + "&f=snl1c1p2&nocache="+newDate;
+				
+			    /*
+				var params = params || {};
+				params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.TEXT;
+				params[gadgets.io.RequestParameters.REFRESH_INTERVAL] = 60;
+				gadgets.io.makeRequest(financeURL, responseText, params);
+				*/
+				var myRequest = UWA.Data.getText(financeURL, responseText);
+				
+			    try {
+			        clearTimeout(reloadId);
+			    }
+			    catch (e) {
+			    }    
+				if (refreshrate != -1) {
+					reloadId = setTimeout("callServer();", refreshrate * 1000);
+			    }
+			}
+			
+			function responseText(responseString) {
+				refreshrate = 60;
+				console.log(responseString);
+			    var result = responseString;
+			    var symbol;
+			    try {
+			        var myregexp = new RegExp("\n");
+			        var quotes = new Array();
+			        quotes = result.split(myregexp);
+			        var n59p = 0, n25p = 0, n02p = 0, p25p = 0, p02p = 0, p59p = 0;
+			        var n59c = 0, n25c = 0, n02c = 0, p25c = 0, p02c = 0, p59c = 0;
+			        for (var c = 0; c < quotes.length; c++) {
+
+				    	var curQuote = quotes[c];
+			            var curQuoteDetail = fixCommas(curQuote).split(",");
+			            var curQuoteTicker = curQuoteDetail[0];
+			            curQuoteTicker = getRefinedSymbol(curQuoteTicker);
+			            var pos = getPosition(curQuoteTicker);
+			            if(pos==-1)
+			            	continue;            	
+			            
+			            symbol = getSymbol(pos);
+			            if (symbol == "") {
+			                continue;
+			            }
+			            var nameSpan, priceSpan, changeSpan, percentSpan, tickerSpan;
+			            var row;
+			            
+			            nameSpan = gel(getAlphaNumericName(symbol) + "NameSpan");
+			            priceSpan = gel(getAlphaNumericName(symbol) + "PriceSpan");
+			            changeSpan = gel(getAlphaNumericName(symbol) + "ChangeSpan");
+			            percentSpan = gel(getAlphaNumericName(symbol) + "PercentSpan");
+			            tickerSpan = gel(getAlphaNumericName(symbol) + "Span");
+			            row = gel(getAlphaNumericName(symbol) + "Row");
+			        
+			                        
+			            
+			            var curQuoteName = curQuoteDetail[1];
+			            curQuoteName = getRefinedName(curQuoteName);
+			            if (symbol == curQuoteName) {
+			                curQuoteName = "Invalid symbol";
+			            }
+			            curQuoteName = curQuoteName.toUpperCase();
+			            nameSpan.setHTML(curQuoteName);
+			            setName(pos, curQuoteName);
+			            var curQuotePrice = removeBold(curQuoteDetail[2]);
+			            curQuotePrice = rcs(curQuotePrice);
+			            curQuotePrice = removeItalics(curQuotePrice);
+			            var curQuoteChange = removeBold(curQuoteDetail[3]);
+			            curQuoteChange = removeItalics(curQuoteChange);
+			            try {
+			                curQuotePrice = parseFloat(curQuotePrice);
+			                if (curQuotePrice > 0.1) {
+			                    curQuotePrice = roundNumber(curQuotePrice);
+			                    curQuotePrice = round2Decimals(curQuotePrice);
+			                }
+			            }
+			            catch (e) {
+			                curQuotePrice = "N/A";
+			            }
+			            var curQuotePercentChange ="";
+			            try {
+			            	curQuotePercentChange = curQuoteDetail[4].substring(1, curQuoteDetail[4].length - 2);
+			            }
+							catch (e) {
+								 curQuotePercentChange = "N/A";
+							}
+			            curQuotePercentChange = removeBold(curQuotePercentChange);
+			            curQuotePercentChange = removeItalics(curQuotePercentChange);
+			            curQuotePercentChange = trim(curQuotePercentChange);
+			            try {
+			                curQuotePercentChange = parseFloat(curQuotePercentChange);
+			                if (curQuotePrice > 0.1) {
+			                    curQuotePercentChange = roundNumber(curQuotePercentChange);
+			                    curQuotePercentChange = round2Decimals(curQuotePercentChange);
+			                }
+			            }
+			            catch (e) {
+			                curQuotePercentChange = "N/A";
+			            }
+			            priceSpan.innerHTML = curQuotePrice;
+			            var curQuoteOldPrice = getPrice(pos);
+			            setPrice(pos, curQuotePrice);
+			            if (isNaN(curQuoteChange)) {
+			                curQuoteChange = "N/A";
+			            } else {
+			                if (curQuotePrice > 0.1) {
+			                    curQuoteChange = roundNumber(curQuoteChange);
+			                    curQuoteChange = round2Decimals(curQuoteChange);
+			                }
+			            }
+			            setChange(pos, curQuoteChange);
+						if (curQuoteChange != 'N/A' && curQuoteChange >= 0) {
+							curQuoteChange = "+" + curQuoteChange;
+						}
+			            changeSpan.innerHTML = curQuoteChange;
+			            if (isNaN(curQuotePercentChange)) {
+			                curQuotePercentChange = "N/A";
+			            } else {
+			                curQuotePercentChange = roundNumber(curQuotePercentChange);
+			                curQuotePercentChange = round2Decimals(curQuotePercentChange);
+			                if (curQuotePercentChange >= 0) {
+			                    curQuotePercentChange = "+" + curQuotePercentChange;
+			                }
+			            }
+			            if (curQuotePercentChange < -3) {
+			                n59c++;
+			            } else {
+			                if (curQuotePercentChange < -1) {
+			                    n25c++;
+			                } else {
+			                    if (curQuotePercentChange < 0) {
+			                        n02c++;
+			                    } else {
+			                        if (curQuotePercentChange > 3) {
+			                            p59c++;
+			                        } else {
+			                            if (curQuotePercentChange > 1) {
+			                                p25c++;
+			                            } else {
+			                                p02c++;
+			                            }
+			                        }
+			                    }
+			                }
+			            }
+			            setPercentChange(pos, curQuotePercentChange);
+			            percentSpan.innerHTML = "(" + curQuotePercentChange + "%)";
+			            if (parseFloat(curQuoteChange) < 0) {
+			                changeSpan.style.color = "#990000";
+			                percentSpan.style.color = "#990000";
+			            } else {
+			                changeSpan.style.color = "#009900";
+			                percentSpan.style.color = "#009900";
+			            }
+			        }
+			        var total = n59c + n25c + n02c + p02c + p25c + p59c;
+			        n59p = roundNumber(n59c * 100 / total);
+			        n25p = roundNumber(n25c * 100 / total);
+			        n02p = roundNumber(n02c * 100 / total);
+			        p02p = roundNumber(p02c * 100 / total);
+			        p25p = roundNumber(p25c * 100 / total);
+			        p59p = roundNumber(p59c * 100 / total);
+			        gel("n59").setStyle('width', n59p + "%");
+			        gel("n59").setAttributes({title : n59c+" of "+total+" indices down over 3%"});
+			        gel("n25").setStyle('width', n25p + "%");
+			        gel("n25").setAttributes({title : n25c+" of "+total+" indices down between 1% and 3%"});
+			        gel("n02").setStyle('width', n02p + "%");
+			        gel("n02").setAttributes({title : n02c+" of "+total+" indices down between 0% and 1%"});
+			        gel("p02").setStyle('width', p02p + "%");
+			        gel("p02").setAttributes({title : p02c+" of "+total+" indices up between 0% and 1%"});
+			        gel("p25").setStyle('width', p25p + "%");
+			        gel("p25").setAttributes({title : p25c+" of "+total+" indices up between 1% and 3%"});
+			        gel("p59").setStyle('width', p59p + "%");
+			        gel("p59").setAttributes({title : p59c+" of "+total+" indices up over 3%"});
+			    }
+			    catch (e) {
+			    	console.log(e + "Symbol : "+symbol);
+			    }
+			}
+			
+			function fixCommas(str) {
+			    var x = 0;
+			    while (str.indexOf("\"", x) >= 0) {
+			        var y = str.indexOf("\"", x);
+			        var z = str.indexOf("\"", y + 1);
+			        var w = str.indexOf(",", y);
+			        if (w > y && w < z) {
+			            str = str.substring(0, w) + "." + str.substring(w + 1);
+			        }
+			        x = z + 1;
+			    }
+			    return str;
+			}
+			
+			function getPrice(c) {
+			    return stockTickers[c].price;
+			}
+			function setPrice(c, newPrice) {
+			    stockTickers[c].price = newPrice;
+			}
+			function setPercentChange(c, newPercent) {
+			    stockTickers[c].percent = newPercent;
+			}
+			function setChange(c, newChange) {
+			    stockTickers[c].change = newChange;
+			}
+			function getSymbol(c) {
+			    if (c < stockTickers.length) {
+			        return stockTickers[c].symbol;
+			    } else {
+			        return "";
+			    }
+			}
+			function setName(c, newName) {
+			    stockTickers[c].name = newName;
+			}
+			function getRefinedSymbol(str) {
+			    return str.substring(1, str.length - 1);
+			}
+			function getRefinedName(str) {
+			    return str.substring(1, str.length - 1);
+			}
+			function trim(str) {
+			    return str.replace(/^\s*|\s*$/g, "");
+			}
+			
+			function paintStockTicker() {
+				initWidget();
+				//widget.log('paintStockTicker');
+				gel('contentData').setHTML('Portfolios will load here...');
+				 
+				var hideCols = widget.getInt("hidecols");
+				var changedisplay="", percentdisplay="";
+				if(hideCols==1)
+					changedisplay = "none";
+				if(hideCols==2)
+					percentdisplay = "none";	
+					
+			    var header = "<table class=\"fixedtable\" align=center style=\"table-layout: fixed; border:0;  font-family: arial,sans-serif;\" width=\"100%\" id=\"contentTable\" cellspacing=0 cellpadding=1>";
+			    var footer = "</table>";
+			    var contentText = "";
+			    var bgcolor="ffffff";
+			    for (i = 0; i < stockTickers.length; i++) {
+			    	if(i%2==1) 
+			    		bgcolor="ffffff";	
+			    	else
+			    		bgcolor="f5f5f5";
+			   	    		
+			        contentText += "<tr id=\"" + stockTickers[i].symbol + "Row\" bgcolor=\""+bgcolor+"\" >";
+			        contentText += "<td width=\"30px\" style=\"padding-right: 3px\" align=\"center\"><img src=\""+staticImgUrl[getAlphaNumericName(stockTickers[i].symbol)]+"\" width=\"21\" height=\"14\" border=\"1\"/></td>";
+			        contentText += "<td width=\"100%\" class=\"dynamic\" nowrap style=\"display:\" align=\"left\"><font size=\"-1\"><a class=\"link\" href=\"http://finance.yahoo.com/q?s=" + stockTickers[i].symbol + "\" target=\"blank\"><span style=\"display:\" id=\"" + getAlphaNumericName(stockTickers[i].symbol) + "NameSpan\">" + stockTickers[i].name + "</span></a></font></td>";
+			        contentText += "<td width=\"75px\" style=\"padding-right: 0.5em;\" align=\"right\"><font size=\"-1\"><span id=\"" + getAlphaNumericName(stockTickers[i].symbol) + "PriceSpan\">" + stockTickers[i].price + "</span></font></td>";
+			        contentText += "<td width=\"65px\" style=\"display:"+changedisplay+";padding-right: 0.5em;\" align=\"right\" nowrap><font size=\"-1\"><span id=\"" + getAlphaNumericName(stockTickers[i].symbol) + "ChangeSpan\">" + stockTickers[i].change + "</span></font></td>";
+			        contentText += "<td width=\"65px\" align=\"right\" style=\"display:"+percentdisplay+"\" nowrap><font size=\"-1\"><span id=\"" + getAlphaNumericName(stockTickers[i].symbol) + "PercentSpan\">" + stockTickers[i].percent + "</span></font></td>";
+			        contentText += "</tr>";
+			    }    
+			    gel("contentData").setHTML(header + contentText + footer);
+			    try {
+			        clearTimeout(reloadId);
+			    }
+			    catch (e) {
+			    }
+			    callServer();
+			}
+
+			function roundNumber(num) {
+			    var rlength = 2;
+			    var newnumber = Math.round(num * Math.pow(10, rlength)) / Math.pow(10, rlength);
+			    return newnumber;
+			}
+
+			function formatData(str) {
+			    str = str.replace("\n", "").replace("\r", "");
+			    if (str.indexOf("\"") == -1) {
+			        return str;
+			    } else {
+			        return str.substring(1, str.length - 1);
+			    }
+			}
+			function round2Decimals(n) {
+			    var stringNumber = "" + n;
+			    if (stringNumber.indexOf(".") == -1) {
+			        stringNumber += ".00";
+			    } else {
+			        if (stringNumber.substring(stringNumber.indexOf(".") + 1).length == 1) {
+			            stringNumber += "0";
+			        }
+			    }
+			    return stringNumber;
+			}
+			function sortArray(arr) {
+			    if (arr.length == 0) {
+			        return arr;
+			    }
+			    var newArray = new Array();
+			    var stA = new Array();
+			    for (var l = 0; l < arr.length; l++) {
+			        stA.push(arr[l].symbol);
+			    }
+			    stA.sort();
+			    for (var h = 0; h < stA.length; h++) {
+			        for (var o = 0; o < arr.length; o++) {
+			            if (stA[h] == arr[o].symbol) {
+			                newArray.push(arr[o]);
+			            }
+			        }
+			    }
+			    return newArray;
+			}
+
+			function sortArray2(tickcopy, col) {
+				sortcol = col;	
+				var exp = 'tickers[l].'+col;
+				var tickers = new Array();
+				var nA = new Array();
+				var stA = new Array();	
+				for(k=0;k<tickcopy.length;k++)
+					tickers.push(tickcopy[k]);
+
+				for (var l = 0; l < tickers.length; l++) {
+					if(parseFloat(eval(exp)))
+						stA.push(parseFloat(eval(exp)));
+			    	else
+			    		stA.push(eval(exp));
+				}
+				if(col=='price' || col=='change' || col=='percent')
+				{
+					try{
+			    		stA.sort(sortNumber);
+			    	}catch(e) {
+			    		stA.sort();
+			    	}
+			    }
+			    else
+			    	stA.sort();
+
+			    for (var h = 0; h < stA.length; h++) {
+			    	for (var l = 0; l < tickers.length; l++) {
+			        	if(nA.contains(tickers[l]))
+			        		continue;
+			        
+			        	if(parseFloat(stA[h]))
+			        	{
+							if (parseFloat(stA[h]) == parseFloat(eval(exp))) {					
+									nA.push(tickers[l]);
+							}
+						}
+						else
+						{
+							if (stA[h] == eval(exp)) {
+								nA.push(tickers[l]);
+							}
+						}
+			        }
+			    }
+
+				tickers = nA;
+
+				return tickers;
+			}
+			function sortNumber(a,b)
+			{
+				if(a-b)
+					return a-b;
+				else
+					return true;
+			}
+			function sortByColumn(col)
+			{
+				stockTickers = sortArray2(stockTickers, col);
+				paintStockTicker();
+			}
+
+			function removeBold(str) {
+			    var boldIndexStart = str.indexOf("<b>");
+			    var boldIndexEnd = str.lastIndexOf("</b>");
+			    if (boldIndexStart == -1) {
+			        return str;
+			    }
+			    var curQuotePrice = str.substring(boldIndexStart + 3, boldIndexEnd);
+			    return curQuotePrice;
+			}
+			function removeItalics(str) {
+			    var italicIndexStart = str.indexOf("<i>");
+			    var italicIndexEnd = str.lastIndexOf("</i>");
+			    if (italicIndexStart == -1) {
+			        return str;
+			    }
+			    var curQuotePrice = str.substring(italicIndexStart + 3, italicIndexEnd);
+			    return curQuotePrice;
+			}
+			function rcs(str) {
+				var imgstart = str.indexOf("<img");
+			    if (imgstart == -1) {
+			        return str;
+			    }	
+			    var csis = str.indexOf(">", imgstart);
+			    var curQuotePrice = str.substring(0,imgstart)+str.substring(csis + 1);
+			    return curQuotePrice;
+			}
+			function joinString(a, b) {
+			    var onelen = a.length;
+			    var twolen = (a.length + b.length > 20) ? (20 - a.length) : b.length;
+			    if (twolen != b.length) {
+			        b = b.substring(0, twolen) + "..";
+			    }
+			    var res = b + " (" + a + ")";
+			    return res;
+			}
+			Array.prototype.contains = function(element)   {
+				for (var i = 0; i < this.length; i++)
+					if (this[i] == element)
+						return true;
+				return false;
+			}
+
+			function getPosition(sym) {
+				var pos = 0;
+				var arr = stockTickers;
+				for(var l = 0; l < arr.length; l++) {
+					if(arr[l].symbol.toUpperCase()==sym.toUpperCase())
+						return (l);
+				}
+				return -1;
+			}
+
+			function log(str) {
+			  // gel("logDiv").innerHTML += str;
+			}
+			
+			widget.addEvent('onLoad', paintStockTicker);            
+
+        //]]>
+        </script>
+    </head>
+    <body>  
+			<div id="adContent" style="height:60px">
+				<script type="text/javascript">
+					google_ad_client = "ca-pub-9983113299815649";
+					google_ad_slot = "7631094754";
+					google_ad_width = 468;
+					google_ad_height = 60;
+				</script>
+				<script type="text/javascript" 
+				src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+				</script>		            
+			</div>
+			
+			<div id="contentData" style="border:1px solid #FFFFFF; display:;width:100%">Loading Global Market Indices.. Please wait..</div>
+
+			&nbsp;&nbsp;<a class="linker" href="javascript:void(0);" onclick="showStrengthMeter();" title="Show/Hide">Strength</a>
+			&nbsp;&nbsp;<a class="linker" href="http://udaysasi-gadgets.googlecode.com/svn/trunk/globalIndexWatchExtensionHelp.html" title="Try Chrome Extension">Chrome Extension</a>
+			&nbsp;&nbsp;<a class="linker" href="http://udaysasi-gadgets.googlecode.com/svn/trunk/globalIndexWatchHelp.html">Help</a>
+			<hr style="display:none;width:99%"/>
+			<table width="99%" id="strengthMeter" style="display:none">
+				<tbody>
+				<tr>
+					<td style="width:100%">
+						<table style="align:center" border="0" cellpadding="0" cellspacing="0" width="100%">
+							<tbody>
+							<tr style="height:15px">
+								<td id="n59" style="background-color: #992020;width:0%" title=""></td>
+								<td id="n25" style="background-color: #CC4949;width:0%" title=""></td>
+								<td id="n02" style="background-color: #FF8383;width:0%" title=""></td>
+								<td id="p02" style="background-color: #83FF83;width:0%" title=""></td>
+								<td id="p25" style="background-color: #49CC49;width:0%" title=""></td>
+								<td id="p59" style="background-color: #209920;width:0%" title=""></td>
+							</tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+			<hr id="strHorLine" style="display:none;width:99%"/>
+			<div style="font-family: arial,sans-serif;color:#AAAAAA">(Data and Charts provided by Yahoo! Finance)</div>
+			<div id="logger" style="display:none"></div> 
+    </body>
+</html>

@@ -1,0 +1,706 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+<ModulePrefs 
+	title="Global Index Watch" 
+	description="Snapshot of major stock market indices of the world. Covers most of american, european, asian and australian markets. (Data provided by Yahoo! Finance)"
+	author="Uday Kumar Pyda - Sunnyvale, CA"
+	author_email="udaysasi+feedback@gmail.com"
+	author_affiliation="UdaySasi"
+	author_link="http://www.udaysasi.com"
+	directory_title="Uday's Global Index Watch"
+	title_url="http://udaysasi-gadgets.googlecode.com/svn/trunk/globalIndexWatchHelp.html"
+	scrolling="false"
+	singleton="false"
+	screenshot="http://udaysasi-gadgets.googlecode.com/svn/trunk/globalIndexWatchScreenshot.png"
+	thumbnail="http://udaysasi-gadgets.googlecode.com/svn/trunk/globalIndexWatchThumbnail.png"
+>
+	<Require feature="analytics"/>
+	<Require feature="minimessage"/>
+	<Require feature="dynamic-height"/>	
+	<Require feature="setprefs" /> 		
+</ModulePrefs>
+<UserPref name="showstrength" datatype="hidden" default_value="0" />
+<UserPref name="region" 
+       display_name="Show Market Indices"
+       datatype="enum"
+       default_value="-1">
+    <EnumValue value="1" display_value="Americas"/>
+    <EnumValue value="2" display_value="Europe"/>
+    <EnumValue value="3" display_value="Asia Pacific"/>
+    <EnumValue value="-1" display_value="All"/>   
+</UserPref>
+<UserPref name="hidecols" 
+       display_name="Hide Columns"
+       datatype="enum"
+       default_value="2">
+    <EnumValue value="1" display_value="Change"/>
+    <EnumValue value="2" display_value="Percent Change"/>
+    <EnumValue value="-1" display_value="None"/>   
+</UserPref>
+
+
+<Content type="html"><![CDATA[
+
+<style type="text/css">
+	a { color:#0000DD;}
+	a:visited { color:#0000DD;}
+
+	a.link { text-decoration:none; color:#000000;}
+	a.link:visited { color:#000000;}
+
+	.fixedtable { table-layout: fixed; width:100%}
+
+	.fixedtable td.dynamic {
+		empty-cells: show;
+		overflow: hidden;	
+		text-overflow:ellipsis;
+		white-space: nowrap;
+	}  
+</style>
+
+<script type="text/javascript">
+	var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+	document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+	</script>
+	<script type="text/javascript">
+	var pageTracker = _gat._getTracker("UA-1214589-10");
+	pageTracker._initData();
+	pageTracker._trackPageview();
+</script>
+<script language="Javascript">
+
+var prefs__MODULE_ID__ = new _IG_Prefs(__MODULE_ID__);
+var americaStrTickers__MODULE_ID__ = "^DJI,^GSPC,^IXIC,^GSPTSE,^MERV,^BVSP,^IPSA,^MXX,";
+var europeStrTickers__MODULE_ID__ = "^FTSE,^IETP,^FCHI,^GDAXI,^IBEX,^AEX,^SSMI,^PSI20,^BFX,^ISEQ,^ATX,^STOXX50E,";
+var asiaStrTickers__MODULE_ID__ = "^BSESN,^NSEI,^SSEC,^JKSE,^KLSE,^N225,^STI,^KS11,^TWII,^HSI,^PSI,^CSE,^TA100,^AORD,^NZ50";
+var region = prefs__MODULE_ID__.getInt("region");			
+
+var strTickers__MODULE_ID__;
+if(region==1)
+	strTickers__MODULE_ID__ = americaStrTickers__MODULE_ID__;
+else if(region==2)
+	strTickers__MODULE_ID__ = europeStrTickers__MODULE_ID__;
+else if(region==3)
+	strTickers__MODULE_ID__ = asiaStrTickers__MODULE_ID__;
+else
+	strTickers__MODULE_ID__ = americaStrTickers__MODULE_ID__+europeStrTickers__MODULE_ID__+asiaStrTickers__MODULE_ID__;
+	
+var stockTickers__MODULE_ID__ = convertToArray__MODULE_ID__(strTickers__MODULE_ID__);
+var baseURL__MODULE_ID__ = "http://finance.yahoo.com/d?s=";
+var refreshrate__MODULE_ID__ = 5;
+var sortcol__MODULE_ID__ = 'symbol';
+var newDate__MODULE_ID__ = new Date().getTime();
+var reloadId__MODULE_ID__ = "0";
+
+var showStrength__MODULE_ID__ = prefs__MODULE_ID__.getInt("showstrength");
+
+var staticImgUrl__MODULE_ID__ = new Array();
+for (var u = 0; u < stockTickers__MODULE_ID__.length; u++) {
+	writeLog__MODULE_ID__("Saving "+getAlphaNumericName__MODULE_ID__(stockTickers__MODULE_ID__[u].symbol)+"<br>");
+	staticImgUrl__MODULE_ID__[stockTickers__MODULE_ID__[u].symbol] = _IG_GetImageUrl("http://udaysasi-gadgets.googlecode.com/svn/trunk/"+getAlphaNumericName__MODULE_ID__(stockTickers__MODULE_ID__[u].symbol)+".gif"); 
+}
+
+function getAlphaNumericName__MODULE_ID__(txtString)
+{
+	txtString = txtString.toLowerCase();
+	txtString = txtString.replace(/[^a-zA-Z 0-9]+/g,"");
+	return txtString;
+}
+
+function sSD__MODULE_ID__()
+{
+	if(showStrength__MODULE_ID__==0)
+	{
+		_gel('sCD__MODULE_ID__').style.display = '';
+		_gel('strHorLine__MODULE_ID__').style.display = '';
+		showStrength__MODULE_ID__ = 1;		
+		prefs__MODULE_ID__.set("showstrength", 1);
+	}
+	else
+	{
+		_gel('sCD__MODULE_ID__').style.display = 'none';		
+		_gel('strHorLine__MODULE_ID__').style.display = 'none';		
+		showStrength__MODULE_ID__ = 0;
+		prefs__MODULE_ID__.set("showstrength", 0);
+	}
+	_IG_AdjustIFrameHeight();
+}
+
+function convertToString__MODULE_ID__(arr) {
+    var returnString = "";
+    for (var g = 0; g < arr.length; g++) {
+        returnString += arr[g].symbol + ",";
+    }
+    return returnString;
+}
+
+function convertToString2__MODULE_ID__(arr) {
+    var returnString = "";
+    for (var g = 0; g < arr.length; g++) {
+        returnString += arr[g].symbol + "|" + arr[g].numshares + "|" + arr[g].buyprice + ",";
+    }
+    return returnString;	
+}
+
+function convertToArray__MODULE_ID__(str) {
+    var returnArray = new Array();
+    str = str.replace(/ /g, ",");
+    var ticks = str.split(",");
+    //ticks.sort();
+    for (var d = 0; d < ticks.length; d++) {
+        var curTicker = ticks[d];
+        curTicker = curTicker.toUpperCase();
+        if (curTicker == "") {
+            continue;
+        }
+        returnArray.push(new StockTicker__MODULE_ID__(curTicker, "Loading..", "0", "0", "(0%)"));
+    }
+    return returnArray;
+}
+
+function StockTicker__MODULE_ID__(symbol, name, price, change, percent) {
+    this.symbol = symbol;
+    this.name = name;
+    this.price = price;
+    this.change = change;
+    this.percent = percent;
+}
+function getSymbolArray__MODULE_ID__() {
+    var sa = new Array();
+    for (u = 0; u < stockTickers__MODULE_ID__.length; u++) {
+        sa = sa.concat(stockTickers__MODULE_ID__[u].symbol);
+    }
+    return sa;
+}
+
+var count__MODULE_ID__ = 1;
+function callServer__MODULE_ID__() {
+    var sa = getSymbolArray__MODULE_ID__();
+    if (sa.length == 0) {
+        return;
+    }
+    var symbol = "";
+    for (var h = 0; h < sa.length - 1; h++) {
+        symbol += sa[h] + ",";
+    }
+    symbol += sa[h];
+    newDate__MODULE_ID__ = new Date().getTime();
+    var financeURL = baseURL__MODULE_ID__ + symbol + "&f=snl1c1p2&dummy=" + newDate__MODULE_ID__;
+    _IG_FetchContent(financeURL, _IG_Callback(responseText__MODULE_ID__));
+    
+    if(count__MODULE_ID__>100)
+    {
+    	//_gel("logDiv__MODULE_ID__").innerHTML = "";
+    	count__MODULE_ID__ = 1;
+    }
+    //writeLog__MODULE_ID__("Called server("+count__MODULE_ID__+") ");
+    
+    try {
+        clearTimeout(reloadId__MODULE_ID__);
+    }
+    catch (e) {
+    }    
+	if (refreshrate__MODULE_ID__ != -1) {
+		reloadId__MODULE_ID__ = setTimeout("callServer__MODULE_ID__();", refreshrate__MODULE_ID__ * 1000);
+		//writeLog__MODULE_ID__("Timeout set("+count__MODULE_ID__+") ");
+		//count__MODULE_ID__ ++;
+    }
+}
+function fixCommas__MODULE_ID__(str) {
+    var x = 0;
+    while (str.indexOf("\"", x) >= 0) {
+        var y = str.indexOf("\"", x);
+        var z = str.indexOf("\"", y + 1);
+        var w = str.indexOf(",", y);
+        if (w > y && w < z) {
+            str = str.substring(0, w) + "." + str.substring(w + 1);
+        }
+        x = z + 1;
+    }
+    return str;
+}
+function responseText__MODULE_ID__(responseString) {
+	//writeLog__MODULE_ID__("Got result("+(count__MODULE_ID__-1)+")<br>");
+	refreshrate__MODULE_ID__ = 60;
+    var result = responseString;
+    try {
+        var myregexp = new RegExp("\n");
+        var quotes = new Array();
+        quotes = result.split(myregexp);
+        var n59p = 0, n25p = 0, n02p = 0, p25p = 0, p02p = 0, p59p = 0;
+        var n59c = 0, n25c = 0, n02c = 0, p25c = 0, p02c = 0, p59c = 0;
+        for (var c = 0; c < quotes.length; c++) {
+
+	    var curQuote = quotes[c];
+            var curQuoteDetail = fixCommas__MODULE_ID__(curQuote).split(",");
+            var curQuoteTicker = curQuoteDetail[0];
+            curQuoteTicker = getRefinedSymbol__MODULE_ID__(curQuoteTicker);
+            var pos = getPosition__MODULE_ID__(curQuoteTicker);
+            if(pos==-1)
+            	continue;            	
+            
+            var symbol = getSymbol__MODULE_ID__(pos);
+            if (symbol == "") {
+                continue;
+            }
+            var nameSpan = _gel(symbol + "NameSpan__MODULE_ID__");
+            var priceSpan = _gel(symbol + "PriceSpan__MODULE_ID__");
+            var changeSpan = _gel(symbol + "ChangeSpan__MODULE_ID__");
+            var percentSpan = _gel(symbol + "PercentSpan__MODULE_ID__");
+            var tickerSpan = _gel(symbol + "Span__MODULE_ID__");
+                        
+            var row = _gel(symbol + "Row__MODULE_ID__");
+            var curQuoteName = curQuoteDetail[1];
+            curQuoteName = getRefinedName__MODULE_ID__(curQuoteName);
+            if (symbol == curQuoteName) {
+                curQuoteName = "Invalid symbol";
+            }
+            //curQuoteName = getInitCaps__MODULE_ID__(curQuoteName);
+            curQuoteName = curQuoteName.toUpperCase();
+            nameSpan.innerHTML = curQuoteName;
+            //writeLog__MODULE_ID__("Namespan value set for "+c+"<br>");
+            setName__MODULE_ID__(pos, curQuoteName);
+            var curQuotePrice = removeBold__MODULE_ID__(curQuoteDetail[2]);
+            curQuotePrice = rcs__MODULE_ID__(curQuotePrice);
+            curQuotePrice = removeItalics__MODULE_ID__(curQuotePrice);
+            var curQuoteChange = removeBold__MODULE_ID__(curQuoteDetail[3]);
+            curQuoteChange = removeItalics__MODULE_ID__(curQuoteChange);
+            try {
+                curQuotePrice = parseFloat(curQuotePrice);
+                if (curQuotePrice > 0.1) {
+                    curQuotePrice = roundNumber__MODULE_ID__(curQuotePrice);
+                    curQuotePrice = round2Decimals__MODULE_ID__(curQuotePrice);
+                }
+            }
+            catch (e) {
+                curQuotePrice = "N/A";
+            }
+            /*
+            var dashIndex = curQuoteDetail[4].indexOf("-");
+            if (dashIndex == 1) {
+                dashIndex = curQuoteDetail[4].indexOf("-", 2);
+            }
+            var curQuotePercentChange = curQuoteDetail[4].substring(dashIndex + 1, curQuoteDetail[4].length - 2);
+            */
+            var curQuotePercentChange ="";
+            try {
+            	curQuotePercentChange = curQuoteDetail[4].substring(1, curQuoteDetail[4].length - 2);
+            }
+				catch (e) {
+					 curQuotePercentChange = "N/A";
+				}
+            curQuotePercentChange = removeBold__MODULE_ID__(curQuotePercentChange);
+            curQuotePercentChange = removeItalics__MODULE_ID__(curQuotePercentChange);
+            curQuotePercentChange = trim__MODULE_ID__(curQuotePercentChange);
+            try {
+                curQuotePercentChange = parseFloat(curQuotePercentChange);
+                if (curQuotePrice > 0.1) {
+                    curQuotePercentChange = roundNumber__MODULE_ID__(curQuotePercentChange);
+                    curQuotePercentChange = round2Decimals__MODULE_ID__(curQuotePercentChange);
+                }
+            }
+            catch (e) {
+                curQuotePercentChange = "N/A";
+            }
+            priceSpan.innerHTML = curQuotePrice;
+            //writeLog__MODULE_ID__("Pricespan value set for "+c+"<br>");
+            
+            var curQuoteOldPrice = getPrice__MODULE_ID__(pos);
+            setPrice__MODULE_ID__(pos, curQuotePrice);
+            if (isNaN(curQuoteChange)) {
+                curQuoteChange = "N/A";
+            } else {
+                if (curQuotePrice > 0.1) {
+                    curQuoteChange = roundNumber__MODULE_ID__(curQuoteChange);
+                    curQuoteChange = round2Decimals__MODULE_ID__(curQuoteChange);
+                }
+            }
+            setChange__MODULE_ID__(pos, curQuoteChange);
+			if (curQuoteChange != 'N/A' && curQuoteChange >= 0) {
+				curQuoteChange = "+" + curQuoteChange;
+			}
+            changeSpan.innerHTML = curQuoteChange;
+            //writeLog__MODULE_ID__("Changespan value set for "+c+"<br>");
+            if (isNaN(curQuotePercentChange)) {
+                curQuotePercentChange = "N/A";
+            } else {
+                curQuotePercentChange = roundNumber__MODULE_ID__(curQuotePercentChange);
+                curQuotePercentChange = round2Decimals__MODULE_ID__(curQuotePercentChange);
+                if (curQuotePercentChange >= 0) {
+                    curQuotePercentChange = "+" + curQuotePercentChange;
+                }
+            }
+            if (curQuotePercentChange < -3) {
+                n59c++;
+            } else {
+                if (curQuotePercentChange < -1) {
+                    n25c++;
+                } else {
+                    if (curQuotePercentChange < 0) {
+                        n02c++;
+                    } else {
+                        if (curQuotePercentChange > 3) {
+                            p59c++;
+                        } else {
+                            if (curQuotePercentChange > 1) {
+                                p25c++;
+                            } else {
+                                p02c++;
+                            }
+                        }
+                    }
+                }
+            }
+            setPercentChange__MODULE_ID__(pos, curQuotePercentChange);
+            percentSpan.innerHTML = "(" + curQuotePercentChange + "%)";
+            //writeLog__MODULE_ID__("Percentspan value set for "+c+"<br>");
+            if (parseFloat(curQuoteChange) < 0) {
+                changeSpan.style.color = "#990000";
+                percentSpan.style.color = "#990000";
+            } else {
+                changeSpan.style.color = "#009900";
+                percentSpan.style.color = "#009900";
+            }
+        }
+        var total = n59c + n25c + n02c + p02c + p25c + p59c;
+        n59p = roundNumber__MODULE_ID__(n59c * 100 / total);
+        n25p = roundNumber__MODULE_ID__(n25c * 100 / total);
+        n02p = roundNumber__MODULE_ID__(n02c * 100 / total);
+        p02p = roundNumber__MODULE_ID__(p02c * 100 / total);
+        p25p = roundNumber__MODULE_ID__(p25c * 100 / total);
+        p59p = roundNumber__MODULE_ID__(p59c * 100 / total);
+        _gel("n59__MODULE_ID__").style.width = n59p + "%";
+        _gel("n59__MODULE_ID__").title = n59c+" of "+total+" indices down over 3%";
+        _gel("n25__MODULE_ID__").style.width = n25p + "%";
+        _gel("n25__MODULE_ID__").title = n25c+" of "+total+" indices down between 1% and 3%";
+        _gel("n02__MODULE_ID__").style.width = n02p + "%";
+        _gel("n02__MODULE_ID__").title = n02c+" of "+total+" indices down between 0% and 1%";
+        _gel("p02__MODULE_ID__").style.width = p02p + "%";
+        _gel("p02__MODULE_ID__").title = p02c+" of "+total+" indices up between 0% and 1%";
+        _gel("p25__MODULE_ID__").style.width = p25p + "%";
+        _gel("p25__MODULE_ID__").title = p25c+" of "+total+" indices up between 1% and 3%";
+        _gel("p59__MODULE_ID__").style.width = p59p + "%";
+        _gel("p59__MODULE_ID__").title = p59c+" of "+total+" indices up over 3%";
+    }
+    catch (e) {
+    	writeLog__MODULE_ID__(e);
+    }
+    //Reload removed from here
+}
+function getPrice__MODULE_ID__(c) {
+    return stockTickers__MODULE_ID__[c].price;
+}
+function setPrice__MODULE_ID__(c, newPrice) {
+    stockTickers__MODULE_ID__[c].price = newPrice;
+}
+function setPercentChange__MODULE_ID__(c, newPercent) {
+    stockTickers__MODULE_ID__[c].percent = newPercent;
+}
+function setChange__MODULE_ID__(c, newChange) {
+    stockTickers__MODULE_ID__[c].change = newChange;
+}
+function getSymbol__MODULE_ID__(c) {
+    if (c < stockTickers__MODULE_ID__.length) {
+        return stockTickers__MODULE_ID__[c].symbol;
+    } else {
+        return "";
+    }
+}
+function setName__MODULE_ID__(c, newName) {
+    stockTickers__MODULE_ID__[c].name = newName;
+}
+function getRefinedSymbol__MODULE_ID__(str) {
+    return str.substring(1, str.length - 1);
+}
+function getRefinedName__MODULE_ID__(str) {
+    return str.substring(1, str.length - 1);
+}
+function trim__MODULE_ID__(str) {
+    return str.replace(/^\s*|\s*$/g, "");
+}
+
+function paintStockTicker__MODULE_ID__() {
+	 if(showStrength__MODULE_ID__==1)
+	 {
+	 	 _gel('sCD__MODULE_ID__').style.display = '';
+		 _gel('strHorLine__MODULE_ID__').style.display = '';
+	 }	 
+	
+	var hideCols = prefs__MODULE_ID__.getInt("hidecols");
+	var changedisplay="", percentdisplay="";
+	if(hideCols==1)
+		changedisplay = "none";
+	if(hideCols==2)
+		percentdisplay = "none";	
+		
+    var header = "<table class=\"fixedtable\" align=center style=\"table-layout: fixed; border:0;  font-family: arial,sans-serif;\" width=\"100%\" id=\"contentTable\" cellspacing=0 cellpadding=1>";
+
+/*     
+     header+= "<tr>";
+     header+="<td width=\"30px\" align=left>&nbsp;</td>";
+ 	 //header+="<td align=left style=\"display:none;\"><a title=\"Click to sort by symbol\" href=\"javascript:void(0);\" onclick=\"javascript:sortByColumn__MODULE_ID__('symbol');\"><font size=\"-1\"><b>Sym</b></font></td>";
+	 header+="<td align=left class=\"dynamic\" style=\"display:\" ><a title=\"Click to sort by name\" href=\"javascript:void(0);\" onclick=\"javascript:sortByColumn__MODULE_ID__('name');\"><font size=\"-1\"><b>Name</b></a></font></td>";
+	 header+="<td width=\"75px\" align=right style=\"padding-right: 0.5em;\"><a title=\"Click to sort by price\" href=\"javascript:void(0);\" onclick=\"javascript:sortByColumn__MODULE_ID__('price');\"><font size=\"-1\"><b>Value</b></a></font></td>";
+	 header+="<td width=\"65px\" align=right style=\"display:"+changedisplay+";padding-right: 0.5em;\"><a title=\"Click to sort by price change\" href=\"javascript:void(0);\" onclick=\"javascript:sortByColumn__MODULE_ID__('change');\"><font size=\"-1\"><b>Chng</b></a></font></td>";
+	 header+="<td width=\"65px\" align=right style=\"display:"+percentdisplay+"\"><a title=\"Click to sort by percentage change\" href=\"javascript:void(0);\" onclick=\"javascript:sortByColumn__MODULE_ID__('percent');\"><font size=\"-1\"><b>%Chng</b></a></font></td>";
+     header+="</tr>";
+*/
+
+    var footer = "</table>";
+    var contentText = "";
+    var bgcolor="ffffff";
+    for (i = 0; i < stockTickers__MODULE_ID__.length; i++) {
+    	if(i%2==1) 
+    		bgcolor="ffffff";	
+    	else
+    		bgcolor="f5f5f5";
+   	    		
+        contentText += "<tr id=\"" + stockTickers__MODULE_ID__[i].symbol + "Row__MODULE_ID__\" bgcolor=\""+bgcolor+"\" >";
+        contentText += "<td width=\"30px\" style=\"padding-right: 3px\" align=\"center\"><img src=\""+staticImgUrl__MODULE_ID__[stockTickers__MODULE_ID__[i].symbol]+"\" width=\"21\" height=\"14\" border=\"1\"/></td>";
+        //contentText += "<td width=\"5%\" align=left style=\"display:none;\"><font size=\"-1\"><span id=\"" + stockTickers__MODULE_ID__[i].symbol + "Span__MODULE_ID__\"><a href=\"http://finance.yahoo.com/q?s=" + stockTickers__MODULE_ID__[i].symbol + "\" target=\"blank\">" + stockTickers__MODULE_ID__[i].symbol + "</a></span></font></td>";
+        contentText += "<td width=\"100%\" class=\"dynamic\" nowrap style=\"display:\" align=\"left\"><font size=\"-1\"><a class=\"link\" href=\"http://finance.yahoo.com/q?s=" + stockTickers__MODULE_ID__[i].symbol + "\" target=\"blank\"><span style=\"display:\" id=\"" + stockTickers__MODULE_ID__[i].symbol + "NameSpan__MODULE_ID__\">" + stockTickers__MODULE_ID__[i].name + "</span></a></font></td>";
+        contentText += "<td width=\"75px\" style=\"padding-right: 0.5em;\" align=\"right\"><font size=\"-1\"><span id=\"" + stockTickers__MODULE_ID__[i].symbol + "PriceSpan__MODULE_ID__\">" + stockTickers__MODULE_ID__[i].price + "</span></font></td>";
+        contentText += "<td width=\"65px\" style=\"display:"+changedisplay+";padding-right: 0.5em;\" align=\"right\" nowrap><font size=\"-1\"><span id=\"" + stockTickers__MODULE_ID__[i].symbol + "ChangeSpan__MODULE_ID__\">" + stockTickers__MODULE_ID__[i].change + "</span></font></td>";
+        contentText += "<td width=\"65px\" align=\"right\" style=\"display:"+percentdisplay+"\" nowrap><font size=\"-1\"><span id=\"" + stockTickers__MODULE_ID__[i].symbol + "PercentSpan__MODULE_ID__\">" + stockTickers__MODULE_ID__[i].percent + "</span></font></td>";
+        contentText += "</tr>";
+        //contentText += "<tr><td></td><td colspan=\"4\" align=\"left\" style=\"width:100%\"><div style=\"position: relative; height: 100%\";><div id=\"" + stockTickers__MODULE_ID__[i].symbol + "chartDiv__MODULE_ID__\" style=\"position:absolute;display:none;border:2px double #666666;padding:3px;background:#ffffff;font-size: 8pt;font-family:arial,sans-serif; z-index:3000;\"></div></div></td></tr>";
+    }
+    
+    _gel("cD__MODULE_ID__").innerHTML = header + contentText + footer;
+     _IG_AdjustIFrameHeight();
+    try {
+        clearTimeout(reloadId__MODULE_ID__);
+    }
+    catch (e) {
+    }
+    callServer__MODULE_ID__();
+}
+
+
+function roundNumber__MODULE_ID__(num) {
+    var rlength = 2;
+    var newnumber = Math.round(num * Math.pow(10, rlength)) / Math.pow(10, rlength);
+    return newnumber;
+}
+
+function formatData__MODULE_ID__(str) {
+    str = str.replace("\n", "").replace("\r", "");
+    if (str.indexOf("\"") == -1) {
+        return str;
+    } else {
+        return str.substring(1, str.length - 1);
+    }
+}
+function round2Decimals__MODULE_ID__(n) {
+    var stringNumber = "" + n;
+    if (stringNumber.indexOf(".") == -1) {
+        stringNumber += ".00";
+    } else {
+        if (stringNumber.substring(stringNumber.indexOf(".") + 1).length == 1) {
+            stringNumber += "0";
+        }
+    }
+    return stringNumber;
+}
+function sortArray__MODULE_ID__(arr) {
+    if (arr.length == 0) {
+        return arr;
+    }
+    var newArray = new Array();
+    var stA = new Array();
+    for (var l = 0; l < arr.length; l++) {
+        stA.push(arr[l].symbol);
+    }
+    stA.sort();
+    for (var h = 0; h < stA.length; h++) {
+        for (var o = 0; o < arr.length; o++) {
+            if (stA[h] == arr[o].symbol) {
+                newArray.push(arr[o]);
+            }
+        }
+    }
+    return newArray;
+}
+
+function sortArray2__MODULE_ID__(tickcopy, col) {
+	sortcol__MODULE_ID__ = col;
+	
+	var exp = 'tickers[l].'+col;
+
+	var tickers = new Array();
+   var nA = new Array();
+   var stA = new Array();	
+	for(k=0;k<tickcopy.length;k++)
+	   tickers.push(tickcopy[k]);
+
+   for (var l = 0; l < tickers.length; l++) {
+   	if(parseFloat(eval(exp)))
+    		stA.push(parseFloat(eval(exp)));
+    	else
+    		stA.push(eval(exp));
+   }
+
+	if(col=='price' || col=='change' || col=='percent')
+	{
+		try{
+    		stA.sort(sortNumber__MODULE_ID__);
+    	}catch(e) {
+    		stA.sort();
+    	}
+    }
+    else
+    	stA.sort();
+
+    for (var h = 0; h < stA.length; h++) {
+    	for (var l = 0; l < tickers.length; l++) {
+        	if(nA.contains(tickers[l]))
+        		continue;
+        
+        	if(parseFloat(stA[h]))
+        	{
+				if (parseFloat(stA[h]) == parseFloat(eval(exp))) {					
+						nA.push(tickers[l]);
+				}
+			}
+			else
+			{
+				if (stA[h] == eval(exp)) {
+					nA.push(tickers[l]);
+				}
+			}
+        }
+    }
+
+	tickers = nA;
+
+	return tickers;
+}
+function sortNumber__MODULE_ID__(a,b)
+{
+	if(a-b)
+		return a-b;
+	else
+		return true;
+}
+function sortByColumn__MODULE_ID__(col)
+{
+	stockTickers__MODULE_ID__ = sortArray2__MODULE_ID__(stockTickers__MODULE_ID__, col);
+	paintStockTicker__MODULE_ID__();
+}
+
+function removeBold__MODULE_ID__(str) {
+    var boldIndexStart = str.indexOf("<b>");
+    var boldIndexEnd = str.lastIndexOf("</b>");
+    if (boldIndexStart == -1) {
+        return str;
+    }
+    var curQuotePrice = str.substring(boldIndexStart + 3, boldIndexEnd);
+    return curQuotePrice;
+}
+function removeItalics__MODULE_ID__(str) {
+    var italicIndexStart = str.indexOf("<i>");
+    var italicIndexEnd = str.lastIndexOf("</i>");
+    if (italicIndexStart == -1) {
+        return str;
+    }
+    var curQuotePrice = str.substring(italicIndexStart + 3, italicIndexEnd);
+    return curQuotePrice;
+}
+function rcs__MODULE_ID__(str) {
+	var imgstart = str.indexOf("<img");
+    if (imgstart == -1) {
+        return str;
+    }	
+    var csis = str.indexOf(">", imgstart);
+    var curQuotePrice = str.substring(0,imgstart)+str.substring(csis + 1);
+    return curQuotePrice;
+}
+function joinString__MODULE_ID__(a, b) {
+    var onelen = a.length;
+    var twolen = (a.length + b.length > 20) ? (20 - a.length) : b.length;
+    if (twolen != b.length) {
+        b = b.substring(0, twolen) + "..";
+    }
+    var res = b + " (" + a + ")";
+    return res;
+}
+
+function getInitCaps__MODULE_ID__(nt) {
+    var sarr = nt.split(" ");
+    var r = "";
+    for (i = 0; i < sarr.length; i++) {
+        var s = sarr[i].toLowerCase();
+        for (j = 0; j < s.length; j++) {
+            if (j == 0) {
+                r += s.charAt(j).toUpperCase();
+            } else {
+                r += s.charAt(j);
+            }
+        }
+        r += " ";
+    }
+    r = r.substring(0, r.length - 1);
+    return r;
+}
+
+Array.prototype.contains = function(element)   {
+	for (var i = 0; i < this.length; i++)
+		if (this[i] == element)
+			return true;
+	return false;
+}
+
+function getPosition__MODULE_ID__(sym) {
+	var pos = 0;
+	var arr = stockTickers__MODULE_ID__;
+	for(var l = 0; l < arr.length; l++) {
+		if(arr[l].symbol.toUpperCase()==sym.toUpperCase())
+			return (l);
+	}
+	return -1;
+}
+
+
+//////////////////////////////////
+
+function writeLog__MODULE_ID__(str) {
+  //_gel("logDiv__MODULE_ID__").innerHTML += str;
+}
+
+//////////////////////////////////
+
+_IG_RegisterOnloadHandler(paintStockTicker__MODULE_ID__);
+
+</script>
+
+<div id="cD__MODULE_ID__" style="border:1px solid #FFFFFF; display:" width="100%"><font size="-1" style="font-family: arial,sans-serif;">Loading Global Market Indices.. Please wait..</font></div>
+&nbsp;&nbsp;<font size="-1" style="font-family: arial,sans-serif"><a href="javascript:void(0);" onClick="sSD__MODULE_ID__();" title="Show/Hide">Strength</a></font>
+&nbsp;&nbsp;<font size="-1" style="font-family: arial,sans-serif"><a href="http://udaysasi-gadgets.googlecode.com/svn/trunk/globalIndexWatchHelp.html" target="globalindexwatchhelp">Help</a></font>
+&nbsp;&nbsp;<font size="-1" style="font-family: arial,sans-serif"><a href="http://udaysasi-gadgets.googlecode.com/svn/trunk/udaysModules.html" target="gadgetspage">My gadgets</a></font>
+&nbsp;&nbsp;<font size="-1" style="font-family: arial,sans-serif"><a href="http://udaysasi-gadgets.googlecode.com/svn/trunk/globalIndexWatchExtensionHelp.html" target="extension" title="Try Chrome Extension"><img src="http://udaysasi-gadgets.googlecode.com/svn/trunk/chrome_logo.png"></a></font>&nbsp;<font size="-1" color="#ff5555"><sup>new</sup></font>
+<span id="myContainer__MODULE_ID__"></span>
+<hr align="center" size="1" width="100%" noshade>
+<table width="90%" align="center" id="sCD__MODULE_ID__" style="display:none">
+	<tr>
+		<td width="100%">
+			<table align="center" border=0 cellpadding=0 cellspacing=0 width="100%">
+				<tr height="15px">
+					<td id="n59__MODULE_ID__" style="background-color: #992020;width:0%" title=""></td>
+					<td id="n25__MODULE_ID__" style="background-color: #CC4949;width:0%" title=""></td>
+					<td id="n02__MODULE_ID__" style="background-color: #FF8383;width:0%" title=""></td>
+					<td id="p02__MODULE_ID__" style="background-color: #83FF83;width:0%" title=""></td>
+					<td id="p25__MODULE_ID__" style="background-color: #49CC49;width:0%" title=""></td>
+					<td id="p59__MODULE_ID__" style="background-color: #209920;width:0%" title=""></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<hr id="strHorLine__MODULE_ID__" align="center" size="1" width="100%" style="display:none;" noshade>
+
+<font size="-1" style="font-family: arial,sans-serif" color="#AAAAAA">(Data provided by Yahoo! Finance)</font>
+
+<div id="logDiv__MODULE_ID__" style="display:"></div>
+
+]]></Content>
+</Module>

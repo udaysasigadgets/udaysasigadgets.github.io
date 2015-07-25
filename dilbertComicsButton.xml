@@ -1,0 +1,16 @@
+<?xml version='1.0'?>
+<custombuttons xmlns="http://toolbar.google.com/custombuttons/">
+<button>
+	<site>http://udaysasi-gadgets.googlecode.com/svn/trunk/dilbertComics.xml</site>
+	<title>Uday&#39;s Dilbert Comics</title>
+	<description>Displays a random dilbert comic to start your day with a giggle - Courtesy : Dilbert.com</description>
+	<gadget width="320" height="200" whole-dropdown="true">http://udaysasi-gadgets.googlecode.com/svn/trunk/dilbertComics.xml</gadget>
+	<icon mode="base64" type="image/x-icon">
+R0lGODlhEAAQAHAAACH5BAEAAAYALAAAAAAQABAAggAAAP/LmcyYZv///xEREf0AAAAAAAAAAANB
+aKqw/iyAIGmDZlKL45Zd9oGdtl2YVQmdBAwvALDQudKPZgro8024nEUTdJg2PAxhx+stBlBA4QWF
+QGGDArZqSAAAOw==
+	</icon>
+	<update>http://udaysasi-gadgets.googlecode.com/svn/trunk/dilbertComicsButton.xml</update>
+	<search>http://www.google.com/search?q={query}</search>	
+</button>
+</custombuttons>

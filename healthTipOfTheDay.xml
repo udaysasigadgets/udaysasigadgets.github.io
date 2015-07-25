@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+<ModulePrefs 
+	title="Health Tip of the day" 
+	description="Follow these simple tips one a day to stay healthy (Data provided by Yahoo! Health)"
+	author="Uday Kumar Pyda - Sunnyvale, CA"
+	author_email="udaysasi+feedback@gmail.com"
+	author_affiliation="UdaySasi"
+	author_link="http://www.udaysasi.com"
+	directory_title="Uday's Health Tip of the day"
+	screenshot="http://www.freewebs.com/udaysasi/healthTipOfTheDayScreenshot.png"
+	thumbnail="http://www.freewebs.com/udaysasi/healthTipOfTheDayThumbnail.png"	
+>
+	<Require feature="dynamic-height"/>	
+</ModulePrefs>	
+<Content type="html"><![CDATA[
+
+<!-- ALm6fM15aoxxjVSmXaGm14Fz_R_1IqrodQkCVKa6NCFH-qSkpE2-yIRwoC8XdqeycJFYx3doqd2YjSYplGc4lW0_1rwHjW-30o79_vg17aJrUFmCAsPagkdewzSGeUNWxB047VupBzS_SlspGnp6xaiPQMK5qYKGdDr5CqnvcDQdjyk4pRH5RMo= -->
+
+<style type="text/css">
+  a { color:#0000DD;}
+  a:visited { color:#0000DD;}
+</style>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-1214589-17");
+pageTracker._initData();
+pageTracker._trackPageview();
+</script>
+<script language="Javascript">
+var contentLink__MODULE_ID__ = "";
+var contentDescription__MODULE_ID__ = "";
+var contentTitle__MODULE_ID__ = "";
+var pubDate__MODULE_ID__ = "";
+var baseURL__MODULE_ID__ = 'http://health.yahoo.com/tips/rss';
+var feedURL__MODULE_ID__ = '';
+
+function cS__MODULE_ID__() {
+   var feedURL = baseURL__MODULE_ID__; 
+   _IG_FetchXmlContent(feedURL, _IG_Callback(pRC__MODULE_ID__)); 
+   }
+function pRC__MODULE_ID__(r) {
+   try {
+      var iL = r.getElementsByTagName("item"); 
+      for (var i = 0; i < iL.length ; i++) {
+         if(i > 0) break; 
+         var nodeList = iL.item(i).childNodes; 
+         for (var j = 0; j < nodeList.length ; j++) {
+            var node = nodeList.item(j); 
+            if (node.nodeName == "title") {
+               contentTitle__MODULE_ID__ = node.firstChild.nodeValue; 
+               }
+            if (node.nodeName == "link") {
+               contentLink__MODULE_ID__ = node.firstChild.nodeValue; 
+               }
+            if (node.nodeName == "description") {
+               contentDescription__MODULE_ID__ = node.firstChild.nodeValue; 
+               }
+            if (node.nodeName == "pubDate") {
+               pubDate__MODULE_ID__ = node.firstChild.nodeValue; 
+               pubDate__MODULE_ID__ = pubDate__MODULE_ID__.substring(0, pubDate__MODULE_ID__.indexOf("00:00:00")-1);
+               }
+            }
+         }
+      pNC__MODULE_ID__(); 
+      }
+   catch(e) {
+      }
+   }
+function pNC__MODULE_ID__() {
+   var header = '<table align=justify style="border:0; font-family: Arial" width="100%" id="contentTable" cellspacing=0 cellpadding=3>'; 
+   var footer = '</table>'; 
+   var contentText = ''; 
+   if(contentTitle__MODULE_ID__.length == 0) contentText = '<tr><td>No health tips available at this time. No sooner than Yahoo! publishes one on their page, you would see it here.</td></tr>'; 
+   else {
+      contentText += '<tr style="background:#ffffff;">'; 
+      contentText += '<td align="justify"><font size="-1"><a href="' + contentLink__MODULE_ID__ + '" target="healthTip">' + contentTitle__MODULE_ID__ + '</a></font><br>'; 
+      contentText += '<font size="-1">' + contentDescription__MODULE_ID__ + ' </font><font size="-1" color="#999999">(' + pubDate__MODULE_ID__ +')</font>'; 
+      }
+   _gel('tipContentDiv').innerHTML = header + contentText + footer; 
+   _IG_AdjustIFrameHeight(); 
+   }
+
+
+_IG_RegisterOnloadHandler(cS__MODULE_ID__);
+</script>
+<div id="tipContentDiv" width="100%"><font size="-1" style="; font-family: Arial"><img src="http://www.freewebs.com/udaysasi/loading-spin.gif">&nbsp;&nbsp;Loading today's health tip.. Please wait..</font></div>
+]]></Content>
+</Module>

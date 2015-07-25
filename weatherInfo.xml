@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+<ModulePrefs 
+	title="Rajampet Weather" 
+	description="Find the weather conditions in your place of interest -  (Data provided by Yahoo! Weather)"
+	author="Uday Kumar Pyda - Sunnyvale, CA"
+	author_email="udaysasi+feedback@gmail.com"
+	author_affiliation="UdaySasi"
+	author_link="http://www.udaysasi.com"
+	directory_title="Uday's Weather Gadget"
+>
+	<Require feature="dynamic-height"/>	
+	<Require feature="analytics"/>	
+</ModulePrefs>	
+<Content type="html"><![CDATA[
+
+<!-- ALm6fM1vEevdUaQ98BRavQfRtEeQgpBZ7d1eSQNMjyURYReJrHHP__4a-XpkifpMp_KSwCpNtv_9ni39Ssz82QFBXEbOgmULvtzHpF63uDE-SeNctyCvsvjkOphY49dSkHwddquRfjQdTD52q-UwOrHNA0VOSshekRCm2OVfJV-NeLUq7MezOas= -->
+
+<style type="text/css">
+  a { color:#0000DD;}
+  a:visited { color:#0000DD;}
+</style>
+
+<script language="Javascript">
+var imgSrc = "";
+var updatedDate = "";
+var conditionCode = "";
+var temperature = "";
+var conditionText = "";
+var windSpeed = "";
+var windDirection = "";
+var windChill = "";
+var humidity = "";
+var visibility = "";
+
+var baseURL = 'http://weather.yahooapis.com/forecastrss?p=INXX0122&u=c';
+function cS() {
+   _IG_FetchXmlContent(baseURL, _IG_Callback(pRC)); 
+   }
+function pRC(r) {
+   try {    	
+   
+   	var iC = r.getElementsByTagName("channel");
+   	for (var i = 0; i < iC.length ; i++) {
+   		var nodeList = iC.item(i).childNodes; 
+			for (var j = 0; j < nodeList.length ; j++) {
+            var node = nodeList.item(j); 
+            if (node.nodeName == "yweather:wind") {
+               windSpeed = node.getAttribute("speed"); 
+               windChill = node.getAttribute("chill"); 
+               windDirection = node.getAttribute("direction"); 
+               var intDirection = parseInt(windDirection);
+               if(intDirection>270)
+               	windDirection = "SE";
+               else if(intDirection==270)
+               	windDirection = "E";
+               else if(intDirection>180)
+               	windDirection = "NE";
+               else if(intDirection==180)
+               	windDirection = "N";
+               else if(intDirection>90)
+               	windDirection = "NW";
+               else if(intDirection==90)
+               	windDirection = "W";
+               else if(intDirection>0)
+               	windDirection = "SW";
+               else if(intDirection==0)
+               	windDirection = "S";
+            }
+            if (node.nodeName == "yweather:atmosphere") {
+               humidity = node.getAttribute("humidity"); 
+               visibility = node.getAttribute("visibility"); 
+            }
+
+         }   		
+   	}
+   	/*
+      var iW = r.getElementsByTagName("yweather:wind"); 
+      alert(iW);
+      windSpeed = iW.item(0).getAttribute("speed"); 
+      windChill = iW.item(0).getAttribute("chill"); 
+
+		var iA = r.getElementsByTagName("yweather:atmosphere"); 
+		humidity = iA.item(0).getAttribute("humidity"); 
+      visibility = iA.item(0).getAttribute("visibility"); 
+      */
+      var iI = r.getElementsByTagName("item");       
+      
+      for (var i = 0; i < iI.length ; i++) {
+         if(i > 0) break;          
+         var nodeList = iI.item(i).childNodes; 
+         for (var j = 0; j < nodeList.length ; j++) {
+            var node = nodeList.item(j); 
+            if (node.nodeName == "yweather:condition") {
+               conditionCode = node.getAttribute("code"); 
+               temperature = node.getAttribute("temp"); 
+               updatedDate = node.getAttribute("date"); 
+               conditionText = node.getAttribute("text"); 
+               }
+            if (node.nodeName == "description") {
+               contentDescription = node.firstChild.nodeValue; 
+               }
+            if (node.nodeName == "pubDate") {
+               pubDate = node.firstChild.nodeValue; 
+               }
+            }
+         }
+      /*   
+      for (var i = 0; i < iM.length ; i++) {
+         if(i > 0) break; 
+         var nodeList = iM.item(i).childNodes; 
+         for (var j = 0; j < nodeList.length ; j++) {
+            var node = nodeList.item(j); 
+            if (node.nodeName == "url") {
+               imgSrc = node.firstChild.nodeValue; 
+               }
+            if (node.nodeName == "width") {
+               imgWidth = node.firstChild.nodeValue; 
+               }
+            if (node.nodeName == "height") {
+               imgHeight = node.firstChild.nodeValue; 
+               }
+            }
+         }       
+      */
+      pNC();
+      }
+   catch(e) {
+   	alert(e);
+      }
+   }
+function pNC() {
+   var header = '<table align=justify style="border:0; font-family: Arial" width="100%" id="contentTable" cellspacing=0 cellpadding=3>'; 
+   var footer = '</table>'; 
+   var contentText = '';
+   contentText += '<tr valign="top">'; 
+   contentText += '<td valign="top" align="center" rowspan="4">';
+   contentText += '<img src="http://l.yimg.com/us.yimg.com/i/us/we/52/'+conditionCode+'.gif"/><br/><font size="-1">'+conditionText+'</font>';
+   contentText += '</td>';
+   contentText += '<td valign="top" align="right"><font size="-1">';
+   contentText += '<b>Temperature </b>:';
+   contentText += '</font></td>';   
+   contentText += '<td valign="top" align="left"><font size="-1">';
+   contentText += temperature+'&#176; C';
+   contentText += '</font></td>'; 
+   contentText += '</tr>'; 
+   
+   contentText += '<tr valign="top">'; 
+   contentText += '<td valign="top" align="right"><font size="-1">';
+   contentText += '<b>Humidity </b>:';
+   contentText += '</font></td>';   
+   contentText += '<td valign="top" align="left"><font size="-1">';
+   contentText += humidity+'%';
+   contentText += '</font></td>'; 
+   contentText += '</tr>'; 
+
+   contentText += '<tr valign="top">'; 
+   contentText += '<td valign="top" align="right"><font size="-1">';
+   contentText += '<b>Visibility </b>:';
+   contentText += '</font></td>';   
+   contentText += '<td valign="top" align="left"><font size="-1">';
+   contentText += visibility+' km';
+   contentText += '</font></td>'; 
+   contentText += '</tr>'; 
+
+   contentText += '<tr valign="top">'; 
+   contentText += '<td valign="top" align="right"><font size="-1">';
+   contentText += '<b>Wind </b>:';
+   contentText += '</font></td>';   
+   contentText += '<td valign="top" align="left"><font size="-1">';
+   contentText += windSpeed+' kmph '+windDirection;
+   contentText += '</font></td>'; 
+   contentText += '</tr>';    
+
+
+   contentText += '<tr valign="top">'; 
+   contentText += '<td valign="top" align="left" colspan="3">';
+   contentText += '<font size="-2"><i>Updated on '+updatedDate+' (Yahoo! Weather)</i></font>';
+   contentText += '</td>';   
+   contentText += '</tr>'; 
+     
+   
+   //+'<img src="http://l.yimg.com/us.yimg.com/i/us/we/52/'+conditionCode+'.gif"/>'+conditionCode+'<br/>'+temperature+'C<br/>'+updatedDate+'<br/>'+conditionText+'<br/>'+windSpeed+' kph '+windDirection+'<br/>'+windChill+'C<br/>'+humidity+'%<br/>'+visibility+'km<br/>'; 
+   /*
+   if(contentTitle.length == 0) contentText = '<tr><td><font size="-1">No deals available at this time. No sooner than Yahoo! publishes a deal on their page, you would see it here.</font></td></tr>'; 
+   else {
+      contentText += '<tr style="background:#ffffff;">'; 
+      contentText += '<td align="justify"><font size="-1"><img border="0" src="' + imgSrc + '" width="' + imgWidth + '" height="' + imgHeight + '" style="float: left"><a href="' + contentLink + '" target="new">' + contentTitle + '</a></font><br>'; 
+      contentText += '<font size="-1">' + contentDescription + '</font>'; 
+      }
+   */
+   _gel('weatherContentDiv').innerHTML = header + contentText + footer; 
+   _IG_AdjustIFrameHeight(); 
+   }_IG_RegisterOnloadHandler(cS);
+</script>
+<div id="weatherContentDiv" width="100%"><font size="-1" style="; font-family: Arial"><img src="http://www.freewebs.com/udaysasi/loading-spin.gif">&nbsp;&nbsp;Loading weather info.. Please wait..</font></div>
+]]></Content>
+</Module>

@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<custombuttons xmlns='http://toolbar.google.com/custombuttons/'>
+  <button>
+    <title>Recipe of the day</title>
+    <description>Garnish your personalized homepage with a recipe everyday. Great module for all the cooks looking for ideas (Data provided by Yahoo! Food)</description>
+    <site>http://www.google.com/ig/directory?url=http%3A%2F%2Fudaysasi.googlepages.com%2FrecipeOfTheDay.xml</site>
+    <gadget whole-dropdown='true'>http://udaysasi-gadgets.googlecode.com/svn/trunk/recipeOfTheDay.xml</gadget>
+    	<icon mode="base64" type="image/x-icon">
+AAABAAEAEBAQAAAAAAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAwAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAACAAACAAAAAgIAAgAAAAIAAgACAgAAAgICAAMDAwAAAAP8AAP8AAAD//wD/AAAA
+/wD/AP//AAD///8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD//wAA3/8AAM/zAADH4wAA48cAAPGPAAD4HwAA+D8A
+APgHAADwAwAA4QkAAMMEAADHIwAAz5MAAP/PAAD/7wAA 	
+		</icon>
+	<update>http://udaysasi-gadgets.googlecode.com/svn/trunk/recipeOfTheDayButton.xml</update>
+	<search>http://www.google.com/search?q={query}</search>	
+	</button>
+</custombuttons>

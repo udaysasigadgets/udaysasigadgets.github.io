@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+<ModulePrefs
+title="Index Ticker"
+description="Watch the changes in the major indices/commodities in the United States Stock Market (Data provided by Yahoo! Finance)"
+author="Uday Kumar Pyda - Sunnyvale, CA"
+author_email="udaysasi+feedback@gmail.com"
+author_affiliation="UdaySasi"
+author_link="http://www.udaysasi.com"
+directory_title="Uday's Index Ticker"
+>
+	<Require feature="dynamic-height"/>	
+	<Require feature="analytics"/>	
+</ModulePrefs>	
+
+<Content type="html"><![CDATA[
+
+<!-- ALm6fM1eWkGmTaTb4X3CbJCFkYz9VpcgzxuIT8DKWZ-s85YtDhJfnYRHEw8TjGe3u_JRR0e6JJmv0-OvIi_ekxWu7xZjS9b04d5DIkMzAK7_NrdFlkao0qChU9vCex3OZBE4cL51oPt-cbD19zZRKezZl2kNvBsfdeCQ2jdtgImNZGJrv_lZBkk= -->
+
+<style type="text/css">
+  a { color:#000066;}
+  a:visited { color:#000066;}
+</style>
+
+<script language="Javascript">
+
+var prefs = new _IG_Prefs(__MODULE_ID__);
+
+var baseURL = 'http://download.finance.yahoo.com/d?s=';
+var refreshrate = 60;
+var newDate = new Date().getTime();
+var reloadId = 'quickStockWatch';
+
+var strTickers = "^DJI,^IXIC,^GSPC,^RUT,^TNX,CLZ08.NYM,GCX08.CMX";
+var stockNames = ["Dow", "Nasdaq", "S&amp;P", "Russell", "10-YR", "Oil", "Gold"];
+var upImage = _IG_GetImageUrl("http://www.freewebs.com/udaysasi/arrow-up.gif"); 
+var downImage = _IG_GetImageUrl("http://www.freewebs.com/udaysasi/arrow-down.gif"); 
+var pixelImage = _IG_GetImageUrl("http://www.freewebs.com/udaysasi/pixel.gif"); 
+//alert('strTickers : '+strTickers);
+var stockTickers = convertToArr(strTickers);
+function convertToStr(arr)
+{
+var returnStr = '';
+for(var g=0;g<arr.length;g++)
+returnStr += arr[g].symbol+',';
+return returnStr;
+}
+
+function convertToArr(str)
+{
+var returnArr = new Array();
+str = str.replace(/ /g,',');
+
+var ticks = str.split(",");
+
+for(var d=0;d<ticks.length;d++)
+{
+var curTicker = ticks[d];
+curTicker = curTicker.toUpperCase();
+if(curTicker=='')
+continue;
+returnArr.push(new StockTicker(curTicker, 'Loading..', '0', '0', '0'));
+}
+//alert('returnArr.length : '+returnArr.length + returnArr[0].symbol+' '+returnArr[1].symbol);
+return returnArr;
+}
+
+
+
+function StockTicker(symbol, name, price, change, percent)
+{
+this.symbol = symbol;
+this.name = name;
+this.price = price;
+this.change = change;
+this.percent = percent;
+}
+
+function getAllSymbols()
+{
+var symbolArr = new Array();
+for (u=0;u<stockTickers.length;u++)
+{
+symbolArr = symbolArr.concat(stockTickers[u].symbol);
+}
+return symbolArr;
+}
+
+function callServer()
+{
+//alert('Inside callServer()');
+var symbolArr = getAllSymbols();
+//alert(symbolArr);
+if(symbolArr.length==0)
+return;
+var symbol = '';
+for(var h=0;h<symbolArr.length-1;h++)
+symbol += symbolArr[h]+',';
+symbol += symbolArr[h];
+
+newDate = new Date().getTime();
+var financeURL = baseURL+symbol+"&f=snl1c1p2";
+
+//alert(financeURL);
+//loadXMLDoc(financeURL);
+_IG_FetchContent(financeURL, _IG_Callback(processReqChange),{refreshInterval:60});
+//alert('Fetch made');
+}
+
+function removeBold(str) {
+var boldIndexStart = str.indexOf("<b>");
+var boldIndexEnd = str.lastIndexOf("</b>");
+if (boldIndexStart == -1) {
+return str;
+}
+var curQuotePrice = str.substring(boldIndexStart + 3, boldIndexEnd);
+return curQuotePrice;
+}
+function removeItalics(str) {
+var italicIndexStart = str.indexOf("<i>");
+var italicIndexEnd = str.lastIndexOf("</i>");
+if (italicIndexStart == -1) {
+return str;
+}
+var curQuotePrice = str.substring(italicIndexStart + 3, italicIndexEnd);
+return curQuotePrice;
+}
+
+function fixCommas(str) {
+var x = 0;
+while (str.indexOf("\"", x) >= 0) {
+var y = str.indexOf("\"", x);
+var z = str.indexOf("\"", y + 1);
+var w = str.indexOf(",", y);
+if (w > y && w < z) {
+str = str.substring(0, w) + "." + str.substring(w + 1);
+}
+x = z + 1;
+}
+return str;
+}
+function rcs(str) {
+var imgstart = str.indexOf("<img");
+if (imgstart == -1) {
+return str;
+}
+var csis = str.indexOf(">", imgstart);
+var curQuotePrice = str.substring(0,imgstart)+str.substring(csis + 1);
+return curQuotePrice;
+}
+function round2Decimals(n) {
+var stringNumber = "" + n;
+if (stringNumber.indexOf(".") == -1) {
+stringNumber += ".00";
+} else {
+if (stringNumber.substring(stringNumber.indexOf(".") + 1).length == 1) {
+stringNumber += "0";
+}
+}
+return stringNumber;
+}
+function roundNumber(num) {
+var rlength = 2;
+var newnumber = Math.round(num * Math.pow(10, rlength)) / Math.pow(10, rlength);
+return newnumber;
+}
+
+
+function processReqChange(responseText)
+{
+
+var result = responseText;
+//alert(result);
+var myregexp = new RegExp('\n');
+var quotes = new Array();
+quotes = result.split(myregexp);
+
+for(var count=0;count<quotes.length;count++)
+{
+var symbol = getSymbol(count);
+if(symbol=='')
+continue;
+var nameSpan = _gel(symbol+'NameSpan');
+var priceSpan = _gel(symbol+'PriceSpan');
+var changeSpan = _gel(symbol+'ChangeSpan');
+var percentSpan = _gel(symbol + "PercentSpan");
+var imageSpan = _gel(symbol + "ImageSpan");
+
+var curQuote = quotes[count];
+var curQuoteDetail = fixCommas(curQuote).split(",");
+var curQuoteTicker = curQuoteDetail[0];
+var curQuoteName = curQuoteDetail[1];
+curQuoteName = getRefinedName(curQuoteName);
+if (symbol == curQuoteName) {
+curQuoteName = "Invalid symbol";
+}
+
+nameSpan.innerHTML = stockNames[count];
+
+setName(count, stockNames[count]);
+var curQuotePrice = removeBold(curQuoteDetail[2]);
+curQuotePrice = rcs(curQuotePrice);
+curQuotePrice = removeItalics(curQuotePrice);
+var curQuoteChange = removeBold(curQuoteDetail[3]);
+curQuoteChange = removeItalics(curQuoteChange);
+try {
+curQuotePrice = parseFloat(curQuotePrice);
+if (curQuotePrice > 0.1) {
+curQuotePrice = roundNumber(curQuotePrice);
+curQuotePrice = round2Decimals(curQuotePrice);
+}
+}
+catch (e) {
+curQuotePrice = "N/A";
+}
+var curQuotePercentChange ="";
+try {
+curQuotePercentChange = curQuoteDetail[4].substring(1, curQuoteDetail[4].length - 2);
+}
+catch (e) {
+curQuotePercentChange = "N/A";
+}
+curQuotePercentChange = removeBold(curQuotePercentChange);
+curQuotePercentChange = removeItalics(curQuotePercentChange);
+curQuotePercentChange = trim(curQuotePercentChange);
+try {
+curQuotePercentChange = parseFloat(curQuotePercentChange);
+if (curQuotePrice > 0.1) {
+curQuotePercentChange = roundNumber(curQuotePercentChange);
+curQuotePercentChange = round2Decimals(curQuotePercentChange);
+}
+}
+catch (e) {
+curQuotePercentChange = "N/A";
+}
+
+priceSpan.innerHTML = curQuotePrice;
+
+var curQuoteOldPrice = getPrice(count);
+if (curQuoteOldPrice != "N/A" && curQuotePrice != "N/A") {
+if (curQuoteOldPrice > curQuotePrice) {
+changeSpan.style.color = "#990000";
+percentSpan.style.color = "#990000";
+} else if (curQuoteOldPrice < curQuotePrice){
+if (curQuoteOldPrice < curQuotePrice) {
+changeSpan.style.color = "#009900";
+percentSpan.style.color = "#009900";
+} else {
+priceSpan.style.color = "#000000";
+percentSpan.style.color = "#000000";
+}
+}
+}
+setTimeout("javascript:callSetTimeout('" + symbol + "');", 1000);
+setPrice(count, curQuotePrice);
+if (isNaN(curQuoteChange)) {
+curQuoteChange = "N/A";
+} else {
+if (curQuotePrice > 0.1) {
+curQuoteChange = roundNumber(curQuoteChange);
+curQuoteChange = round2Decimals(curQuoteChange);
+}
+}
+setChange(count, curQuoteChange);
+var quoteChange = parseFloat(curQuoteChange);
+if (curQuoteChange != 'N/A' && curQuoteChange >= 0) {
+curQuoteChange = "+" + curQuoteChange;
+}
+
+changeSpan.innerHTML = curQuoteChange;
+if(quoteChange>0)
+	imageSpan.src=upImage;	
+else if(quoteChange<0)
+	imageSpan.src=downImage;
+else
+	imageSpan.src=pixelImage;
+	
+if (isNaN(curQuotePercentChange)) {
+curQuotePercentChange = "N/A";
+} else {
+curQuotePercentChange = roundNumber(curQuotePercentChange);
+curQuotePercentChange = round2Decimals(curQuotePercentChange);
+if (curQuotePercentChange >= 0) {
+curQuotePercentChange = "+" + curQuotePercentChange;
+}
+}
+setPercentChange(count, curQuotePercentChange);
+percentSpan.innerHTML = "(" + curQuotePercentChange + "%)";
+/*
+if (parseFloat(curQuoteChange) < 0) {
+changeSpan.style.color = "#000000";
+percentSpan.style.color = "#000000";
+} else {
+changeSpan.style.color = "#000000";
+percentSpan.style.color = "#000000";
+}
+*/
+
+}
+
+reloadId = setTimeout("callServer();", refreshrate*1000);
+}
+
+function callSetTimeout(symbol)
+{
+var changeSpan= _gel(symbol+'ChangeSpan');
+var percentSpan= _gel(symbol+'PercentSpan');
+changeSpan.style.color='#000000';
+percentSpan.style.color = "#000000";
+}
+
+function getPrice(count)
+{
+return stockTickers[count].price;
+}
+
+function setPrice(count, newPrice)
+{
+stockTickers[count].price = newPrice;
+}
+
+function getSymbol(count)
+{
+if(count<stockTickers.length)
+return stockTickers[count].symbol;
+else
+return '';
+}
+
+function setName(count, newName)
+{
+stockTickers[count].name = newName;
+}
+
+function setPercentChange(count, percent) {
+stockTickers[count].percent = percent;
+}
+
+function setChange(count, newChange)
+{
+stockTickers[count].change = newChange;
+}
+
+function getRefinedName(str)
+{
+return str.substring(1, str.length-1);
+}
+
+function trim(str) {
+return str.replace(/^\s*|\s*$/g, "");
+}
+
+
+function paintStockTickers()
+{
+var header = '<table align=center style="border:0px;" width="100%" id="contentTable" cellspacing=0 cellpadding=3><tr valign="top">';
+var footer = '</tr></table>';
+
+var contentText = '';
+
+for (i=0;i<stockTickers.length;i++)
+{
+contentText+='<td align="left"><font size="-1">';
+contentText+='<a href="http://finance.yahoo.com/q?s='+stockTickers[i].symbol+'" target="_blank"><span id="'+stockTickers[i].symbol+'NameSpan">'+stockTickers[i].name+'</span></a>';
+contentText+='&nbsp;<img id="'+stockTickers[i].symbol+'ImageSpan" src="'+pixelImage+'"><span id="'+stockTickers[i].symbol+'ChangeSpan" style="color:#000000">'+stockTickers[i].change+'</span>';
+contentText+='&nbsp;<span id="'+stockTickers[i].symbol+'PercentSpan" style="color:#000000">'+stockTickers[i].percent+'</span>';
+contentText+='<br><span id="'+stockTickers[i].symbol+'PriceSpan">'+stockTickers[i].price+'</span>';
+contentText+='</font></td>';
+}
+contentText+='<td nowrap style="border-left:1px solid #AAAAAA;"><font size="-2"><a href="http://www.google.com/ig/directory?url=udaysasi.googlepages.com/quickStockWatch.xml" target="_blank">Quick Stock Watch</font><br><font size="-2"><a href="http://www.google.com/ig/directory?url=udaysasi.googlepages.com/globalIndexWatch.xml" target="_blank">Global Index Watch</font></td>';
+
+_gel('contentDiv').innerHTML = header+contentText+footer;
+_IG_AdjustIFrameHeight();
+
+try {
+clearTimeOut(reloadId);
+} catch(e){}
+callServer();
+}
+
+function deleteStockTicker(k)
+{
+stockTickers.splice(k,1);
+prefs.set("tickers", convertToStr(stockTickers));
+//alert('New tickers after delete : '+convertToStr(stockTickers));
+paintStockTickers();
+}
+
+function roundNumber(num)
+{
+var rlength = 2;
+var newnumber = Math.round(num*Math.pow(10,rlength))/Math.pow(10,rlength);
+return newnumber;
+}
+
+_IG_RegisterOnloadHandler(paintStockTickers);
+_IG_AdjustIFrameHeight();
+</script>
+
+
+<font size="-1"><div id="contentDiv" width="100%"></div></font>
+
+
+]]></Content>
+</Module>
+
+
+
+

@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<custombuttons xmlns='http://toolbar.google.com/custombuttons/'>
+  <button>
+    <title>Health Tip of the day</title>
+    <description>Follow these simple tips one a day to stay healthy (Data provided by Yahoo! Health)</description>
+    <site>http://www.google.com/ig/directory?url=http%3A%2F%2Fudaysasi.googlepages.com%2FhealthTipOfTheDay.xml</site>
+    <gadget whole-dropdown='true'>http://udaysasi-gadgets.googlecode.com/svn/trunk/healthTipOfTheDay.xml</gadget>
+    	<icon mode="base64" type="image/x-icon">
+AAABAAEAEBAQAAAAAAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAwAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAACAAACAAAAAgIAAgAAAAIAAgACAgAAAgICAAMDAwAAAAP8AAP8AAAD//wD/AAAA
+/wD/AP//AAD///8AAAAAAAAAAAAAAACZmQAAAAAAAJmZAAAAAAAAmZkAAAAAAACZmQAAAAAAAJmZ
+AAAACZmZmZmZmZAJmZmZmZmZkAmZmZmZmZmQCZmZmZmZmZAAAACZmQAAAAAAAJmZAAAAAAAAmZkA
+AAAAAACZmQAAAAAAAJmZAAAAAAAAAAAAAAD//wAA/D8AAPw/AAD8PwAA/D8AAPw/AACAAQAAgAEA
+AIABAACAAQAA/D8AAPw/AAD8PwAA/D8AAPw/AAD//wAA
+		</icon>
+	<update>http://udaysasi-gadgets.googlecode.com/svn/trunk/healthTipOfTheDayButton.xml</update>
+	<search>http://www.google.com/search?q={query}</search>	
+	</button>
+</custombuttons>

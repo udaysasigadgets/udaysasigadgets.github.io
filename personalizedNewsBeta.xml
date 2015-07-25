@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+<ModulePrefs 
+	title="Personalized News" 
+	description="Why look all over the internet for the news you are interested in? Create your own personalized news feed using this gadget. Your search query overrides the selected news section. You can also pick an existing news section(Data provided by Yahoo! News)"
+	author="Uday Kumar Pyda - Sunnyvale, CA"
+	author_email="udaysasi+feedback@gmail.com"
+	author_affiliation="UdaySasi"
+	author_link="http://www.udaysasi.com"
+	directory_title="Uday's Personalized News Gadget"
+	screenshot="http://www.freewebs.com/udaysasi/personalizedNewsScreenshot.png"
+	thumbnail="http://www.freewebs.com/udaysasi/personalizedNewsThumbnail.png"	
+>
+	<Require feature="dynamic-height"/>	
+	<Require feature="analytics"/>	
+</ModulePrefs>	
+<UserPref name="newsType" 
+       display_name="Pick News"
+       datatype="enum"
+       default_value="topstories">
+    <EnumValue value="topstories" display_value="Top Stories"/>
+    <EnumValue value="us" display_value="United States"/>
+    <EnumValue value="world" display_value="World"/>
+    <EnumValue value="politics" display_value="Politics"/>
+    <EnumValue value="business" display_value="Business"/>
+    <EnumValue value="tech" display_value="Technology"/>
+    <EnumValue value="sports" display_value="Sports"/>
+    <EnumValue value="entertainment" display_value="Entertainment"/>
+    <EnumValue value="science" display_value="Science"/>    
+</UserPref>
+<UserPref name="searchStr" display_name="(or)Search For"/>
+<UserPref name="numItems" 
+       display_name="Number of Items"
+       datatype="enum"
+       default_value="5">
+    <EnumValue value="1" display_value="1"/>
+    <EnumValue value="2" display_value="2"/>
+    <EnumValue value="3" display_value="3"/>
+    <EnumValue value="5" display_value="5"/>
+    <EnumValue value="10" display_value="10"/>
+</UserPref>	
+<UserPref name="displayContent" 
+       display_name="Display"
+       datatype="enum"
+       default_value="1">
+    <EnumValue value="1" display_value="Headlines only"/>
+    <EnumValue value="2" display_value="Headlines with snippets"/>
+</UserPref>	
+<UserPref name="refreshRate" 
+       display_name="Refresh Rate"
+       datatype="enum"
+       default_value="5">
+    <EnumValue value="-1" display_value="No refresh"/>
+    <EnumValue value="5" display_value="5 minutes"/>
+    <EnumValue value="15" display_value="15 minutes"/>
+    <EnumValue value="30" display_value="30 minutes"/>
+    <EnumValue value="45" display_value="45 minutes"/>
+    <EnumValue value="60" display_value="1 hour"/>
+</UserPref>	
+<Content type="html"><![CDATA[
+
+<!-- ALm6fM1xqI793yjIdP4j2ljjlf0mlzope4_QyKz0fWG_0tgJYLaoAsUK07VBI8COL3ZpI-_vVa4OScmdZjKFpTQ2-GgDmCvCS01PsrAJ4Hq3e0OgoWE9BGg2pLS1te2urd6Z-QMbaidaXxyMmEvBPeirsTn_ws7ASFnA1ji96cg4v07W_jv-5Ec= -->
+
+<style type="text/css">
+  a { color:#0000DD;}
+  a:visited { color:#0000DD;}
+</style>
+
+<script>
+  _IG_Analytics("UA-1214589-6", "/PersonalizedNews");
+</script>
+<script language="Javascript">
+var prefs__MODULE_ID__ = new _IG_Prefs(__MODULE_ID__); 
+var baseURL__MODULE_ID__ = ''; 
+var newsType__MODULE_ID__ = prefs__MODULE_ID__.getString("newsType"); 
+var searchStr__MODULE_ID__ = prefs__MODULE_ID__.getString("searchStr"); 
+var numItems__MODULE_ID__ = prefs__MODULE_ID__.getInt("numItems"); 
+var refreshRate__MODULE_ID__ = prefs__MODULE_ID__.getInt("refreshRate"); 
+var displayContent__MODULE_ID__ = prefs__MODULE_ID__.getInt("displayContent");
+if(trim__MODULE_ID__(searchStr__MODULE_ID__) == '') baseURL__MODULE_ID__ = 'http://rss.news.yahoo.com/rss/' + newsType__MODULE_ID__; 
+else baseURL__MODULE_ID__ = 'http://news.search.yahoo.com/news/rss?p=' + searchStr__MODULE_ID__ + '&ei=UTF-8&fl=0&x=wrt'; 
+var newDate__MODULE_ID__ = new Date().getTime(); 
+var reloadId__MODULE_ID__ = 'personalNews'; 
+var expand__MODULE_ID__ = _IG_GetImageUrl("http://www.freewebs.com/udaysasi/expand.gif"); 
+var collapse__MODULE_ID__ = _IG_GetImageUrl("http://www.freewebs.com/udaysasi/collapse.gif"); 
+var newsItemArr__MODULE_ID__ = new Array(); 
+function NI__MODULE_ID__(title, link, description) {
+   this.title = title; 
+   this.link = link; 
+   this.description = description; 
+   }
+function cS__MODULE_ID__() {
+   var feedURL = baseURL__MODULE_ID__; 
+   newDate__MODULE_ID__ = new Date().getTime(); 
+//   if(baseURL__MODULE_ID__.indexOf('?') !=- 1) feedURL = baseURL__MODULE_ID__ + "&dummy=" + newDate__MODULE_ID__; 
+//   else feedURL = baseURL__MODULE_ID__ + "?dummy=" + newDate__MODULE_ID__; 
+   _IG_FetchXmlContent(feedURL, _IG_Callback(pRC__MODULE_ID__)); 
+   }
+function pRC__MODULE_ID__(r) {
+   try {
+      var iL = r.getElementsByTagName("item"); 
+      newsItemArr__MODULE_ID__ = new Array(); 
+      for (var i = 0; i < iL.length ; i++) {
+         if(i >= numItems__MODULE_ID__) break; 
+         var nodeList = iL.item(i).childNodes; 
+         var title = '', link = ''; 
+         description = ''; 
+         for (var j = 0; j < nodeList.length ; j++) {
+            var node = nodeList.item(j); 
+            if (node.nodeName == "title") {
+               title = node.firstChild.nodeValue; 
+               }
+            if (node.nodeName == "description") {
+               description = node.firstChild.nodeValue; 
+               }
+            if (node.nodeName == "link") {
+               link = node.firstChild.nodeValue; 
+               }
+            }
+         newsItemArr__MODULE_ID__ = newsItemArr__MODULE_ID__.concat(new NI__MODULE_ID__(title, link, description)); 
+         }
+      pNC__MODULE_ID__(); 
+      }
+   catch(e) {
+   	pNC__MODULE_ID__();
+      }
+   if(refreshRate__MODULE_ID__ !=- 1) reloadId__MODULE_ID__ = setTimeout("cS__MODULE_ID__();", refreshRate__MODULE_ID__ * 60000); 
+   }
+function pNC__MODULE_ID__() {
+   var header = '<table align=center style="border:0;" width="100%" id="contentTable" cellspacing=0 cellpadding=3>'; 
+   var footer = '</table>'; 
+   var contentText = ''; 
+   if(newsItemArr__MODULE_ID__.length == 0) contentText = '<tr><td><font size="-1">No news available at this time. Many a time, this might be a temporary glitch. Try refreshing the module by clicking <a href="javascript:cS__MODULE_ID__();">here</a></font></td></tr>'; 
+	var displayDescription = "none";
+	var imgIconSrc = expand__MODULE_ID__;
+	if(displayContent__MODULE_ID__==2) {
+		displayDescription = "";
+		imgIconSrc = collapse__MODULE_ID__;      
+	}
+   for (i = 0; i < newsItemArr__MODULE_ID__.length; i++) {
+      contentText += '<tr>'; 
+      contentText += '<td align="left"><a href="javascript:toggleDetail(' + i + ');"><img id="icon' + i + '" src="'+imgIconSrc+'" border="0"></a>&nbsp;<a href="' + newsItemArr__MODULE_ID__[i].link + '" target="news"><font size="-1">' + newsItemArr__MODULE_ID__[i].title + '</font></a></td>';
+      contentText += '</tr>'; 
+      contentText += '<tr id="description' + i + '" style="background:#ffffff;display:'+displayDescription+';"><td align="left" style="padding-left:15px"><font size="-1">' + newsItemArr__MODULE_ID__[i].description + '</font></td>'; 
+      contentText += '</tr>'; 
+      }
+   _gel('newsContentDiv').innerHTML = header + contentText + footer; 
+   _IG_AdjustIFrameHeight(); 
+   }
+function toggleDetail(i) {
+   var detailObj = _gel("description" + i); 
+   var iconObj = _gel("icon" + i); 
+   if(detailObj.style.display == "none") {
+      detailObj.style.display = ""; 
+      iconObj.src = collapse__MODULE_ID__; 
+      }
+   else {
+      detailObj.style.display = "none"; 
+      iconObj.src = expand__MODULE_ID__; 
+      }
+   _IG_AdjustIFrameHeight(); 
+   }   
+function trim__MODULE_ID__(str) {
+   return str.replace(/^\s*|\s*$/g,"");
+   }
+_IG_RegisterOnloadHandler(cS__MODULE_ID__); 
+
+
+</script>
+<div id="newsContentDiv" width="100%"><font size="-1" style="; font-family: Arial"><img src="http://www.freewebs.com/udaysasi/loading-spin.gif">&nbsp;&nbsp;Loading news.. Please wait..</font></div>
+
+<hr align="center" size="1" width="100%" noshade>
+<font size="-1" style="font-family: arial,sans-serif" color="#AAAAAA">(Data provided by Yahoo! News)</font>
+&nbsp;&nbsp;<font size="-1" style="font-family: arial,sans-serif"><a href="http://www.freewebs.com/udaysasi/udaysModules.html" target="gadgetspage">My gadgets</a></font>
+]]></Content>
+</Module>

@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+<ModulePrefs 
+	title="Real-time Traffic" 
+	description="Displays real-time traffic information in over 50 cities in the United States. Ability to choose freeways to monitor. A great tool for people whose daily commute depends on traffic (Data provided by Traffic.com)"
+	author="Uday Kumar Pyda - Sunnyvale, CA"
+	author_email="udaysasi+feedback@gmail.com"
+	author_affiliation="UdaySasi"
+	author_link="http://www.udaysasi.com"
+	directory_title="Uday's Real-time Traffic"
+	title_url="http://udaysasi-gadgets.googlecode.com/svn/trunk/realTimeTrafficHelp.html"
+	screenshot="http://udaysasi-gadgets.googlecode.com/svn/trunk/realTimeTrafficScreenshot.png"
+	thumbnail="http://udaysasi-gadgets.googlecode.com/svn/trunk/realTimeTrafficThumbnail.png"	
+>
+	<Require feature="dynamic-height"/>	
+	<Require feature="analytics"/>
+</ModulePrefs>	
+<UserPref name="city" 
+       display_name="City/Metro Area"
+       datatype="enum"
+       default_value="sanfrancisco">
+	<EnumValue value="albany" display_value="Albany, NY"/>
+	<EnumValue value="atlanta" display_value="Atlanta, GA"/>
+	<EnumValue value="austin" display_value="Austin, TX"/>
+	<EnumValue value="baltimore" display_value="Baltimore, VA"/>
+	<EnumValue value="birmingham" display_value="Birmingham, AL"/>
+	<EnumValue value="boston" display_value="Boston, MA"/>
+	<EnumValue value="charlotte" display_value="Charlotte, NC"/>
+	<EnumValue value="chicago" display_value="Chicago, IL"/>
+	<EnumValue value="cincinnati" display_value="Cincinnati, OH"/>
+	<EnumValue value="cleveland" display_value="Cleveland, OH"/>
+	<EnumValue value="columbus" display_value="Columbus, OH"/>
+	<EnumValue value="dallas" display_value="Dallas, TX"/>
+	<EnumValue value="denver" display_value="Denver, CO"/>
+	<EnumValue value="detroit" display_value="Detroit, MI"/>
+	<EnumValue value="ftmyers" display_value="Ft Myers, FL"/>
+	<EnumValue value="greensbro" display_value="Greensbro, NC"/>
+	<EnumValue value="hartford" display_value="Hartford, CT"/>
+	<EnumValue value="houston" display_value="Houston, TX"/>
+	<EnumValue value="indianapolis" display_value="Indianapolis, IN"/>
+	<EnumValue value="jacksonville" display_value="Jacksonville, FL"/>
+	<EnumValue value="kansascity" display_value="Kansas City, KS"/>
+	<EnumValue value="lasvegas" display_value="Las Vegas, NV"/>
+	<EnumValue value="losangeles" display_value="Los Angeles, CA"/>
+	<EnumValue value="louisville" display_value="Louisville, KY"/>
+	<EnumValue value="miami" display_value="Miami, FL"/>
+	<EnumValue value="milwaukee" display_value="Milwaukee, WI"/>
+	<EnumValue value="minneapolis" display_value="Minneapolis, MN"/>
+	<EnumValue value="nashville" display_value="Nashville, TN"/>
+	<EnumValue value="neworleans" display_value="New Orleans, LA"/>
+	<EnumValue value="newyork" display_value="New York City, NY"/>
+	<EnumValue value="norfolk" display_value="Norfolk, VA"/>
+	<EnumValue value="oklahomacity" display_value="Oklahoma City, OK"/>
+	<EnumValue value="orlando" display_value="Orlando, FL"/>
+	<EnumValue value="philadelphia" display_value="Philadelphia, PA"/>
+	<EnumValue value="phoenix" display_value="Phoenix, AZ"/>
+	<EnumValue value="pittsburgh" display_value="Pittsburgh, PA"/>
+	<EnumValue value="portland" display_value="Portland, OR"/>
+	<EnumValue value="providence" display_value="Providence, RI"/>
+	<EnumValue value="raleighdurham" display_value="Raleigh, NC"/>
+	<EnumValue value="richmond" display_value="Richmond, VA"/>
+	<EnumValue value="sanfrancisco" display_value="San Francisco, CA"/>
+	<EnumValue value="sacramento" display_value="Sacramento, CA"/>
+	<EnumValue value="saltlakecity" display_value="Salt Lake City, UT"/>
+	<EnumValue value="sanantonio" display_value="San Antonio, TX"/>
+	<EnumValue value="sandiego" display_value="San Diego, CA"/>
+	<EnumValue value="seattle" display_value="Seattle, WA"/>
+	<EnumValue value="stlouis" display_value="St Louis, MO"/>
+	<EnumValue value="tampa" display_value="Tampa, FL"/>
+	<EnumValue value="tuscon" display_value="Tuscon, AZ"/>
+	<EnumValue value="tulsa" display_value="Tulsa, OK"/>
+	<EnumValue value="washingtondc" display_value="Washington, DC"/>    
+</UserPref>	
+<UserPref name="freeways" display_name="Only Freeways"/>
+<Content type="html"><![CDATA[
+
+<style type="text/css">
+  a { color:#0000DD;}
+  a:visited { color:#0000DD;}
+  body { font-family: arial,sans;}
+</style>
+
+<script type="text/javascript">
+	var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+	document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+	var pageTracker = _gat._getTracker("UA-1214589-13");
+	pageTracker._initData();
+	pageTracker._trackPageview();
+</script>
+
+<script language="Javascript">
+
+var prefs = new gadgets.Prefs();
+var baseURL = '';
+var city = prefs.getString("city");
+var freewayStr = prefs.getString("freeways");
+baseURL = 'http://cityrss.traffic.com/feeds/rss_' + city;
+var reloadId = 'liveTraffic';
+var newsItemArr = new Array();
+var freewayArray = new Array();
+freewayStr = freewayStr.replace(/ /g, ",");
+var freeways = freewayStr.split(",");
+for ( var p = 0; p < freeways.length; p++) {
+	var freeway = "" + trim(freeways[p])
+	if (freeway != "")
+		freewayArray.push(freeway);
+}
+var expand = gadgets.io
+		.getProxyUrl("http://udaysasi-gadgets.googlecode.com/svn/trunk/expand.gif");
+var collapse = gadgets.io
+		.getProxyUrl("http://udaysasi-gadgets.googlecode.com/svn/trunk/collapse.gif");
+
+function _gel(id) {
+	return document.getElementById(id);
+}
+
+function NI(title, link, description, jamfactor) {
+	this.title = title;
+	this.link = link;
+	this.description = description;
+	this.jamfactor = jamfactor;
+}
+function callServer() {
+	var feedURL = '';
+	var newDate = new Date().getTime();
+	if (baseURL.indexOf('?') != -1)
+		feedURL = baseURL + "&dummy=" + newDate;
+	else
+		feedURL = baseURL + "?dummy=" + newDate;
+	var params = params || {};
+	params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.DOM;
+	params[gadgets.io.RequestParameters.REFRESH_INTERVAL] = 60;
+	gadgets.io.makeRequest(feedURL, processResponse, params);
+}
+function processResponse(r) {
+	try {
+		r = r.data;
+		var iL = r.getElementsByTagName("item");
+		newsItemArr = new Array();
+		for ( var i = 0; i < iL.length; i++) {
+			var nodeList = iL.item(i).childNodes;
+			var title = '', link = '', description = '', jamfactor = '';
+			for ( var j = 0; j < nodeList.length; j++) {
+				var node = nodeList.item(j);
+				if (node.nodeName == "title") {
+					title = node.firstChild.nodeValue;
+					var jCharIndex = title.toUpperCase().indexOf(": JAMFACTOR");
+					if (jCharIndex != -1) {
+						jamfactor = title.substring(jCharIndex + 12);
+						title = title.substring(0, jCharIndex);
+					}
+				}
+				if (node.nodeName == "link") {
+					link = node.firstChild.nodeValue;
+				}
+				if (node.nodeName == "description") {
+					description = node.firstChild.nodeValue;
+				}
+			}
+			if (freewayArray.length == 0)
+				newsItemArr = newsItemArr.concat(new NI(title, link, description, jamfactor));
+			else {
+				for ( var p = 0; p < freewayArray.length; p++) {
+					if (title.indexOf('-' + freewayArray[p]) != -1) {
+						newsItemArr = newsItemArr.concat(new NI(title, link,
+								description, jamfactor));
+						break;
+					}
+				}
+			}
+		}
+		printTable();
+	} catch (e) {
+	}
+}
+function printTable() {
+	var header = '<table align=center style="border:0; font-family: Arial" width="100%" id="contentTable" cellspacing=0 cellpadding=3>';
+	var footer = '</table>';
+	var contentText = '';
+	if (newsItemArr.length == 0)
+		contentText = '<tr><td>Oops.. Unable to retrieve real-time traffic information at this time. Please check your preferences for incorrect entries. If the preferences are set correctly, try refreshing this page.</td></tr>';
+	for (i = 0; i < newsItemArr.length; i++) {
+		contentText += '<tr style="background:#ffffff;">';
+		contentText += '<td align="left"><a href="javascript:toggleDetail(' + i
+				+ ');"><img id="icon' + i + '" src="' + expand
+				+ '" border="0"></a>&nbsp;<font size="-1"><a href="'
+				+ newsItemArr[i].link + '" target="new">'
+				+ newsItemArr[i].title
+				+ '</a>&nbsp&nbsp<span style="background-color:'
+				+ jamFactorColor(newsItemArr[i].jamfactor)
+				+ '" title="Jam Factor : ' + newsItemArr[i].jamfactor
+				+ '">&nbsp;&nbsp;&nbsp;&nbsp;</span></font></td>';
+		contentText += '</tr>';
+		contentText += '<tr id="description'
+				+ i
+				+ '" style="background:#ffffff;display:none;"><td align="left" style="padding-left:15px"><font size="-1">'
+				+ newsItemArr[i].description + '</font></td>';
+		contentText += '</tr>';
+	}
+	_gel('trafficContentDiv').innerHTML = header + contentText + footer;
+	gadgets.window.adjustHeight();
+}
+function trim(str) {
+	return str.replace(/^\s*|\s*$/g, "");
+}
+function jamFactorColor(x) {
+	x = parseFloat(x);
+	var g = Math.round((10 - x) * 25.5);
+	var r = Math.round(x * 25.5);
+	var color = "#" + decToHex(r) + decToHex(g) + "00";
+	return color;
+}
+function decToHex(decNum) {
+	var hexNum = "" + decConvertToBase(decNum, 16);
+	if (hexNum.length == 1)
+		hexNum = "0" + hexNum;
+	return hexNum;
+}
+function decConvertToBase(num, base) {
+	var newNum = "";
+	var result = num;
+	var remainder = 0;
+	if (result == 0)
+		return "0";
+	while (result > 0) {
+		result = Math.floor(num / base);
+		remainder = num % base;
+		num = result;
+		if (remainder >= 10) {
+			if (remainder == 10)
+				remainder = 'A';
+			if (remainder == 11)
+				remainder = 'B';
+			if (remainder == 12)
+				remainder = 'C';
+			if (remainder == 13)
+				remainder = 'D';
+			if (remainder == 14)
+				remainder = 'E';
+			if (remainder == 15)
+				remainder = 'F';
+		}
+		// just append the next remainder to the beginning of the string
+		newNum = "" + remainder + newNum;
+	}
+	return newNum;
+}
+function toggleDetail(i) {
+	var detailObj = _gel("description" + i);
+	var iconObj = _gel("icon" + i);
+	if (detailObj.style.display == "none") {
+		detailObj.style.display = "";
+		iconObj.src = collapse;
+	} else {
+		detailObj.style.display = "none";
+		iconObj.src = expand;
+	}
+	gadgets.window.adjustHeight();
+}
+function log(str) {
+	//_gel("loggerDiv").innerHTML += str+'<br>';
+	//gadgets.window.adjustHeight();
+}
+gadgets.util.registerOnLoadHandler(callServer);
+reloadId = window.setInterval("callServer();", 60000);
+
+</script>
+<div id="trafficContentDiv" width="100%"><font size="-1" style="; font-family: Arial"><img src="http://udaysasi-gadgets.googlecode.com/svn/trunk/loading-spin.gif">&nbsp;&nbsp;Loading traffic information.. Please wait..</font></div>
+<div id="loggerDiv"></div>
+&nbsp;&nbsp;<font size="-1" style="font-family: arial,sans-serif"><a href="http://udaysasi-gadgets.googlecode.com/svn/trunk/realTimeTrafficHelp.html" target="realtimetraffichelp">Help</a></font>
+&nbsp;&nbsp;<font size="-1" style="font-family: arial,sans-serif"><a href="http://udaysasi-gadgets.googlecode.com/svn/trunk/udaysModules.html" target="gadgetspage">My gadgets</a></font>
+]]></Content>
+</Module>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Apigee example</title>
+        <script type="text/javascript" src="apigee.min.js"></script>
+        <script type="text/javascript">
+	        var client = new Usergrid.Client({
+	            orgName:'udaysasi',
+	            appName:'sandbox',
+	            logging: true, // Optional - turn on logging, off by default
+	            buildCurl: true // Optional - turn on curl commands, off by default
+	        });
+	        
+	        var userPrefs = null;
+	        function getUserPrefs(userid) {
+	        	var opts = {
+		        	'type':'igprefs',
+		        	'name':userid
+		        };
+	        	client.getEntity(opts, function(err, pref){
+	        	    if (err){
+	        	        console.log("Error getting entity. No such entity is present")
+	        	    } else {
+	        	        // Get the UUID of the obj we just got from the database
+	        	        var newuuid = pref.get('uuid');
+	        	        console.log("Preferences object retrieved : "+pref.get('uuid'));
+	        	        console.log(pref);
+	        	        userPrefs = pref;
+	        	    }
+	        	});
+	        }
+	        
+	        function storeUserPrefs(userid) {
+		        var opts = {
+		        	'type':'igprefs',
+		        	'name':userid,
+		        	getOnExist:true,
+		        	'gadget':'qsw',
+		        	'showname':'0',
+		        	'flashing':'1'
+		        };
+		        client.createEntity(opts, function(err, obj) {
+		        	if(err) {
+		        		console.log("Error creating preferences object");
+		        	} else {
+		        		console.log("Preferences object saved : "+obj.get('uuid'));
+		        	}
+		        });
+	        	
+	        }
+        </script>
+    </head>
+    <body>
+			
+    </body>
+</html>

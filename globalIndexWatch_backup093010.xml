@@ -1,0 +1,733 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+<ModulePrefs 
+	title="Global Index Watch" 
+	description="Snapshot of major stock market indices of the world. Covers most of american, european, asian and australian markets. (Data provided by Yahoo! Finance)"
+	author="Uday Kumar Pyda - Sunnyvale, CA"
+	author_email="udaysasi+feedback@gmail.com"
+	author_affiliation="UdaySasi"
+	author_link="http://www.udaysasi.com"
+	directory_title="Uday's Global Index Watch"
+	title_url="http://udaysasi-gadgets.googlecode.com/svn/trunk/globalIndexWatchHelp.html"
+	scrolling="false"
+	singleton="false"
+	screenshot="http://udaysasi-gadgets.googlecode.com/svn/trunk/globalIndexWatchScreenshot.png"
+	thumbnail="http://udaysasi-gadgets.googlecode.com/svn/trunk/globalIndexWatchThumbnail.png"
+>
+	<Require feature="analytics"/>
+	<Require feature="minimessage"/>
+	<Require feature="dynamic-height"/>	
+	<Require feature="setprefs" /> 		
+	<Require feature="finance"/>	
+</ModulePrefs>
+<UserPref name="showstrength" datatype="hidden" default_value="0" />
+<UserPref name="region" 
+       display_name="Show Market Indices"
+       datatype="enum"
+       default_value="-1">
+    <EnumValue value="1" display_value="Americas"/>
+    <EnumValue value="2" display_value="Europe"/>
+    <EnumValue value="3" display_value="Asia Pacific"/>
+    <EnumValue value="-1" display_value="All"/>   
+</UserPref>
+<UserPref name="hidecols" 
+       display_name="Hide Columns"
+       datatype="enum"
+       default_value="2">
+    <EnumValue value="1" display_value="Change"/>
+    <EnumValue value="2" display_value="Percent Change"/>
+    <EnumValue value="-1" display_value="None"/>   
+</UserPref>
+
+
+<Content type="html"><![CDATA[
+
+<style type="text/css">
+	a { color:#0000DD;}
+	a:visited { color:#0000DD;}
+
+	a.link { text-decoration:none; color:#000000;}
+	a.link:visited { color:#000000;}
+
+	.fixedtable { table-layout: fixed; width:100%}
+
+	.fixedtable td.dynamic {
+		empty-cells: show;
+		overflow: hidden;	
+		text-overflow:ellipsis;
+		white-space: nowrap;
+	}  
+</style>
+
+<script type="text/javascript">
+	var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+	document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+	</script>
+	<script type="text/javascript">
+	var pageTracker = _gat._getTracker("UA-1214589-10");
+	pageTracker._initData();
+	pageTracker._trackPageview();
+</script>
+<script language="Javascript">
+
+var prefs = new gadgets.Prefs();
+var americaStrTickers = "^DJI,^GSPC,^IXIC,^GSPTSE,^MERV,^BVSP,^IPSA,^MXX,";
+var europeStrTickers = "^FTSE,^IETP,^FCHI,^GDAXI,^IBEX,^AEX,^SSMI,^PSI20,^BFX,^ISEQ,^ATX,^STOXX50E,";
+var asiaStrTickers = "^BSESN,^NSEI,000001.SS,^JKSE,^KLSE,^N225,^STI,^KS11,^TWII,^HSI,^PSI,^CSE,^TA100,^AORD,^NZ50";
+var region = prefs.getInt("region");			
+var showStrength = prefs.getInt("showstrength");
+
+var strTickers;
+if(region==1)
+	strTickers = americaStrTickers;
+else if(region==2)
+	strTickers = europeStrTickers;
+else if(region==3)
+	strTickers = asiaStrTickers;
+else
+	strTickers = americaStrTickers+europeStrTickers+asiaStrTickers;
+	
+var stockTickers = convertToArray(strTickers);
+var baseURL = "http://finance.yahoo.com/d?s=";
+var refreshrate = 15;
+var sortcol = 'symbol';
+var newDate = new Date().getTime();
+var reloadId = "0";
+
+function _gel(id) {
+	return document.getElementById(id);
+}
+
+var staticImgUrl = new Array();
+for (var u = 0; u < stockTickers.length; u++) {
+	staticImgUrl[stockTickers[u].symbol] = gadgets.io.getProxyUrl("http://udaysasi-gadgets.googlecode.com/svn/trunk/"+getAlphaNumericName(stockTickers[u].symbol)+".gif"); 
+}
+
+function getAlphaNumericName(txtString)
+{
+	txtString = txtString.toLowerCase();
+	txtString = txtString.replace(/[^a-zA-Z 0-9]+/g,"");
+	return txtString;
+}
+
+function showStrengthMeter()
+{
+	if(showStrength==0)
+	{
+		_gel('strengthMeter').style.display = '';
+		_gel('strHorLine').style.display = '';
+		showStrength = 1;		
+		prefs.set("showstrength", 1);
+	}
+	else
+	{
+		_gel('strengthMeter').style.display = 'none';		
+		_gel('strHorLine').style.display = 'none';		
+		showStrength = 0;
+		prefs.set("showstrength", 0);
+	}
+	gadgets.window.adjustHeight();
+}
+
+function convertToString(arr) {
+    var returnString = "";
+    for (var g = 0; g < arr.length; g++) {
+        returnString += arr[g].symbol + ",";
+    }
+    return returnString;
+}
+
+function convertToString2(arr) {
+    var returnString = "";
+    for (var g = 0; g < arr.length; g++) {
+        returnString += arr[g].symbol + "|" + arr[g].numshares + "|" + arr[g].buyprice + ",";
+    }
+    return returnString;	
+}
+
+function convertToArray(str) {
+    var returnArray = new Array();
+    str = str.replace(/ /g, ",");
+    var ticks = str.split(",");
+    // ticks.sort();
+    for (var d = 0; d < ticks.length; d++) {
+        var curTicker = ticks[d];
+        curTicker = curTicker.toUpperCase();
+        if (curTicker == "") {
+            continue;
+        }
+        returnArray.push(new StockTicker(curTicker, "Loading..", "0", "0", "(0%)"));
+    }
+    return returnArray;
+}
+
+function StockTicker(symbol, name, price, change, percent) {
+    this.symbol = symbol;
+    this.name = name;
+    this.price = price;
+    this.change = change;
+    this.percent = percent;
+}
+function getSymbolArray() {
+    var sa = new Array();
+    for (u = 0; u < stockTickers.length; u++) {
+        sa = sa.concat(stockTickers[u].symbol);
+    }
+    return sa;
+}
+
+function getDowData() {
+	var symbol = "^DJI";
+	var nameSpan = _gel(symbol + "NameSpan");
+	var priceSpan = _gel(symbol + "PriceSpan");
+	var changeSpan = _gel(symbol + "ChangeSpan");
+	var percentSpan = _gel(symbol + "PercentSpan");                        
+	var row = _gel(symbol + "Row");	
+	if(!nameSpan)
+		return;
+	var quote = '';	
+	try {
+	 	quote = new google.finance.Quote();
+	} catch(e) {
+		var pos = getPosition("^DJI");
+		setName(pos, "DOW(Not supported)");
+		nameSpan.innerHTML = "DOW(Not supported)";
+		row.style.color = "#888888";
+		row.style.textDecoration="line-through";
+		return;
+	}		
+	quote.getQuotes([".DJI"]);	
+	quote.addListener(function(data) {	
+		nameSpan.innerHTML = "DOW JONES INDUSTRIAL";
+		var pos = getPosition("^DJI");
+		
+		setName(pos, "DOW JONES INDUSTRIAL");
+
+		var curQuotePrice = data[google.finance.LAST];
+		
+		try {			
+			curQuotePrice = parseFloat(curQuotePrice.replace(",", ""));
+			curQuotePrice = roundNumber(curQuotePrice);
+			curQuotePrice = round2Decimals(curQuotePrice);
+		}
+		catch (e) {
+			curQuotePrice = "N/A";
+		}
+		priceSpan.innerHTML = curQuotePrice;
+		
+		var curQuoteOldPrice = getPrice(pos);
+		setPrice(pos, curQuotePrice);
+
+		var curQuoteChange = data[google.finance.CHANGE];
+		var curQuotePercentChange = data[google.finance.CHANGE_PCT];
+		
+		if (isNaN(curQuoteChange)) {
+			curQuoteChange = "N/A";
+		} else {
+			try {
+				curQuoteChange = parseFloat(curQuoteChange);
+				curQuoteChange = roundNumber(curQuoteChange);
+				curQuoteChange = round2Decimals(curQuoteChange);
+			} catch (e) {
+				curQuoteChange = "N/A";
+			}
+		}
+		setChange(pos, curQuoteChange);
+		if (curQuoteChange != 'N/A' && curQuoteChange >= 0) {
+			curQuoteChange = "+" + curQuoteChange;
+		}
+		changeSpan.innerHTML = curQuoteChange;
+		if (isNaN(curQuotePercentChange)) {
+			curQuotePercentChange = "N/A";
+		} else {
+			curQuotePercentChange = roundNumber(curQuotePercentChange);
+			curQuotePercentChange = round2Decimals(curQuotePercentChange);
+			if (curQuotePercentChange >= 0) {
+				curQuotePercentChange = "+" + curQuotePercentChange;
+			}
+		}
+		setPercentChange(pos, curQuotePercentChange);
+		percentSpan.innerHTML = "(" + curQuotePercentChange + "%)";
+		if (parseFloat(curQuotePercentChange) < 0 || parseFloat(curQuoteChange) < 0) {
+			changeSpan.style.color = "#990000";
+			percentSpan.style.color = "#990000";
+		} else if (parseFloat(curQuotePercentChange) > 0 || parseFloat(curQuoteChange) > 0) {
+			changeSpan.style.color = "#009900";
+			percentSpan.style.color = "#009900";
+		} else {
+			changeSpan.style.color = "#666666";
+			percentSpan.style.color = "#666666";
+		}
+
+	});
+    
+}
+function callServer() {
+
+	getDowData();
+
+    var sa = getSymbolArray();
+    if (sa.length == 0) {
+        return;
+    }
+    var symbol = "";
+    for (var h = 0; h < sa.length - 1; h++) {
+        symbol += sa[h] + ",";
+    }
+    symbol += sa[h];
+    var newDate = new Date().getTime(); 
+    var financeURL = baseURL + symbol + "&f=snl1c1p2&nocache="+newDate;
+	
+	var params = params || {};
+	params[gadgets.io.RequestParameters.CONTENT_TYPE] = gadgets.io.ContentType.TEXT;
+	params[gadgets.io.RequestParameters.REFRESH_INTERVAL] = 60;
+	gadgets.io.makeRequest(financeURL, responseText, params);    
+    try {
+        clearTimeout(reloadId);
+    }
+    catch (e) {
+    }    
+	if (refreshrate != -1) {
+		reloadId = setTimeout("callServer();", refreshrate * 1000);
+    }
+}
+function fixCommas(str) {
+    var x = 0;
+    while (str.indexOf("\"", x) >= 0) {
+        var y = str.indexOf("\"", x);
+        var z = str.indexOf("\"", y + 1);
+        var w = str.indexOf(",", y);
+        if (w > y && w < z) {
+            str = str.substring(0, w) + "." + str.substring(w + 1);
+        }
+        x = z + 1;
+    }
+    return str;
+}
+function responseText(responseString) {
+	refreshrate = 60;
+    var result = responseString.data;
+    try {
+        var myregexp = new RegExp("\n");
+        var quotes = new Array();
+        quotes = result.split(myregexp);
+        var n59p = 0, n25p = 0, n02p = 0, p25p = 0, p02p = 0, p59p = 0;
+        var n59c = 0, n25c = 0, n02c = 0, p25c = 0, p02c = 0, p59c = 0;
+        for (var c = 0; c < quotes.length; c++) {
+
+	    var curQuote = quotes[c];
+            var curQuoteDetail = fixCommas(curQuote).split(",");
+            var curQuoteTicker = curQuoteDetail[0];
+            curQuoteTicker = getRefinedSymbol(curQuoteTicker);
+            var pos = getPosition(curQuoteTicker);
+            if(pos==-1)
+            	continue;            	
+            
+            var symbol = getSymbol(pos);
+            if (symbol == "") {
+                continue;
+            }
+            var nameSpan = _gel(symbol + "NameSpan");
+            var priceSpan = _gel(symbol + "PriceSpan");
+            var changeSpan = _gel(symbol + "ChangeSpan");
+            var percentSpan = _gel(symbol + "PercentSpan");
+            var tickerSpan = _gel(symbol + "Span");
+                        
+            var row = _gel(symbol + "Row");
+            var curQuoteName = curQuoteDetail[1];
+            curQuoteName = getRefinedName(curQuoteName);
+            if (symbol == curQuoteName) {
+                curQuoteName = "Invalid symbol";
+            }
+            curQuoteName = curQuoteName.toUpperCase();
+            nameSpan.innerHTML = curQuoteName;
+            setName(pos, curQuoteName);
+            var curQuotePrice = removeBold(curQuoteDetail[2]);
+            curQuotePrice = rcs(curQuotePrice);
+            curQuotePrice = removeItalics(curQuotePrice);
+            var curQuoteChange = removeBold(curQuoteDetail[3]);
+            curQuoteChange = removeItalics(curQuoteChange);
+            try {
+                curQuotePrice = parseFloat(curQuotePrice);
+                if (curQuotePrice > 0.1) {
+                    curQuotePrice = roundNumber(curQuotePrice);
+                    curQuotePrice = round2Decimals(curQuotePrice);
+                }
+            }
+            catch (e) {
+                curQuotePrice = "N/A";
+            }
+            var curQuotePercentChange ="";
+            try {
+            	curQuotePercentChange = curQuoteDetail[4].substring(1, curQuoteDetail[4].length - 2);
+            }
+				catch (e) {
+					 curQuotePercentChange = "N/A";
+				}
+            curQuotePercentChange = removeBold(curQuotePercentChange);
+            curQuotePercentChange = removeItalics(curQuotePercentChange);
+            curQuotePercentChange = trim(curQuotePercentChange);
+            try {
+                curQuotePercentChange = parseFloat(curQuotePercentChange);
+                if (curQuotePrice > 0.1) {
+                    curQuotePercentChange = roundNumber(curQuotePercentChange);
+                    curQuotePercentChange = round2Decimals(curQuotePercentChange);
+                }
+            }
+            catch (e) {
+                curQuotePercentChange = "N/A";
+            }
+            priceSpan.innerHTML = curQuotePrice;
+            var curQuoteOldPrice = getPrice(pos);
+            setPrice(pos, curQuotePrice);
+            if (isNaN(curQuoteChange)) {
+                curQuoteChange = "N/A";
+            } else {
+                if (curQuotePrice > 0.1) {
+                    curQuoteChange = roundNumber(curQuoteChange);
+                    curQuoteChange = round2Decimals(curQuoteChange);
+                }
+            }
+            setChange(pos, curQuoteChange);
+			if (curQuoteChange != 'N/A' && curQuoteChange >= 0) {
+				curQuoteChange = "+" + curQuoteChange;
+			}
+            changeSpan.innerHTML = curQuoteChange;
+            if (isNaN(curQuotePercentChange)) {
+                curQuotePercentChange = "N/A";
+            } else {
+                curQuotePercentChange = roundNumber(curQuotePercentChange);
+                curQuotePercentChange = round2Decimals(curQuotePercentChange);
+                if (curQuotePercentChange >= 0) {
+                    curQuotePercentChange = "+" + curQuotePercentChange;
+                }
+            }
+            if (curQuotePercentChange < -3) {
+                n59c++;
+            } else {
+                if (curQuotePercentChange < -1) {
+                    n25c++;
+                } else {
+                    if (curQuotePercentChange < 0) {
+                        n02c++;
+                    } else {
+                        if (curQuotePercentChange > 3) {
+                            p59c++;
+                        } else {
+                            if (curQuotePercentChange > 1) {
+                                p25c++;
+                            } else {
+                                p02c++;
+                            }
+                        }
+                    }
+                }
+            }
+            setPercentChange(pos, curQuotePercentChange);
+            percentSpan.innerHTML = "(" + curQuotePercentChange + "%)";
+            if (parseFloat(curQuoteChange) < 0) {
+                changeSpan.style.color = "#990000";
+                percentSpan.style.color = "#990000";
+            } else {
+                changeSpan.style.color = "#009900";
+                percentSpan.style.color = "#009900";
+            }
+        }
+        var total = n59c + n25c + n02c + p02c + p25c + p59c;
+        n59p = roundNumber(n59c * 100 / total);
+        n25p = roundNumber(n25c * 100 / total);
+        n02p = roundNumber(n02c * 100 / total);
+        p02p = roundNumber(p02c * 100 / total);
+        p25p = roundNumber(p25c * 100 / total);
+        p59p = roundNumber(p59c * 100 / total);
+        _gel("n59").style.width = n59p + "%";
+        _gel("n59").title = n59c+" of "+total+" indices down over 3%";
+        _gel("n25").style.width = n25p + "%";
+        _gel("n25").title = n25c+" of "+total+" indices down between 1% and 3%";
+        _gel("n02").style.width = n02p + "%";
+        _gel("n02").title = n02c+" of "+total+" indices down between 0% and 1%";
+        _gel("p02").style.width = p02p + "%";
+        _gel("p02").title = p02c+" of "+total+" indices up between 0% and 1%";
+        _gel("p25").style.width = p25p + "%";
+        _gel("p25").title = p25c+" of "+total+" indices up between 1% and 3%";
+        _gel("p59").style.width = p59p + "%";
+        _gel("p59").title = p59c+" of "+total+" indices up over 3%";
+    }
+    catch (e) {
+    	log(e);
+    }
+}
+function getPrice(c) {
+    return stockTickers[c].price;
+}
+function setPrice(c, newPrice) {
+    stockTickers[c].price = newPrice;
+}
+function setPercentChange(c, newPercent) {
+    stockTickers[c].percent = newPercent;
+}
+function setChange(c, newChange) {
+    stockTickers[c].change = newChange;
+}
+function getSymbol(c) {
+    if (c < stockTickers.length) {
+        return stockTickers[c].symbol;
+    } else {
+        return "";
+    }
+}
+function setName(c, newName) {
+    stockTickers[c].name = newName;
+}
+function getRefinedSymbol(str) {
+    return str.substring(1, str.length - 1);
+}
+function getRefinedName(str) {
+    return str.substring(1, str.length - 1);
+}
+function trim(str) {
+    return str.replace(/^\s*|\s*$/g, "");
+}
+
+function paintStockTicker() {
+	 if(showStrength==1)
+	 {
+	 	 _gel('strengthMeter').style.display = '';
+		 _gel('strHorLine').style.display = '';
+	 }	 
+	
+	var hideCols = prefs.getInt("hidecols");
+	var changedisplay="", percentdisplay="";
+	if(hideCols==1)
+		changedisplay = "none";
+	if(hideCols==2)
+		percentdisplay = "none";	
+		
+    var header = "<table class=\"fixedtable\" align=center style=\"table-layout: fixed; border:0;  font-family: arial,sans-serif;\" width=\"100%\" id=\"contentTable\" cellspacing=0 cellpadding=1>";
+    var footer = "</table>";
+    var contentText = "";
+    var bgcolor="ffffff";
+    for (i = 0; i < stockTickers.length; i++) {
+    	if(i%2==1) 
+    		bgcolor="ffffff";	
+    	else
+    		bgcolor="f5f5f5";
+   	    		
+        contentText += "<tr id=\"" + stockTickers[i].symbol + "Row\" bgcolor=\""+bgcolor+"\" >";
+        contentText += "<td width=\"30px\" style=\"padding-right: 3px\" align=\"center\"><img src=\""+staticImgUrl[stockTickers[i].symbol]+"\" width=\"21\" height=\"14\" border=\"1\"/></td>";
+        contentText += "<td width=\"100%\" class=\"dynamic\" nowrap style=\"display:\" align=\"left\"><font size=\"-1\"><a class=\"link\" href=\"http://finance.yahoo.com/q?s=" + stockTickers[i].symbol + "\" target=\"blank\"><span style=\"display:\" id=\"" + stockTickers[i].symbol + "NameSpan\">" + stockTickers[i].name + "</span></a></font></td>";
+        contentText += "<td width=\"75px\" style=\"padding-right: 0.5em;\" align=\"right\"><font size=\"-1\"><span id=\"" + stockTickers[i].symbol + "PriceSpan\">" + stockTickers[i].price + "</span></font></td>";
+        contentText += "<td width=\"65px\" style=\"display:"+changedisplay+";padding-right: 0.5em;\" align=\"right\" nowrap><font size=\"-1\"><span id=\"" + stockTickers[i].symbol + "ChangeSpan\">" + stockTickers[i].change + "</span></font></td>";
+        contentText += "<td width=\"65px\" align=\"right\" style=\"display:"+percentdisplay+"\" nowrap><font size=\"-1\"><span id=\"" + stockTickers[i].symbol + "PercentSpan\">" + stockTickers[i].percent + "</span></font></td>";
+        contentText += "</tr>";
+    }    
+    _gel("contentData").innerHTML = header + contentText + footer;
+     gadgets.window.adjustHeight();
+    try {
+        clearTimeout(reloadId);
+    }
+    catch (e) {
+    }
+    callServer();
+}
+
+
+function roundNumber(num) {
+    var rlength = 2;
+    var newnumber = Math.round(num * Math.pow(10, rlength)) / Math.pow(10, rlength);
+    return newnumber;
+}
+
+function formatData(str) {
+    str = str.replace("\n", "").replace("\r", "");
+    if (str.indexOf("\"") == -1) {
+        return str;
+    } else {
+        return str.substring(1, str.length - 1);
+    }
+}
+function round2Decimals(n) {
+    var stringNumber = "" + n;
+    if (stringNumber.indexOf(".") == -1) {
+        stringNumber += ".00";
+    } else {
+        if (stringNumber.substring(stringNumber.indexOf(".") + 1).length == 1) {
+            stringNumber += "0";
+        }
+    }
+    return stringNumber;
+}
+function sortArray(arr) {
+    if (arr.length == 0) {
+        return arr;
+    }
+    var newArray = new Array();
+    var stA = new Array();
+    for (var l = 0; l < arr.length; l++) {
+        stA.push(arr[l].symbol);
+    }
+    stA.sort();
+    for (var h = 0; h < stA.length; h++) {
+        for (var o = 0; o < arr.length; o++) {
+            if (stA[h] == arr[o].symbol) {
+                newArray.push(arr[o]);
+            }
+        }
+    }
+    return newArray;
+}
+
+function sortArray2(tickcopy, col) {
+	sortcol = col;	
+	var exp = 'tickers[l].'+col;
+	var tickers = new Array();
+	var nA = new Array();
+	var stA = new Array();	
+	for(k=0;k<tickcopy.length;k++)
+		tickers.push(tickcopy[k]);
+
+	for (var l = 0; l < tickers.length; l++) {
+		if(parseFloat(eval(exp)))
+			stA.push(parseFloat(eval(exp)));
+    	else
+    		stA.push(eval(exp));
+	}
+	if(col=='price' || col=='change' || col=='percent')
+	{
+		try{
+    		stA.sort(sortNumber);
+    	}catch(e) {
+    		stA.sort();
+    	}
+    }
+    else
+    	stA.sort();
+
+    for (var h = 0; h < stA.length; h++) {
+    	for (var l = 0; l < tickers.length; l++) {
+        	if(nA.contains(tickers[l]))
+        		continue;
+        
+        	if(parseFloat(stA[h]))
+        	{
+				if (parseFloat(stA[h]) == parseFloat(eval(exp))) {					
+						nA.push(tickers[l]);
+				}
+			}
+			else
+			{
+				if (stA[h] == eval(exp)) {
+					nA.push(tickers[l]);
+				}
+			}
+        }
+    }
+
+	tickers = nA;
+
+	return tickers;
+}
+function sortNumber(a,b)
+{
+	if(a-b)
+		return a-b;
+	else
+		return true;
+}
+function sortByColumn(col)
+{
+	stockTickers = sortArray2(stockTickers, col);
+	paintStockTicker();
+}
+
+function removeBold(str) {
+    var boldIndexStart = str.indexOf("<b>");
+    var boldIndexEnd = str.lastIndexOf("</b>");
+    if (boldIndexStart == -1) {
+        return str;
+    }
+    var curQuotePrice = str.substring(boldIndexStart + 3, boldIndexEnd);
+    return curQuotePrice;
+}
+function removeItalics(str) {
+    var italicIndexStart = str.indexOf("<i>");
+    var italicIndexEnd = str.lastIndexOf("</i>");
+    if (italicIndexStart == -1) {
+        return str;
+    }
+    var curQuotePrice = str.substring(italicIndexStart + 3, italicIndexEnd);
+    return curQuotePrice;
+}
+function rcs(str) {
+	var imgstart = str.indexOf("<img");
+    if (imgstart == -1) {
+        return str;
+    }	
+    var csis = str.indexOf(">", imgstart);
+    var curQuotePrice = str.substring(0,imgstart)+str.substring(csis + 1);
+    return curQuotePrice;
+}
+function joinString(a, b) {
+    var onelen = a.length;
+    var twolen = (a.length + b.length > 20) ? (20 - a.length) : b.length;
+    if (twolen != b.length) {
+        b = b.substring(0, twolen) + "..";
+    }
+    var res = b + " (" + a + ")";
+    return res;
+}
+Array.prototype.contains = function(element)   {
+	for (var i = 0; i < this.length; i++)
+		if (this[i] == element)
+			return true;
+	return false;
+}
+
+function getPosition(sym) {
+	var pos = 0;
+	var arr = stockTickers;
+	for(var l = 0; l < arr.length; l++) {
+		if(arr[l].symbol.toUpperCase()==sym.toUpperCase())
+			return (l);
+	}
+	return -1;
+}
+
+function log(str) {
+  // _gel("logDiv").innerHTML += str;
+}
+
+gadgets.util.registerOnLoadHandler(paintStockTicker);
+
+</script>
+
+<div id="contentData" style="border:1px solid #FFFFFF; display:" width="100%"><font size="-1" style="font-family: arial,sans-serif;">Loading Global Market Indices.. Please wait..</font></div>
+&nbsp;&nbsp;<font size="-1" style="font-family: arial,sans-serif"><a href="javascript:void(0);" onClick="showStrengthMeter();" title="Show/Hide">Strength</a></font>
+&nbsp;&nbsp;<font size="-1" style="font-family: arial,sans-serif"><a href="http://udaysasi-gadgets.googlecode.com/svn/trunk/globalIndexWatchHelp.html" target="globalindexwatchhelp">Help</a></font>
+&nbsp;&nbsp;<font size="-1" style="font-family: arial,sans-serif"><a href="http://udaysasi-gadgets.googlecode.com/svn/trunk/udaysModules.html" target="gadgetspage">My gadgets</a></font>
+&nbsp;&nbsp;<font size="-1" style="font-family: arial,sans-serif"><a href="http://udaysasi-gadgets.googlecode.com/svn/trunk/globalIndexWatchExtensionHelp.html" target="extension" title="Try Chrome Extension"><img src="http://udaysasi-gadgets.googlecode.com/svn/trunk/chrome_logo.png" border="0"></a></font>&nbsp;<font size="-1" color="#ff5555"><sup>new</sup></font>
+<hr align="center" size="1" width="100%" noshade>
+<table width="90%" align="center" id="strengthMeter" style="display:none">
+	<tr>
+		<td width="100%">
+			<table align="center" border=0 cellpadding=0 cellspacing=0 width="100%">
+				<tr height="15px">
+					<td id="n59" style="background-color: #992020;width:0%" title=""></td>
+					<td id="n25" style="background-color: #CC4949;width:0%" title=""></td>
+					<td id="n02" style="background-color: #FF8383;width:0%" title=""></td>
+					<td id="p02" style="background-color: #83FF83;width:0%" title=""></td>
+					<td id="p25" style="background-color: #49CC49;width:0%" title=""></td>
+					<td id="p59" style="background-color: #209920;width:0%" title=""></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<hr id="strHorLine" align="center" size="1" width="100%" style="display:none;" noshade>
+
+<font size="-1" style="font-family: arial,sans-serif" color="#AAAAAA">(Data provided by Yahoo! Finance)</font>
+
+<div id="logDiv" style="display:none"></div>
+
+]]></Content>
+</Module>

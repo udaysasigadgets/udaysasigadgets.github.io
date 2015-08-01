@@ -58,8 +58,9 @@
 	</div>
 	
 	<div id="adContent" style="height:60px">
-		<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 		<!-- GIW_Module -->
+		<!-- 
+		<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 		<ins class="adsbygoogle"
 		     style="display:inline-block;width:468px;height:60px"
 		     data-ad-client="ca-pub-9983113299815649"
@@ -78,6 +79,18 @@
 		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 		  })();
 		</script>
+		-->	
+		  
+		<iframe id="ad0" class="hide" src="//rcm-na.amazon-adsystem.com/e/cm?t=kloudspot-20&o=1&p=26&l=ur1&category=subscribe&banner=00ZH4W1WT6HQDHJXFV02&f=ifr&linkID=S6TGB4GDPEHZBLXV" width="468" height="60" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
+		<iframe id="ad1" class="hide" src="//z-na.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&Operation=GetAdHtml&ID=OneJS&OneJS=1&banner_type=setandforget&campaigns=holsetforget2&placement=assoc_banner_placement_default&region=US&marketplace=amazon&tracking_id=kloudspot-20&ad_type=banner&height=60&width=468&linkid=NYW3FNDH6U5PIT6T&f=ifr" width="468" height="60" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
+		<iframe id="ad2" class="hide" src="//rcm-na.amazon-adsystem.com/e/cm?t=kloudspot-20&o=1&p=26&l=ur1&category=ce_wearabletech&banner=1RPTSCBFWA8PHN5C7QG2&f=ifr&linkID=KDPMPBFE4YN7ZEQN" width="468" height="60" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
+		<iframe id="ad3" class="hide" src="//rcm-na.amazon-adsystem.com/e/cm?t=kloudspot-20&o=1&p=26&l=ur1&category=cctrade&banner=0KZK3C7S18PE82KK4Z82&f=ifr&linkID=E3FZYBBOARKCMDUE" width="468" height="60" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
+		<iframe id="ad4" class="hide" src="//rcm-na.amazon-adsystem.com/e/cm?t=kloudspot-20&o=1&p=26&l=ur1&category=topgiftideas&banner=13TF8DHM5H3K11P61YR2&f=ifr&linkID=GY3AULAQ4K7YU62O" width="468" height="60" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
+		<iframe id="ad5" class="hide" src="//rcm-na.amazon-adsystem.com/e/cm?t=kloudspot-20&o=1&p=26&l=ur1&category=mostwishforitem&banner=1M2GXANPMRX5Z7KV4202&f=ifr&linkID=VII7PWTWOCG46XV3" width="468" height="60" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
+		<iframe id="ad6" class="hide" src="//rcm-na.amazon-adsystem.com/e/cm?t=kloudspot-20&o=1&p=26&l=ur1&category=sh48_421_5070off&banner=0R1RH6Z4PEX3MT1GMH02&f=ifr&linkID=XW4C2WFH3DPL37JW" width="468" height="60" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
+		<iframe id="ad7" class="hide" src="//rcm-na.amazon-adsystem.com/e/cm?t=kloudspot-20&o=1&p=26&l=ur1&category=bestsellingproducts&banner=1F8VTV49P7N5K5XY5N82&f=ifr&linkID=HK7TXPB6IUPGZLEL" width="468" height="60" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
+		<iframe id="ad8" class="hide" src="//rcm-na.amazon-adsystem.com/e/cm?t=kloudspot-20&o=1&p=26&l=ur1&category=maythefourth&banner=1CGX58KRBW7XR4XP2002&f=ifr&linkID=GTZVT2U7BH2UDF3V" width="468" height="60" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
+		<iframe id="ad9" class="hide" src="//rcm-na.amazon-adsystem.com/e/cm?t=kloudspot-20&o=1&p=26&l=ur1&category=home_mdaygifts_15&banner=03VDGE48BKQW34K768G2&f=ifr&linkID=4R4RZDTMW2ZVN2AH" width="468" height="60" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
 				
 	</div>
 	
@@ -294,6 +307,11 @@
 			var region, showStrength, stockTickers, strTickers, showchart;
 			var cURL = "http://ichart.finance.yahoo.com/t?s=";
 			var staticImgUrl = new Array();
+			
+			//Amazon ads
+			$("#ad"+Math.floor(Math.random()*10)).removeClass('hide');
+
+			
 			function initWidget() {
 				region = localStore.getItem("region");			
 				showStrength = localStore.getItem("showstrength");

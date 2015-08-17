@@ -70,7 +70,7 @@
 	<div id="portfolioContent" style="display:none;width:100%" class="clearfix">Loading your portfolio. Please wait...</div>
 
 	<div id="myStatsContent" style="height:60px">
-		<!--
+		
 		<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 		<ins class="adsbygoogle"
 		     style="display:inline-block;width:468px;height:60px"
@@ -89,7 +89,6 @@
 		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 		  })();
 		</script>
-		-->
 		
 		<!-- Amazon Ads via iframe
 		<iframe id="ad0" class="hide" src="//rcm-na.amazon-adsystem.com/e/cm?t=kloudspot-20&o=1&p=26&l=ur1&category=subscribe&banner=00ZH4W1WT6HQDHJXFV02&f=ifr&linkID=S6TGB4GDPEHZBLXV" width="468" height="60" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
@@ -104,7 +103,7 @@
 		<iframe id="ad9" class="hide" src="//rcm-na.amazon-adsystem.com/e/cm?t=kloudspot-20&o=1&p=26&l=ur1&category=home_mdaygifts_15&banner=03VDGE48BKQW34K768G2&f=ifr&linkID=4R4RZDTMW2ZVN2AH" width="468" height="60" scrolling="no" border="0" marginwidth="0" style="border:none;" frameborder="0"></iframe>
 		-->
 		
-		<!-- Amazon Link ads -->
+		<!-- Amazon Link ads 
 		<img src="http://ir-na.amazon-adsystem.com/e/ir?t=kloudspot-20&l=ur2&o=1" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
 		<div id="ad0" class="hide">
 			<a target="_blank" href="http://www.amazon.com/b?_encoding=UTF8&camp=1789&creative=9325&linkCode=ur2&node=172282&site-redirect=&tag=kloudspot-20&linkId=4KLB2BMSGC3RVXYO">
@@ -156,6 +155,7 @@
 				<img src="amazon/apparel.jpg"/>
 			</a>
 		</div>
+		-->
 	</div>
 	<br>
 	<form class="form-inline">
@@ -627,7 +627,8 @@
 		var staticImgUrl = "http://udaysasi-gadgets.googlecode.com/svn/trunk/delete.gif";
 		
 		//Amazon ads
-		$("#ad"+Math.floor(Math.random()*10)).removeClass('hide');
+		//$("#ad"+Math.floor(Math.random()*10)).removeClass('hide');
+		
 		function initWidget() {
 			showname = localStore.getItem("showname");
 			if(showname==null)

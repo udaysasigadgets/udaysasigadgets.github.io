@@ -163,23 +163,14 @@ $(function() {
           .attr("class", "node")
           .attr("transform", function(d) { return "translate(" + source.x0 + "," + source.y0 + ")"; })
           .on("click", highlightNode)
-          .on("dblclick", dblclick);
+          .on("dblclick", dblclick)
+          .on("mouseover", showEntireChain)
+          .on("mouseout", function() {
+              //d3.select(this).select('text.info').remove();
+          });;
 
       nodeEnter.append("circle")
-          .attr("r", 1e-6);
-          // .on("mouseover", function(d) {
-          //     var g = d3.select(this); // The node
-          //     // The class is used to remove the additional text later
-          //     var info = g.append('text')
-          //        .classed('info', true)
-          //        .attr('x', 20)
-          //        .attr('y', 10)
-          //        .text('More info');
-          // })
-          // .on("mouseout", function() {
-          //     // Remove the info text on mouse out.
-          //     d3.select(this).select('text.info').remove();
-          // });
+          .attr("r", 1e-6)
           //.style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
 
       nodeEnter.append("text")
@@ -282,7 +273,11 @@ $(function() {
       highlightedNode = d;
       d3.selectAll(".node").select("circle").classed("highlight", false);
       d3.select(this).select("circle").classed("highlight", true);
+      var names = showEntireChain(d);
+      d3.select("#hierarchyname").text(names.reverse().join(" > "));
+    }
 
+    function showEntireChain(d) {
       d3.selectAll("svg").selectAll("text").style("fill-opacity", 1e-6);
       var temp = d;
       var names = [];
@@ -292,7 +287,7 @@ $(function() {
         temp = temp.parent;
       } while(temp);
 
-      d3.select("#hierarchyname").text(names.reverse().join(" > "));
+      return names;
     }
 
     function adjustSVGDimensions() {
@@ -304,14 +299,16 @@ $(function() {
     };
 
     function addElement() {
+      var newNode = {"name":"New", "size": 887, "id": globalid++};
       if(highlightedNode.children) {
-        highlightedNode.children.push({"name":"New", "size": 887, "id": globalid++});
+        highlightedNode.children.push(newNode);
       } else if(highlightedNode._children) {
-        highlightedNode._children.push({"name":"New", "size": 887, "id": globalid++});
+        highlightedNode._children.push(newNode);
       } else {
         highlightedNode.children = [];
-        highlightedNode.children.push({"name":"New", "size": 887, "id": globalid++});
+        highlightedNode.children.push(newNode);
       }
+
       update(highlightedNode);
     }
 });

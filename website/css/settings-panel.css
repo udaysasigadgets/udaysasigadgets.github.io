@@ -1,4 +1,7 @@
 .b-settings-panel {
+	/* Uday : Hide this panel */
+	display: none;
+	
 	width: 200px;
 
 	position: fixed;

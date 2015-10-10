@@ -4,7 +4,7 @@
   
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8"> 
 
-	<title>Trend | Responsive Multipurpose Bootstrap Theme</title>
+	<title>aptiWiz</title>
 
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="description" content="">
@@ -314,14 +314,16 @@
 							<div class="panel-heading">
 								<h4 class="panel-title">
 									<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseFour2">
-									Smart Bundling
+									Smart Connect
 									<span class="fa fa-plus"></span>
 									</a>
 								</h4>
 							</div>
 							<div id="collapseFour2" class="panel-collapse collapse">
 								<div class="panel-body">
-									<p>mLINK Gateways send traffic on all available WAN links. Cloud based Smart Bundling service re-assembles the traffic and delivers to the applications. With Smart Bundling, WAN fail-over and redundancy support come inherent. Applications do not see connectivity downtime if a WAN link goes down.</p>
+									<p>aptiWiz’s mLINK gateways use WiFi, multiple multi-carrier Cellular (3G/LTE) radios and wired connections as WAN links and provide high availability on connectivity to the Internet by using aptiWiz Smart Connect technology. aptiWiz’s Smart Connect technology consists of Smart Bundling and Smart Roaming. Smart Bundling technology bundles all available WAN links (wired, wireless) and deliver high bandwidth to the applications. It load balances the traffic across WAN Links using round-robin, fast response and weight based algorithms. Smart Bundling also provides seamless flow-level connection continuity with zero downtime to applications in case of a WAN failure, and also provides fast roaming in wireless handoffs.  Smart Roaming technology avoids sticking to poorly performing WiFi AP by aggressively seeking and associating to new APs without dropping traffic.</p>
+									<p>In traditional WAN load-balancing and failover technologies, traffic is load balanced at session (flow) level i.e. roughly equal number of flows are sent on each WAN link irrespective of how much traffic each flow is passing e.g. If flow1 takes 100% of the WAN1, flow2 takes 1% of WAN2, flow3 may still be sent on WAN1.  Besides, if WAN1 goes down, flow1 and flow3 are disrupted. Applications at the either end need to restart the flows. It may take up to 15 minutes depending upon application timeouts. In wireless environments, WAN link conditions change rapidly as a mobile device moves.  Packet drops and latency vary rapidly. Change is the only constant when a mobile device is moving. So, high bandwidth applications do not behave consistently in such scenarios.</p>
+									<p>In WiFi technology, it is the client’s responsibility to scan for APs, decide which one is best and associate with the best AP. Once connected to one AP, again, it is client’s responsibility to keep scanning and decide when to move to another AP. From our experience, we see most clients are lazy roamers. Once they are connected to an AP, they tend to stick to that AP until that connection drops. Then they scan and associate to next best AP. Re-establishing connection takes few seconds to complete WiFi association process and DHCP process. This behavior obviously disrupts applications and is acceptable for casual laptop or mobile phone usage. But, it is not acceptable for mission-critical applications where constant connectivity is needed. Such a lazy roaming is intentionally done to save battery life or just to avoid complexity of implementing such scanning algorithm without dropping traffic or there is no market need as most laptops and phones tend be fairly stationary or not mission-critical. Some technologies solve this problem using two radios. They use one radio to continuously scan and another to transmit data. Scans are initiated from high layers in software stack. Once they start seeing loss on data radio, they associate the scan radio to the best AP it found and disconnect data radio so traffic switches over to scan radio. Old data radio is then used for scanning purpose and the cycle repeats. This still has few hundreds of millisecs of switching time, complex switching algorithm implementation, takes two radio slots on the main board. </p>
 								</div>
 							</div>
 						</div>

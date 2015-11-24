@@ -524,47 +524,48 @@
 	}
 	
 	var YAHOO = {
-	        Finance: {
-	            SymbolSuggest: {
-	            	
-					ssCallback : function(feed) {  	  
-	    				if (feed == null || feed["ResultSet"]==null || feed["ResultSet"]["Result"]==null){ 
-	    					gel("myContainer").html("Error retrieving data");
-	    					return;
-	    			  	}
-	    			  	var html = "", numResults = 0;
-	    				dataArray = feed["ResultSet"]["Result"];
-	    				var queryStr = feed["ResultSet"]["Query"];
-	    				if(dataArray && dataArray.length)
-	    				{
-	    				  numResults  = dataArray.length;
-	    				}
-	    				
-                        //Filter out your own parameters. Populate them into an array, since this is what typeahead's source requires
-                        var arr = [], i=numResults;
-                        while(i--){
-                            arr[i] = dataArray[i]['name']
-                        }
-                        autocomplete.data('typeahead').source = function(query, process) {
-                        	suggests = [];
-                            map = {};  
-                         
-                            $.each(dataArray, function (i, d) {
-                                map[d.symbol+" -> "+d.name] = d;
-                                suggests.push(d.symbol+" -> "+d.name);
-                            });
-                         
-                            process(suggests);
-                        };
-                        autocomplete.data('typeahead').updater = function (item) {
-                            selectedSymbol = map[item].symbol;
-                            return selectedSymbol;
-                        }
-                        autocomplete.trigger('keyup');
-                        autocomplete.data('active', false);
-                        //console.log("Unlocked and Ready for next input");
-	    			  }
-	            }
+	        util: {
+	        	ScriptNodeDataSource: {
+		            	
+		            	callbacks : function(feed) {  	  
+		    				if (feed == null || feed["ResultSet"]==null || feed["ResultSet"]["Result"]==null){ 
+		    					gel("myContainer").html("Error retrieving data");
+		    					return;
+		    			  	}
+		    			  	var html = "", numResults = 0;
+		    				dataArray = feed["ResultSet"]["Result"];
+		    				var queryStr = feed["ResultSet"]["Query"];
+		    				if(dataArray && dataArray.length)
+		    				{
+		    				  numResults  = dataArray.length;
+		    				}
+		    				
+	                        //Filter out your own parameters. Populate them into an array, since this is what typeahead's source requires
+	                        var arr = [], i=numResults;
+	                        while(i--){
+	                            arr[i] = dataArray[i]['name']
+	                        }
+	                        autocomplete.data('typeahead').source = function(query, process) {
+	                        	suggests = [];
+	                            map = {};  
+	                         
+	                            $.each(dataArray, function (i, d) {
+	                                map[d.symbol+" -> "+d.name] = d;
+	                                suggests.push(d.symbol+" -> "+d.name);
+	                            });
+	                         
+	                            process(suggests);
+	                        };
+	                        autocomplete.data('typeahead').updater = function (item) {
+	                            selectedSymbol = map[item].symbol;
+	                            return selectedSymbol;
+	                        }
+	                        autocomplete.trigger('keyup');
+	                        autocomplete.data('active', false);
+	                        //console.log("Unlocked and Ready for next input");
+		    			  }
+		            }
+	        	
 	        }
 	};
 	
@@ -577,14 +578,14 @@
 	  queryStr = trim(queryStr);
 
 		$.ajax({
-              type: "GET",
-              url: "http://d.yimg.com/autoc.finance.yahoo.com/autoc",
-              data: {query: escape(queryStr)},
-              dataType: "jsonp",
-              async : false,
-              jsonp : "callback",
-              jsonpCallback: "YAHOO.Finance.SymbolSuggest.ssCallback"
-          });
+            type: "GET",
+            url: "https://s.yimg.com/aq/autoc",
+            data: {query: escape(queryStr), region: 'US', lang : 'en-US'},
+            dataType: "jsonp",
+            async : false,
+            jsonp : "callback",
+            jsonpCallback: "YAHOO.util.ScriptNodeDataSource.callbacks"
+        });
 	}
 	
 	function getSelectedStr(origStr, matchStr)
@@ -2368,12 +2369,12 @@
 
 			$.ajax({
 	              type: "GET",
-	              url: "http://d.yimg.com/autoc.finance.yahoo.com/autoc",
-	              data: {query: escape(queryStr)},
+	              url: "https://s.yimg.com/aq/autoc",
+	              data: {query: escape(queryStr), region: 'US', lang : 'en-US'},
 	              dataType: "jsonp",
 	              async : false,
 	              jsonp : "callback",
-	              jsonpCallback: "YAHOO.Finance.SymbolSuggest.ssCallback"
+	              jsonpCallback: "YAHOO.util.ScriptNodeDataSource.callbacks"
 	          });
 		}
 		

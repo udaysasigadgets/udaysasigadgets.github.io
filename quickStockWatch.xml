@@ -1682,6 +1682,7 @@
 		    catch (e) {
 		    }
 		    
+		    gadgets.window.adjustHeight();
 		}
 		
 		restoreColor = function(symbol) {
@@ -1796,6 +1797,8 @@
 			 setTimeout(function() {
 				 $("#userMessage").hide();
 			 }, 5000);
+			 
+			 gadgets.window.adjustHeight();
 		}
 		function paintStockTicker() {
 			 if(showNews==1)
@@ -1851,6 +1854,7 @@
 		    }
 		    catch (e) {
 		    }
+		    gadgets.window.adjustHeight();
 		    callServer();    
 		}
 		
@@ -1886,6 +1890,7 @@
 		    }
 		    gel("portfolioContent").html(header + contentText + footer);
 		    $("td[align='right']").css("text-align", "right");
+		    gadgets.window.adjustHeight();
 		}
 		deleteStockTicker = function(k) {
 			loadDeleteModal(k);

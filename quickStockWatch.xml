@@ -22,8 +22,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="imagex-icon" href="favicon.ico">
 <!-- Bootstrap -->
-<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
-<link href="bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
+<link href="http://udaysasigadgets.github.io/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+<link href="http://udaysasigadgets.github.io/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
 <style>
 	body {
 		padding: 5px;
@@ -346,11 +346,11 @@
 	</div>
 	
 	<script src="http://code.jquery.com/jquery.js"></script>
-	<script src="bootstrap/js/jquery.cookie.js"></script>
-	<script src="bootstrap/js/bootstrap.min.js"></script>
-	<script src="bootstrap/js/json2.js"></script>
-	<script src="bootstrap/js/storage.js"></script>
-	<script type="text/javascript" src="apigee.min.js"></script>
+	<script src="http://udaysasigadgets.github.io/bootstrap/js/jquery.cookie.js"></script>
+	<script src="http://udaysasigadgets.github.io/bootstrap/js/bootstrap.min.js"></script>
+	<script src="http://udaysasigadgets.github.io/bootstrap/js/json2.js"></script>
+	<script src="http://udaysasigadgets.github.io/bootstrap/js/storage.js"></script>
+	<script type="text/javascript" src="http://udaysasigadgets.github.io/apigee.min.js"></script>
 	
 	<script type="text/javascript">
 	

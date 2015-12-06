@@ -364,11 +364,12 @@
 	}
 		
 	var prefs = new gadgets.Prefs();
-	var userId = prefs.getModuleId();
+	var userId = prefs.get('userId');
 	console.log('Module ID : '+userId);
 	if(userId==0) {
 		console.log('Generating a unique id');
 		userId = (S4() + S4() + S4() + "4" + S4().substr(0,3) + S4() + S4() + S4() + S4()).toUpperCase();
+		prefs.set('userId', userId);
 	}
 	console.log(userId);
 	

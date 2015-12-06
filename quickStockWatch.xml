@@ -17,6 +17,7 @@
 	height="100"
 >
 	<Require feature="dynamic-height"/>	
+	<Require feature="setprefs" />	
 </ModulePrefs>
 <Content type="html" view="home, preview, canvas"><![CDATA[
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -357,6 +358,10 @@
 	var userId = null;
 	var userPrefs = null;
 	var debugBuf = []; 
+	
+	var prefs = new gadgets.Prefs();
+	var moduleId = prefs.getModuleId();
+	alert('Module ID : '+moduleId);
 	
 	if (!window.console) {
 		window.console = { log : function(s) { } };

@@ -3,16 +3,16 @@
 <ModulePrefs 
 	title="Quick Stock Watch" 
 	description="A simple Stock Quotes and Portfolio tracking module. Works for over 30 international markets - Argentina, Australia, Austria, Belgium, Brazil, Canada, China, Denmark, Egypt, France, Germany, Hong Kong, India, Israel, Italy, Japan, Jakarta, Korea, Malaysia, Mexico, Netherlands, New Zealand, Norway, Singapore, Spain, Sweden, Switzerland, Taiwan, Turkey, UK, United States and more.. You can watch the up/down ticks of your favorite stocks and monitor your portfolio at desired intervals (Data provided by Yahoo! Finance)"
-	author="Uday Kumar Pyda - Sunnyvale, CA"
+	author="Uday Kumar Pyda"
 	author_email="udaysasi+feedback@gmail.com"
 	author_affiliation="UdaySasi"
 	author_link="http://www.udaysasi.com"
 	directory_title="Uday's Quick Stock Watch"
-	title_url="http://udaysasi-gadgets.googlecode.com/svn/trunk/quickStockWatchHelp.html"
+	title_url="http://http://udaysasigadgets.github.io//quickStockWatchHelp.html"
 	scrolling="false"
 	singleton="false"
-	screenshot="http://udaysasi-gadgets.googlecode.com/svn/trunk/quickStockWatchScreenshot.png"
-	thumbnail="http://udaysasi-gadgets.googlecode.com/svn/trunk/quickStockWatchThumbnail.png"
+	screenshot="http://http://udaysasigadgets.github.io//quickStockWatchScreenshot.png"
+	thumbnail="http://http://udaysasigadgets.github.io//quickStockWatchThumbnail.png"
 >
 	<Require feature="analytics"/>
 	<Require feature="minimessage"/>

@@ -359,9 +359,18 @@
 	var userPrefs = null;
 	var debugBuf = []; 
 	
+	function S4() {
+	    return (((1+Math.random())*0x10000)|0).toString(16).substring(1); 
+	}
+		
 	var prefs = new gadgets.Prefs();
-	var moduleId = prefs.getModuleId();
-	alert('Module ID : '+moduleId);
+	var userId = prefs.getModuleId();
+	console.log('Module ID : '+userId);
+	if(userId==0) {
+		console.log('Generating a unique id');
+		userId = (S4() + S4() + S4() + "4" + S4().substr(0,3) + S4() + S4() + S4() + S4()).toUpperCase();
+	}
+	console.log(userId);
 	
 	if (!window.console) {
 		window.console = { log : function(s) { } };
@@ -384,18 +393,7 @@
 	    if((tem= ua.match(/version\/([\.\d]+)/i))!= null) M[2]= tem[1];
 	    return M[0];
 	}
-	
-    var searchkey = self.location.search;
-	if(searchkey!='') {
-		searchkey = searchkey.substring(1);
-		var pairs = searchkey.split("=");
-		if(pairs[0]=="subscriptionid") {
-			userId = pairs[1];
-			userId = userId.replace("@","");
-			if(userId=="token")
-				userId = null;
-		}
-	}
+
 	debugLog('1');
 	debugLog(userId);
 	

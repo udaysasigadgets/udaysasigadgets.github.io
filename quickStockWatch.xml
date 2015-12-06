@@ -8,8 +8,7 @@
 		title_url="http://udaysasigadgets.github.io/quickStockWatchHelp.html"
 		scrolling="false" singleton="false"
 		screenshot="http://udaysasigadgets.github.io/quickStockWatchScreenshot.png"
-		thumbnail="http://udaysasigadgets.github.io/quickStockWatchThumbnail.png"
-		height="100">
+		thumbnail="http://udaysasigadgets.github.io/quickStockWatchThumbnail.png">
 		<Require feature="dynamic-height" />
 		<Require feature="setprefs" />
 	</ModulePrefs>

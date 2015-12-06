@@ -19,6 +19,7 @@
 	<Require feature="dynamic-height"/>	
 	<Require feature="setprefs" />	
 </ModulePrefs>
+<UserPref name="userId" display_name="User ID" datatype="hidden" default_value=""/>
 <Content type="html" view="home, preview, canvas"><![CDATA[
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="imagex-icon" href="favicon.ico">
@@ -366,7 +367,7 @@
 	var prefs = new gadgets.Prefs();
 	var userId = prefs.getString('userId');
 	console.log('Module ID : '+userId);
-	if(userId==0) {
+	if(userId=='') {
 		console.log('Generating a unique id');
 		userId = (S4() + S4() + S4() + "4" + S4().substr(0,3) + S4() + S4() + S4() + S4()).toUpperCase();
 		prefs.set('userId', userId);

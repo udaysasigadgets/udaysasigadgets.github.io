@@ -154,11 +154,6 @@ function amazon() {
 gadgets.window.adjustHeight();
 gadgets.util.registerOnLoadHandler(displayImage);
 </script>
-<img src="amazon/holidays.png" id="amazonlink" class="pointer" style="width:100%;max-width:400px;cursor:pointer" onclick="amazon();"/>
-<img
-	src="http://ir-na.amazon-adsystem.com/e/ir?t=dilbertcomics-20&l=pf4&o=1"
-	width="1" height="1" border="0" alt=""
-	style="border: none !important; margin: 0px !important;" /> 
 <div id="logDiv"></div>
 <div id="loadingDiv" style="display:"><font size="-1" style="; font-family: Arial"><img src="http://udaysasigadgets.github.io/loading-spin.gif">&nbsp;&nbsp;Loading comic strip.. Please wait..</font></div>
 <table align="center" border="0">
@@ -177,5 +172,12 @@ gadgets.util.registerOnLoadHandler(displayImage);
 &nbsp;&nbsp;<a href="javascript:void(0);" onClick="nextImage();">New</a></font>
 <!-- &nbsp;&nbsp;<font size="-1" style="font-family: arial,sans-serif"><a href="javascript:void(0);" onclick="shareComic();" title="Share this comic strip via e-mail">Share</a></font> -->
 &nbsp;&nbsp;<font size="-1" style="font-family: arial,sans-serif"><a href="javascript:void(0);" onclick="playPause();" title="Play/Pause"><span id="control">Play</span></a></font>
+<br>
+<img src="amazon/holidays.png" id="amazonlink" class="pointer" style="width:100%;max-width:400px;cursor:pointer" onclick="amazon();"/>
+<img
+	src="http://ir-na.amazon-adsystem.com/e/ir?t=dilbertcomics-20&l=pf4&o=1"
+	width="1" height="1" border="0" alt=""
+	style="border: none !important; margin: 0px !important;" /> 
+
 ]]></Content>
 </Module>

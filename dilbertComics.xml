@@ -154,7 +154,7 @@ function amazon() {
 gadgets.window.adjustHeight();
 gadgets.util.registerOnLoadHandler(displayImage);
 </script>
-<img src="amazon/holidays.png" id="amazonlink" class="pointer" style="height:60px;cursor:pointer" onclick="amazon();"/>
+<img src="amazon/holidays.png" id="amazonlink" class="pointer" style="width:100%;max-width:400px;cursor:pointer" onclick="amazon();"/>
 <img
 	src="http://ir-na.amazon-adsystem.com/e/ir?t=spacemask-20&l=pf4&o=1"
 	width="1" height="1" border="0" alt=""
@@ -172,7 +172,7 @@ gadgets.util.registerOnLoadHandler(displayImage);
 		</td>
 	</tr>
 </table>
-<hr align="center" size="1" width="100%" noshade>
+<hr align="center" size="1" width="90%" noshade>
 <font size="-1"><span id="dateContent"></span>
 &nbsp;&nbsp;<a href="javascript:void(0);" onClick="nextImage();">New</a></font>
 <!-- &nbsp;&nbsp;<font size="-1" style="font-family: arial,sans-serif"><a href="javascript:void(0);" onclick="shareComic();" title="Share this comic strip via e-mail">Share</a></font> -->

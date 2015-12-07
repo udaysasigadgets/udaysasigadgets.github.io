@@ -146,14 +146,14 @@ function writeLog(str) {
   //gadgets.window.adjustHeight();
 }
 
-_gel("amazonlink").onclick = function() {
+function amazon() {
 	window.open('https://www.amazon.com/gp/holidaytoylist?&tag=spacemask-20&camp=0&creative=0&linkCode=ur1&adid=1VCY40JKMXRW3YJ3CZY1&');
 };
 		
 gadgets.window.adjustHeight();
 gadgets.util.registerOnLoadHandler(displayImage);
 </script>
-<img src="amazon/holidays.png" id="amazonlink" class="pointer" style="height:60px" />
+<img src="amazon/holidays.png" id="amazonlink" class="pointer" style="height:60px" onclick="amazon();"/>
 <img
 	src="http://ir-na.amazon-adsystem.com/e/ir?t=spacemask-20&l=pf4&o=1"
 	width="1" height="1" border="0" alt=""
@@ -174,7 +174,7 @@ gadgets.util.registerOnLoadHandler(displayImage);
 <hr align="center" size="1" width="100%" noshade>
 <font size="-1"><span id="dateContent"></span>
 &nbsp;&nbsp;<a href="javascript:void(0);" onClick="nextImage();">New</a></font>
-&nbsp;&nbsp;<font size="-1" style="font-family: arial,sans-serif"><a href="javascript:void(0);" onClick="shareComic();" title="Share this comic strip via e-mail">Share</a></font>
-&nbsp;&nbsp;<font size="-1" style="font-family: arial,sans-serif"><a href="javascript:void(0);" onClick="playPause();" title="Play/Pause"><span id="control">Play</span></a></font>
+&nbsp;&nbsp;<font size="-1" style="font-family: arial,sans-serif"><a href="javascript:void(0);" onclick="shareComic();" title="Share this comic strip via e-mail">Share</a></font>
+&nbsp;&nbsp;<font size="-1" style="font-family: arial,sans-serif"><a href="javascript:void(0);" onclick="playPause();" title="Play/Pause"><span id="control">Play</span></a></font>
 ]]></Content>
 </Module>

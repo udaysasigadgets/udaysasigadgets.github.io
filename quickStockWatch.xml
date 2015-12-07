@@ -348,7 +348,7 @@
 		
 	var prefs = new gadgets.Prefs();
 	
-	console.log('Last opened : '+prefs.getString('useridd'));
+	console.log('Last opened : '+prefs.getString('userid'));
 	prefs.set('userid', (new Date().toString())); 
 	
 	var userId = '123456789';

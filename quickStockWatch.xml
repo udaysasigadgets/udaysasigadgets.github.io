@@ -348,10 +348,11 @@
 		
 	var prefs = new gadgets.Prefs();
 	
-	console.log('Last opened : '+prefs.getString('lastopened'));
-	prefs.set('lastopened', (new Date().toString())); 
+	console.log('Last opened : '+prefs.getString('useridd'));
+	prefs.set('userid', (new Date().toString())); 
 	
-	
+	var userId = '123456789';
+	/*
 	var userId = prefs.getString('userid');
 	console.log('Module ID : '+userId);
 	if(userId=='') {
@@ -359,6 +360,7 @@
 		userId = (S4() + S4() + S4() + "4" + S4().substr(0,3) + S4() + S4() + S4() + S4()).toUpperCase();
 		prefs.set('userid', userId);
 	}
+	*/
 	console.log(userId);
 	
 	if (!window.console) {

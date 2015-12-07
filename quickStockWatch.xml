@@ -12,7 +12,7 @@
 		<Require feature="dynamic-height" />
 		<Require feature="setprefs" />
 	</ModulePrefs>
-	<UserPref name="userid" display_name="Unique ID (Do not change this)" default_value="" />
+	<UserPref name="userid" display_name="Unique ID (Do not change this)" datatype="string" default_value="" />
 	<Content type="html" view="home, preview, canvas"><![CDATA[
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="imagex-icon" href="favicon.ico">
@@ -344,6 +344,10 @@
 	function S4() {
 	    return (((1+Math.random())*0x10000)|0).toString(16).substring(1); 
 	}
+	
+	var igprefs = new _IG_Prefs(__MODULE_ID__);
+	console.log('Last opened : '+igprefs.getString('lastopened'));
+	igprefs.set('lastopened', (new Date().toString())); 
 		
 	var prefs = new gadgets.Prefs();
 	var userId = prefs.getString('userid');

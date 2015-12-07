@@ -8,8 +8,8 @@
 	author_affiliation="UdaySasi"
 	author_link="http://www.udaysasi.com"
 	directory_title="Uday's Dilbert Comics"
-	screenshot="http://udaysasi-gadgets.googlecode.com/svn/trunk/dilbertComicsScreenshot.png"
-	thumbnail="http://udaysasi-gadgets.googlecode.com/svn/trunk/dilbertComicsThumbnail.png"	
+	screenshot="http://udaysasigadgets.github.io/dilbertComicsScreenshot.png"
+	thumbnail="http://udaysasigadgets.github.io/dilbertComicsThumbnail.png"	
 >
 	<Require feature="dynamic-height"/>	
 	<Require feature="analytics"/>	
@@ -146,7 +146,7 @@ function writeLog(str) {
   //gadgets.window.adjustHeight();
 }
 
-_gel("test").onclick = function() {
+_gel("amazonlink").onclick = function() {
 	window.open('https://www.amazon.com/gp/holidaytoylist?&tag=spacemask-20&camp=0&creative=0&linkCode=ur1&adid=1VCY40JKMXRW3YJ3CZY1&');
 };
 		
@@ -159,7 +159,7 @@ gadgets.util.registerOnLoadHandler(displayImage);
 	width="1" height="1" border="0" alt=""
 	style="border: none !important; margin: 0px !important;" /> 
 <div id="logDiv"></div>
-<div id="loadingDiv" style="display:"><font size="-1" style="; font-family: Arial"><img src="http://udaysasi-gadgets.googlecode.com/svn/trunk/loading-spin.gif">&nbsp;&nbsp;Loading comic strip.. Please wait..</font></div>
+<div id="loadingDiv" style="display:"><font size="-1" style="; font-family: Arial"><img src="http://udaysasigadgets.github.io/loading-spin.gif">&nbsp;&nbsp;Loading comic strip.. Please wait..</font></div>
 <table align="center" border="0">
 	<tr>
 		<td>
@@ -174,7 +174,6 @@ gadgets.util.registerOnLoadHandler(displayImage);
 <hr align="center" size="1" width="100%" noshade>
 <font size="-1"><span id="dateContent"></span>
 &nbsp;&nbsp;<a href="javascript:void(0);" onClick="nextImage();">New</a></font>
-&nbsp;&nbsp;<font size="-1" style="font-family: arial,sans-serif"><a href="http://udaysasi-gadgets.googlecode.com/svn/trunk/udaysModules.html" target="gadgetspage">My gadgets</a></font>
 &nbsp;&nbsp;<font size="-1" style="font-family: arial,sans-serif"><a href="javascript:void(0);" onClick="shareComic();" title="Share this comic strip via e-mail">Share</a></font>
 &nbsp;&nbsp;<font size="-1" style="font-family: arial,sans-serif"><a href="javascript:void(0);" onClick="playPause();" title="Play/Pause"><span id="control">Play</span></a></font>
 ]]></Content>

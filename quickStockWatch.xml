@@ -12,7 +12,7 @@
 		<Require feature="dynamic-height" />
 		<Require feature="setprefs" />
 	</ModulePrefs>
-	<UserPref name="userid" display_name="Unique ID (Do not change this)" datatype="string" default_value="" />
+	<UserPref name="userid" display_name="Unique ID (Do not change this)" datatype="hidden" default_value="" />
 	<Content type="html" view="home, preview, canvas"><![CDATA[
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="imagex-icon" href="favicon.ico">
@@ -351,9 +351,8 @@
 	console.log('Last opened : '+prefs.getString('userid'));
 	prefs.set('userid', (new Date().toString())); 
 	
-	var userId = '123456789';
 	/*
-	var userId = prefs.getString('userid');
+	userId = prefs.getString('userid');
 	console.log('Module ID : '+userId);
 	if(userId=='') {
 		console.log('Generating a unique id');
@@ -402,26 +401,45 @@
         	getOnExist:true,
         	'gadget':'qsw'
         };
+        
+        userId = null;
+   		
+		console.log("seems to be inside an iframe, Using cookie instead..");
+		$.cookie("utest","Luigi", { expires: 365 });
+		console.log("Value read from cookie : "+$.cookie("utest"));
+		if($.cookie("utest")=="Luigi") {
+			console.log("cookies are enabled..");
+			debugLog('createEntity cookieenabled');
+		} else {
+			console.log("cookies are not enabled.. Notify the user..");
+			var userBrowserVersion = userBrowser();
+			$("#message").html("<small>Please <a href='http://www.google.com/search?q=enable+third+party+cookies+"+userBrowserVersion+"' target='new'>enable third party cookies</a> on your browser to view the gadget</small>").removeClass("hide");
+			debugLog('createEntity cookiedisabled');
+			return;
+		}
+		localStore.setItem = function(i,v) {
+			console.log("setting to cookie : "+i+"="+v);
+			$.cookie(i, v, { expires: 365 });
+		}
+		localStore.getItem = function(i) {
+			console.log("reading from cookie : "+i);
+			return $.cookie(i);
+		}
+		debugLog('createEntity cloud err => cookie');
+
+		//Inform the user
+		$("#message").removeClass("hide");
+		debugLog('createEntity callback');
+		callback();
+    			
+        /*
        	client.createEntity(opts, function(err, pref) {
         	if(err) {
         		debugLog('createEntity cloud err');
         		console.log("Error creating preferences object");
-        		/*Temporary Fix for IE users*/
+        		//Temporary Fix for IE users start
         		userId = null;
-        		/*
-        		try {
-    				var p = window.localStorage;
-    				localStore.setItem = function(i,v) {
-    					console.log("setting to localStorage : "+i+"="+v);
-    					localStorage.setItem(i,v);
-    				}
-    				localStore.getItem = function(i) {
-    					console.log("reading from localStorage : "+i);
-    					return localStorage.getItem(i);
-    				}
-    				debugLog('createEntity cloud err => localStorage');
-    			} catch(e) {
-    			*/
+        		
     				console.log("seems to be inside an iframe, Using cookie instead..");
     				$.cookie("utest","Luigi", { expires: 365 });
     				console.log("Value read from cookie : "+$.cookie("utest"));
@@ -433,6 +451,7 @@
     					var userBrowserVersion = userBrowser();
     					$("#message").html("<small>Please <a href='http://www.google.com/search?q=enable+third+party+cookies+"+userBrowserVersion+"' target='new'>enable third party cookies</a> on your browser to view the gadget</small>").removeClass("hide");
     					debugLog('createEntity cookiedisabled');
+    					return;
     				}
     				localStore.setItem = function(i,v) {
     					console.log("setting to cookie : "+i+"="+v);
@@ -443,14 +462,12 @@
     					return $.cookie(i);
     				}
     				debugLog('createEntity cloud err => cookie');
-    			/*	
-    			}
-    			*/
+
     			//Inform the user
     			$("#message").removeClass("hide");
     			debugLog('createEntity callback');
     			callback();
-    			/*Temporary Fix for IE users*/
+    			//Temporary Fix for IE users end
         	} else {
         		debugLog('createEntity cloud');
         		console.log("Preferences object : "+pref.get('uuid'));
@@ -461,6 +478,7 @@
     	        callback();
         	}
         });
+        */
     }
 	
 	var autocomplete = null;

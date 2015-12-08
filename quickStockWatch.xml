@@ -12,7 +12,7 @@
 		<Require feature="dynamic-height" />
 		<Require feature="setprefs" />
 	</ModulePrefs>
-	<UserPref name="subscriptionid" display_name="Unique ID (Do not change this)" datatype="hidden" default_value="" />
+	<UserPref name="subscriptionid" display_name="Unique ID (Do not change this)" datatype="String" default_value="" />
 	<Content type="html" view="home, preview, canvas"><![CDATA[
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="imagex-icon" href="favicon.ico">

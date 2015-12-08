@@ -168,17 +168,18 @@ gadgets.util.registerOnLoadHandler(displayImage);
 	</tr>
 </table>
 <hr align="center" size="1" width="90%" noshade>
-<font size="-1"><span id="dateContent"></span>
-&nbsp;&nbsp;<a href="javascript:void(0);" onClick="nextImage();">New</a></font>
-<!-- &nbsp;&nbsp;<font size="-1" style="font-family: arial,sans-serif"><a href="javascript:void(0);" onclick="shareComic();" title="Share this comic strip via e-mail">Share</a></font> -->
-&nbsp;&nbsp;<font size="-1" style="font-family: arial,sans-serif"><a href="javascript:void(0);" onclick="playPause();" title="Play/Pause"><span id="control">Play</span></a></font>
-<br>
-<div class="text-align:center">
-<img src="amazon/holidays.png" id="amazonlink" class="pointer" style="width:100%;max-width:400px;cursor:pointer" onclick="amazon();"/>
-<img
-	src="http://ir-na.amazon-adsystem.com/e/ir?t=dilbertcomics-20&l=pf4&o=1"
-	width="1" height="1" border="0" alt=""
-	style="border: none !important; margin: 0px !important;" /> 
+<div style="text-align:center">
+	<font size="-1"><span id="dateContent"></span>
+	&nbsp;&nbsp;<a href="javascript:void(0);" onClick="nextImage();">New</a></font>
+	<!-- &nbsp;&nbsp;<font size="-1" style="font-family: arial,sans-serif"><a href="javascript:void(0);" onclick="shareComic();" title="Share this comic strip via e-mail">Share</a></font> -->
+	&nbsp;&nbsp;<font size="-1" style="font-family: arial,sans-serif"><a href="javascript:void(0);" onclick="playPause();" title="Play/Pause"><span id="control">Play</span></a></font>
+	<br>
+	
+	<img src="amazon/holidays.png" id="amazonlink" class="pointer" style="width:100%;max-width:400px;cursor:pointer" onclick="amazon();"/>
+	<img
+		src="http://ir-na.amazon-adsystem.com/e/ir?t=dilbertcomics-20&l=pf4&o=1"
+		width="1" height="1" border="0" alt=""
+		style="border: none !important; margin: 0px !important;" /> 
 </div>
 ]]></Content>
 </Module>

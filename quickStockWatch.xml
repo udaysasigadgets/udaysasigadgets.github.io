@@ -43,7 +43,7 @@
 		</script>
 		
 	<a href="#settingsModal" class="btn btn-small pull-right" data-toggle="modal" id="settingsloadbtn" style="margin-left:5px"><i class="icon-cog"></i> Settings</a>
-	<a href="http://udaysasi-gadgets.googlecode.com/svn/trunk/quickStockWatch.html" class="btn btn-small pull-right" target="newwin" id="fullscreen"><i class="icon-fullscreen"></i> FullScreen</a>
+	<!-- <a href="http://udaysasi-gadgets.googlecode.com/svn/trunk/quickStockWatch.html" class="btn btn-small pull-right" target="newwin" id="fullscreen"><i class="icon-fullscreen"></i> FullScreen</a> -->
 	
 	<div id="myStatsContent" style="height:60px;clear:both">
 		<!-- 

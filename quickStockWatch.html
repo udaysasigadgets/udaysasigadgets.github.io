@@ -636,7 +636,7 @@
 			
 			stockTickers = sortArray(stockTickers);
 			
-			if(refreshrate!=-1 && refreshrate<30) {
+			if(refreshrate==null || (refreshrate!=-1 && refreshrate<30)) {
 				refreshrate = 30;
 				localStore.setItem("refreshrate", 30);
 			}

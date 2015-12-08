@@ -611,32 +611,32 @@
 		
 		function initWidget() {
 			showname = localStore.getItem("showname");
-			if(showname==null)
+			if(showname==null || showname=='null')
 				showname = "1";
 			flashing = localStore.getItem("flashing");
-			if(flashing==null)
+			if(flashing==null || flashing=='null')
 				flashing = "0";
 			showchart = localStore.getItem("showchart");
-			if(showchart==null)
+			if(showchart==null || showchart=='null')
 				showchart = "1";
 			refreshrate = localStore.getItem("refreshrate");
-			if(refreshrate==null)
+			if(refreshrate==null || refreshrate=='null')
 				refreshrate = "30";
 			showNews = localStore.getItem("shownews");
-			if(showNews==null)
+			if(showNews==null || showNews=='null')
 				showNews = "0";
 			showStrength = localStore.getItem("showstrength");
-			if(showStrength==null)
+			if(showStrength==null || showStrength=='null')
 				showStrength = "0";
 			strTickers = localStore.getItem("tickers");
-			if(strTickers==null)
+			if(strTickers==null || strTickers=='null')
 				strTickers = "GOOG,FB";
 			strTickers = convertToNewFormat(strTickers);
 			stockTickers = convertToArray2(strTickers);
 			
 			stockTickers = sortArray(stockTickers);
 			
-			if(refreshrate==null || (refreshrate!=-1 && refreshrate<30)) {
+			if(refreshrate!=-1 && refreshrate<30) {
 				refreshrate = 30;
 				localStore.setItem("refreshrate", 30);
 			}

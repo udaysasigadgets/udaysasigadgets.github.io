@@ -157,10 +157,12 @@ gadgets.util.registerOnLoadHandler(displayImage);
 </script>
 <div id="logDiv"></div>
 <div id="loadingDiv" style="display:"><font size="-1" style="; font-family: Arial"><img src="http://udaysasigadgets.github.io/loading-spin.gif">&nbsp;&nbsp;Loading comic strip.. Please wait..</font></div>
+<br>
 <div style="text-align:center">
-	<span id="amazonlink" class="pointer" style="color: #0088CC;background-color: #FAFAD2;padding: 5px;border: 1px solid #B8860B;">Complete Holiday Shopping Guide</span>
+	<span id="amazonlink" class="pointer" style="color: #0088CC;background-color: #FAFAD2;padding: 5px;border: 1px solid #B8860B;" onclick="amazon();">Complete Holiday Shopping Guide</span>
 	<img src="http://ir-na.amazon-adsystem.com/e/ir?t=spacemask-20&l=ur2&o=1" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
 </div>	
+<br>
 <table align="center" border="0">
 	<tr>
 		<td>

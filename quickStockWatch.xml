@@ -45,11 +45,6 @@
 	<a href="#settingsModal" class="btn btn-small pull-right" data-toggle="modal" id="settingsloadbtn" style="margin-left:5px"><i class="icon-cog"></i> Settings</a>
 	<a href="http://udaysasi-gadgets.googlecode.com/svn/trunk/quickStockWatch.html" class="btn btn-small pull-right" target="newwin" id="fullscreen"><i class="icon-fullscreen"></i> FullScreen</a>
 	
-	<!--
-	<span id="amazonlink" class="pointer" style="color: #0088CC;background-color: #FAFAD2;padding: 5px;border: 1px solid #B8860B;">Holiday Shopping Guide</span>
-	<img src="http://ir-na.amazon-adsystem.com/e/ir?t=spacemask-20&l=ur2&o=1" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
-	-->
-	
 	<div id="myStatsContent" style="clear:both">
 		
 		<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -61,66 +56,6 @@
 		(adsbygoogle = window.adsbygoogle || []).push({});
 		</script>
 		
-		<!--
-		<img src="amazon/holidays.png" id="amazonlink" class="pointer" style="height:60px" />
-		<img
-			src="http://ir-na.amazon-adsystem.com/e/ir?t=spacemask-20&l=pf4&o=1"
-			width="1" height="1" border="0" alt=""
-			style="border: none !important; margin: 0px !important;" /> 
-		-->
-		<!-- Amazon Link ads 
-		<img src="http://ir-na.amazon-adsystem.com/e/ir?t=spacemask-20&l=ur2&o=1" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
-		<div id="ad0" class="hide">
-			<a target="_blank" href="http://www.amazon.com/b?_encoding=UTF8&camp=1789&creative=9325&linkCode=ur2&node=172282&site-redirect=&tag=spacemask-20&linkId=4KLB2BMSGC3RVXYO">
-				<img src="amazon/electronics.png"/>
-			</a>
-		</div>
-		<div id="ad1" class="hide">
-			<a target="_blank" href="http://www.amazon.com/b?_encoding=UTF8&camp=1789&creative=9325&linkCode=ur2&node=165796011&site-redirect=&tag=spacemask-20&linkId=ZV2BV4GLMCFCN25F">
-				<img src="amazon/baby.png"/>
-			</a>
-		</div>
-		<div id="ad2" class="hide">
-			<a target="_blank" href="http://www.amazon.com/b?_encoding=UTF8&camp=1789&creative=9325&linkCode=ur2&node=2335752011&site-redirect=&tag=spacemask-20&linkId=QWVHBAFSXLPLINUX">
-				<img src="amazon/cellphones.png"/>
-			</a>
-		</div>
-		<div id="ad3" class="hide">
-			<a target="_blank" href="http://www.amazon.com/b?_encoding=UTF8&camp=1789&creative=9325&linkCode=ur2&node=13900871&site-redirect=&tag=spacemask-20&linkId=AURH3TFAY7QYPYXD">
-				<img src="amazon/computers.png"/>
-			</a>
-		</div>
-		<div id="ad4" class="hide">
-			<a target="_blank" href="http://www.amazon.com/b?_encoding=UTF8&camp=1789&creative=9325&linkCode=ur2&node=2972638011&site-redirect=&tag=spacemask-20&linkId=W5WVV7X7WR2BBM3Q">
-				<img src="amazon/patio.gif"/>
-			</a>
-		</div>
-		<div id="ad5" class="hide">
-			<a target="_blank" href="http://www.amazon.com/b?_encoding=UTF8&camp=1789&creative=9325&linkCode=ur2&node=284507&site-redirect=&tag=spacemask-20&linkId=PA3QTJBPOOWMJ63Y">
-				<img src="amazon/kitchen.gif"/>
-			</a>
-		</div>
-		<div id="ad6" class="hide">
-			<a target="_blank" href="http://www.amazon.com/b?_encoding=UTF8&camp=1789&creative=9325&linkCode=ur2&node=1064954&site-redirect=&tag=spacemask-20&linkId=ETK23HLSXTFLRY7L">
-				<img src="amazon/office.gif"/>
-			</a>
-		</div>
-		<div id="ad7" class="hide">
-			<a target="_blank" href="http://www.amazon.com/b?_encoding=UTF8&camp=1789&creative=9325&linkCode=ur2&node=165793011&site-redirect=&tag=spacemask-20&linkId=Z6C3FDZT263UU4WV">
-				<img src="amazon/toys.png"/>
-			</a>
-		</div>
-		<div id="ad8" class="hide">
-			<a target="_blank" href="http://www.amazon.com/b?_encoding=UTF8&camp=1789&creative=9325&linkCode=ur2&node=16261631&site-redirect=&tag=spacemask-20&linkId=IAZRCLZNHZ3XSFJA">
-				<img src="amazon/prime.jpg"/>
-			</a>
-		</div>
-		<div id="ad9" class="hide">
-			<a target="_blank" href="http://www.amazon.com/b?_encoding=UTF8&camp=1789&creative=9325&linkCode=ur2&node=51569011&site-redirect=&tag=spacemask-20&linkId=FLKAYD47TGZBWXTM">
-				<img src="amazon/apparel.jpg"/>
-			</a>
-		</div>
-		-->
 	</div>
 	<div class="clearfix"></div>
 	<div class="clearfix alert hide" id="message" style="margin-bottom:0px;padding:2px;">
@@ -596,6 +531,11 @@
 	
 	$(document).ready(function() {
 		
+		var client2 = new Usergrid.Client({
+	        orgName:'perfectpluto',
+	        appName:'sandbox'
+	    });
+		console.log('client2 : '+client2);
 		var showname, flashing, showchart, refreshrate, showNews, showStrength, strTickers, stockTickers;
 		var baseURL = "http://download.finance.yahoo.com/d?s=";
 		var sortcol = 'symbol';

@@ -531,11 +531,6 @@
 	
 	$(document).ready(function() {
 		
-		var client2 = new Usergrid.Client({
-	        orgName:'perfectpluto',
-	        appName:'sandbox'
-	    });
-		console.log('client2 : '+client2);
 		var showname, flashing, showchart, refreshrate, showNews, showStrength, strTickers, stockTickers;
 		var baseURL = "http://download.finance.yahoo.com/d?s=";
 		var sortcol = 'symbol';

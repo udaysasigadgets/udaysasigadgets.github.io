@@ -44,7 +44,14 @@
 		
 	<a href="#settingsModal" class="btn btn-small pull-right" data-toggle="modal" id="settingsloadbtn" style="margin-left:5px"><i class="icon-cog"></i> Settings</a>
 	<a href="http://udaysasi-gadgets.googlecode.com/svn/trunk/quickStockWatch.html" class="btn btn-small pull-right" target="newwin" id="fullscreen"><i class="icon-fullscreen"></i> FullScreen</a>
-	
+
+	<script src="http://code.jquery.com/jquery.js"></script>
+	<script src="http://udaysasigadgets.github.io/bootstrap/js/jquery.cookie.js"></script>
+	<script src="http://udaysasigadgets.github.io/bootstrap/js/bootstrap.min.js"></script>
+	<script src="http://udaysasigadgets.github.io/bootstrap/js/json2.js"></script>
+	<script src="http://udaysasigadgets.github.io/bootstrap/js/storage.js"></script>
+	<script type="text/javascript" src="http://udaysasigadgets.github.io/apigee.min.js"></script>
+		
 	<div id="myStatsContent" style="clear:both">
 		
 		<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -268,13 +275,6 @@
 			<button class="btn btn-danger" data-dismiss="modal" id="deletesavebtn">Delete</button>
 		</div>
 	</div>
-	
-	<script src="http://code.jquery.com/jquery.js"></script>
-	<script src="http://udaysasigadgets.github.io/bootstrap/js/jquery.cookie.js"></script>
-	<script src="http://udaysasigadgets.github.io/bootstrap/js/bootstrap.min.js"></script>
-	<script src="http://udaysasigadgets.github.io/bootstrap/js/json2.js"></script>
-	<script src="http://udaysasigadgets.github.io/bootstrap/js/storage.js"></script>
-	<script type="text/javascript" src="http://udaysasigadgets.github.io/apigee.min.js"></script>
 	
 	<script type="text/javascript">
 	

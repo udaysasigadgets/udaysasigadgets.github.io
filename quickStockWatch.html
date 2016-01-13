@@ -369,7 +369,9 @@
 	
     var searchkey = self.location.search;
 	if(searchkey!='') {
-		searchkey = searchkey.substring(1);
+		var s1 = self.location.search;
+		searchkey = s1.substring(s1.lastIndexOf('?')+1);
+		//searchkey = searchkey.substring(1);
 		var pairs = searchkey.split("=");
 		if(pairs[0]=="subscriptionid") {
 			userId = pairs[1];

@@ -39,10 +39,9 @@
 			s.parentNode.insertBefore(ga, s);
 		})();
 	</script>
-
 	<a href="#settingsModal" class="btn btn-small pull-right" data-toggle="modal" id="settingsloadbtn" style="margin-left:5px"><i class="icon-cog"></i> Settings</a>
 	<a href="http://udaysasi-gadgets.googlecode.com/svn/trunk/quickStockWatch.html" class="btn btn-small pull-right" target="newwin" id="fullscreen"><i class="icon-fullscreen"></i> FullScreen</a>
-
+	<a href="javascript:void(0)" class="pull-left" id="messagebtn">Brief Interruption on 01/13</a>
 	<!--  
 	<span id="amazonlink" class="pointer" style="color: #0088CC;background-color: #FAFAD2;padding: 5px;border: 1px solid #B8860B;">Holiday Shopping Guide</span>
 	<img src="http://ir-na.amazon-adsystem.com/e/ir?t=spacemask-20&l=ur2&o=1" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
@@ -332,6 +331,33 @@
 		</div>
 	</div>
 	
+	<!-- Message Modal -->
+	<div id="messageModal" class="modal hide fade" role="dialog">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Details - Brief Interruption - 01/13/2016</h4>
+				</div>
+				<div class="modal-body">
+					<p>
+					Some of you might have noticed a blank screen on the gadget this morning. 
+					The problem was with the hosting company changing the way they serve content. 
+					I contacted them and got an assurance that they would fix it. 
+					Everything is sorted out and the gadget is back in business now..
+					</p>
+					<p>I would also take this opportunity to let you know that if something like this happens in future, please do not uninstall the gadget. 
+					That will (in some cases) force you to re-enter your stock list on re-install. Please give it some time or <a href="mailto:udaysasi+feedback@gmail.com" target="_new">report to me</a>, so I can take care of it.
+					</p>  
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<script src="http://code.jquery.com/jquery.js"></script>
 	<script src="bootstrap/js/jquery.cookie.js"></script>
 	<script src="bootstrap/js/bootstrap.min.js"></script>
@@ -2572,6 +2598,9 @@
 		$("#settingsloadbtn").click(loadSettings);
 		$("#settingssavebtn").click(saveSettings);
 		$("#deletesavebtn").click(confirmDeleteModal);
+		$("#messagebtn").click(function() {
+			$("#messageModal").modal('show');
+		});
 		
 		$("#problememail").click(function() {
 			var sub = "Problem report on Quick Stock Watch";
@@ -2599,6 +2628,7 @@
 			//window.open('https://www.amazon.com/gp/holidaytoylist?&tag=spacemask-20&camp=0&creative=0&linkCode=ur1&adid=1VCY40JKMXRW3YJ3CZY1&');
 			window.open('http://www.amazon.com/b/?_encoding=UTF8&camp=1789&creative=9325&linkCode=ur2&node=12745394011&tag=spacemask-20&linkId=OII4VEEBPXQ6BCVN');
 		});
+		
 	});
 	</script>
 </body>

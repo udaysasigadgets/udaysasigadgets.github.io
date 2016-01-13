@@ -17,6 +17,9 @@
 	.pointer {
 		cursor: pointer; cursor: hand;
 	}
+	.delete-icon {
+		max-width: none;
+	}
 </style>
 </head>
 <body>
@@ -1831,7 +1834,7 @@
 		    var contentText = "";
 		    for (i = 0; i < stockTickers.length; i++) {
 		    	contentText += "<tr id=\"" + getAlphaNumericName(stockTickers[i].symbol) + "Row\" style=\"background:#ffffff;\" onMouseOver=\"highlightColor(this);showChart('" + stockTickers[i].symbol + "')\" onMouseOut=\"unhighlightColor(this);hideChart('" + stockTickers[i].symbol + "')\">";
-		        contentText += "<td style=\"padding-right: 3px;\" width=\"5%\" align=\"center\" title=\"Delete " + stockTickers[i].symbol + "\"><img src=\""+staticImgUrl+"\" onClick=\"javascript:deleteStockTicker(" + i + ")\"/></td>";
+		        contentText += "<td style=\"padding-right: 3px;\" width=\"5%\" align=\"center\" title=\"Delete " + stockTickers[i].symbol + "\"><img class=\"delete-icon pointer\" src=\""+staticImgUrl+"\" onClick=\"javascript:deleteStockTicker(" + i + ")\"/></td>";
 		        contentText += "<td width=\"5%\" align=left style=\"padding-right: 0.5em;\"><font size=\"-1\"><span rel=\"popover\" id=\"" + getAlphaNumericName(stockTickers[i].symbol) + "Span\"><a href=\"http://finance.yahoo.com/q?s=" + stockTickers[i].symbol + "\" target=\"blank\">" + stockTickers[i].symbol + "</a></span></font></td>";
 		        contentText += "<td nowrap style=\"display:" + nameDisplay + "\" width=\"35%\" align=left onClick=\"callMoreData('" + stockTickers[i].symbol + "')\" ><font size=\"-1\"><span style=\"display:" + nameDisplay + "\" id=\"" + getAlphaNumericName(stockTickers[i].symbol) + "NameSpan\">" + stockTickers[i].name + "</span></font></td>";
 		        contentText += "<td width=\"20%\" style=\"padding-right: 0.5em;\" align=right onClick=\"callMoreData('" + stockTickers[i].symbol + "')\" ><font size=\"-1\"><span id=\"" + getAlphaNumericName(stockTickers[i].symbol) + "PriceSpan\">" + stockTickers[i].price + "</span></font></td>";

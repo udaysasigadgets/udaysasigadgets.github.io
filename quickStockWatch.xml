@@ -2255,7 +2255,7 @@
 				var sub = 'My Portfolio on Quick Stock Watch';
 				var body = 'Hi there, %0A%0AHere is my portfolio on Quick Stock Watch : %0A%0A'+ticks+'%0A%0AThanks';
 			}
-			window.location='mailto:?subject='+sub+'&body='+body;	
+			window.open('mailto:?subject='+sub+'&body='+body);	
 		}
 		
 		var numResults = 0;

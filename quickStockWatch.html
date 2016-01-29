@@ -1775,18 +1775,15 @@
 		    newTickerString = newTickerString.replace(/ /g, ",");
 		    var newTickerArray = newTickerString.split(",");
 		    var symbolArray = getSymbolArray();
-		
-			 // Check for URL too large error
-			 if (symbolArray.length == 0) {
-			 	 return;
-			 }
+			 
 			 var symbol = "";
 			 for (var h = 0; h < symbolArray.length; h++) {
 				 symbol += symbolArray[h] + ",";
 			 }
 		 	 for (var d = 0; d < newTickerArray.length; d++) {
 				 symbol += newTickerArray[d] + ",";	
-			 }	 
+			 }
+		 	// Check for URL too large error
 			 if(symbol.length>400) {
 			 	 gel("ticker").val("");
 			 	 

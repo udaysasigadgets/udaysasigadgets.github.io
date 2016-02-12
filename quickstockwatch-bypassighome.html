@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>QuickStockWatch - Bypass ighome limitation</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+    	.highlight {
+		    padding: 9px 14px;
+		    margin-bottom: 14px;
+		    background-color: #f7f7f9;
+		    border: 1px solid #e1e1e8;
+		    border-radius: 4px;
+		    margin: 10px;
+		}
+
+    </style>
+
+</head>
+
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+
+
+<div class="highlight">
+
+	<p>The problem is bcoz of ighome.com not working as expected. There is nothing wrong with the gadget itself. </p>
+	<p>May I suggest the following solution so you will never have to worry again (this solution completely eliminates any errors caused by ighome)</p>
+	<p>1) Click on gear icon on top right corner of your ighome page and select "Add Gadgets"<br />2) Select "Create Your Own Gadget" from the left menu (bottom most option)<br />3) Select "From a URL" option.<br />4) Click on "Add It Now" button.<br />5) Your custom gadget should now show up on your homepage as the first one in the list. Give the gadget any title say "My Favorite Stocks" and enter the following in the URL section : <br /><span id="subscriptionid"></span> <br />Do not change the url. Please enter as-is. <br />6) Click on Save.<br />7) Refresh the browser page. You can now start using this gadget going forward..</p>
+	<p>Enter a couple of stocks and reload the page to test to make sure your stocks don't disappear, before you load it up with all of your stock symbols.</p>
+	<p>This should solve the intermittent problem you are facing. Once you are satisfied with this, go ahead and delete the old gadget you were using.</p>
+	<p>Please let me know if it worked.</p>
+
+	<button id="load" class="btn btn-primary">Load</button>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+	$(function() {
+		var S4 = function() {
+		    return (((1+Math.random())*0x10000)|0).toString(16).substring(1); 
+		};
+		var generateUUID = function() {
+			return guid = (S4() + S4() + "-" + S4() + "-4" + S4().substr(0,3) + "-" + S4() + "-" + S4() + S4() + S4()).toUpperCase().replace(/-/g,'');
+		};
+
+		var subscriptionid = generateUUID();
+		$("#subscriptionid").text('http://udaysasigadgets.github.io/quickStockWatch.html?subscriptionid='+subscriptionid);
+
+		$("#load").click(function() {
+			$("#preview").attr("src", "http://udaysasigadgets.github.io/quickStockWatch.html?subscriptionid="+subscriptionid);			
+		});
+	});
+</script>
+
+<iframe id="preview" src="" width="400" height="300"></iframe>
+</body>
+</html>

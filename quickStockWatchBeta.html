@@ -48,6 +48,11 @@
     .news-time {
     	color: #AAAAAA;
     }
+    @media only screen and (max-width : 480px) {
+    	.hidden-phone {
+    		display: none;
+    	}   
+    }
 </style>
 </head>
 <body>
@@ -155,10 +160,14 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
+					<button type="button" class="pull-right btn btn-xs btn-danger" style="margin-left:5px" data-dismiss="modal">Cancel</button>
+					<button type="button" class="pull-right btn btn-xs btn-success settingssavebtn separator" data-dismiss="modal" id="settingssavebtn">Save</button>
+					<!-- 
 					<button type="button" class="close" data-dismiss="modal"
 						aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
+					-->
 					<strong>Gadget Settings</strong>
 				</div>
 				<div class="modal-body container-fluid">
@@ -222,10 +231,12 @@
 						</div>
 					</form>
 				</div>
-				<div class="modal-footer">
+				<!-- 
+				<div class="modal-footer hide">
 					<button type="button" class="btn btn-md btn-default" data-dismiss="modal">Cancel</button>
-					<button type="button" class="btn btn-md btn-success" data-dismiss="modal" id="settingssavebtn">Done</button>
+					<button type="button" class="btn btn-md btn-success settingssavebtn" data-dismiss="modal" id="settingssavebtn">Save</button>
 				</div>
+				-->
 			</div>
 			<!-- /.modal-content -->
 		</div>
@@ -1726,7 +1737,6 @@
 		    if (showchart == 0) {
 		        return;
 		    }
-		    
 		    var img = "<img src='" + cURL + sym + "'/>";
 		    gel(getAlphaNumericName(sym) + "Span").popover({'title':'', 'content': img, 'trigger':'hover', 'html': true});
 		}
@@ -1734,7 +1744,6 @@
 		    if (showchart == 0) {
 		        return;
 		    }
-		   
 		    gel("logger").html("");
 		    gel("logger").css('display', 'none');
 		}
@@ -2326,7 +2335,7 @@
 		$("#profitChart").click(showProfitChart);
 		$("#emailbtn").click(showEmailContent);
 		$("#settingsloadbtn").click(loadSettings);
-		$("#settingssavebtn").click(saveSettings);
+		$(".settingssavebtn").click(saveSettings);
 		$("#deletesavebtn").click(confirmDeleteModal);
 		$("#messagebtn").click(function() {
 			$("#messageModal").modal('show');

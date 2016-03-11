@@ -804,7 +804,7 @@
 		    symbol += symbolArray[h];
 		    var newDate = new Date().getTime();
 
-		    customAjax("http://query.yahooapis.com/v1/public/yql?q=select+*+from+csv+where+url%3D'http%3A%2F%2Fdownload.finance.yahoo.com%2Fd%2Fquotes.csv%3Fs%3D"+encodeURIComponent(encodeURIComponent(symbol))+"%26f%3Dnsl1p2c1p'+and+columns%3D'name%2Csymbol%2CLastTradePriceOnly%2CPercentChange%2CChange%2CPreviousClose'&format=json", responseText);
+		    customAjax("http://query.yahooapis.com/v1/public/yql?q=select+*+from+csv+where+url%3D'http%3A%2F%2Fdownload.finance.yahoo.com%2Fd%2Fquotes.csv%3Fs%3D"+encodeURIComponent(encodeURIComponent(symbol))+"%26f%3Dnsl1p2c1p%26c="+(new Date()).getTime()+"'+and+columns%3D'name%2Csymbol%2CLastTradePriceOnly%2CPercentChange%2CChange%2CPreviousClose'&format=json", responseText);
 		    
 		    try {
 		        clearTimeout(reloadId);
@@ -1950,7 +1950,7 @@
 				    }
 				});
 			} else {
-		    	customAjax("http://query.yahooapis.com/v1/public/yql?q=select+*+from+csv+where+url%3D'http%3A%2F%2Fdownload.finance.yahoo.com%2Fd%2Fquotes.csv%3Fs%3D"+encodeURIComponent(encodeURIComponent(sym))+"%26f%3Dnsopvmwt1x'+and+columns%3D'name%2Csymbol%2cOpen%2CPreviousClose%2CVolume%2CDaysRange%2CYearRange%2CLastTradeTime%2CStockExchange'&format=json", showMoreData);
+		    	customAjax("http://query.yahooapis.com/v1/public/yql?q=select+*+from+csv+where+url%3D'http%3A%2F%2Fdownload.finance.yahoo.com%2Fd%2Fquotes.csv%3Fs%3D"+encodeURIComponent(encodeURIComponent(sym))+"%26f%3Dnsopvmwt1x%26c="+(new Date()).getTime()+"'+and+columns%3D'name%2Csymbol%2cOpen%2CPreviousClose%2CVolume%2CDaysRange%2CYearRange%2CLastTradeTime%2CStockExchange'&format=json", showMoreData);
 			}
 		}
 		function formatData(str) {

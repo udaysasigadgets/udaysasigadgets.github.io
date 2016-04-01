@@ -638,6 +638,7 @@
 	  var queryStr = inputVal.substring(commaIndex+1);
 	  queryStr = trim(queryStr);
 
+	   /*//Throwing a 400 from March 30th 2016
 		$.ajax({
             type: "GET",
             url: "https://s.yimg.com/aq/autoc",
@@ -647,6 +648,16 @@
             jsonp : "callback",
             jsonpCallback: "YAHOO.util.ScriptNodeDataSource.callbacks"
         });
+		*/	
+		$.ajax({
+	        type: "GET",
+	        url: "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D'http%3A%2F%2Fd.yimg.com%2Faq%2Fautoc%3Fquery%3D"+encodeURI(escape(queryStr))+"%26region%3DUS%26lang%3Den-US'&format=json&callback=",
+	        dataType: "json",
+	        success: function(data) {
+	        	YAHOO.util.ScriptNodeDataSource.callbacks(JSON.parse(data.query.results.body));
+	        }
+	    });
+		
 	}
 	
 	function getSelectedStr(origStr, matchStr)
@@ -2142,58 +2153,7 @@
 		
 		var numResults = 0;
 		var currentSelection = -1;
-		addEntry = function (symbol)
-		{
-		  var inputTextObj = gel("ticker");
-		  var addedString = "";
-		  var inputVal = inputTextObj.val();
-		  var commaIndex = inputVal.lastIndexOf(",");
-		  
-		  if(commaIndex!=-1)
-		  {
-		    var prevStr = inputVal.substring(0, commaIndex);
-		    addedString += prevStr + ", "; 
-		  }
-		  inputTextObj.val(addedString+symbol+", ");   
-		  gel("myContainer").html(""); 
-		  currentSelection=-1;
-		  if(inputTextObj.createTextRange) {
-			  var txtRange = inputTextObj.createTextRange();
-			  txtRange.moveStart("character", inputTextObj.val().length);
-			  txtRange.moveEnd( "character", 0 );
-			  txtRange.select();
-		  }
-		  else if(inputTextObj.selectionStart) {
-		      inputTextObj.focus(); 
-		      inputTextObj.setSelectionRange(inputTextObj.val().length, inputTextObj.val().length);  	
-		  }
-		}
 		
-		keyEnter = function(e)
-		{
-		  var key = (window.Event) ? e.which : e.keyCode;
-		  switch(key) {
-		    case 40: case 38: case 13:
-		      return;
-		  }
-		  currentSelection = -1;
-		  numResults = 0;
-		  var inputVal = gel("ticker").val();
-		  var commaIndex = inputVal.lastIndexOf(",");
-		  var prevStr = inputVal.substring(0, commaIndex);
-		  var queryStr = inputVal.substring(commaIndex+1);
-		  queryStr = trim(queryStr);
-
-			$.ajax({
-	              type: "GET",
-	              url: "https://s.yimg.com/aq/autoc",
-	              data: {query: escape(queryStr), region: 'US', lang : 'en-US'},
-	              dataType: "jsonp",
-	              async : false,
-	              jsonp : "callback",
-	              jsonpCallback: "YAHOO.util.ScriptNodeDataSource.callbacks"
-	          });
-		}
 		
 		function log(str) {
 		  // gel("logger").html(gel("logger").html() + str+'<br>');

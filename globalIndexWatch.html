@@ -874,8 +874,9 @@
 				    	var curQuote = quotes[c];
 			            var curQuoteTicker = curQuote["symbol"];
 			            var pos = getPosition(curQuoteTicker);
-			            if(pos==-1)
-			            	continue;            	
+			            if(pos==-1 || curQuoteTicker=='^DJI') {
+			            	continue;
+			            }            	
 			            
 			            symbol = getSymbol(pos);
 			            if (symbol == "") {

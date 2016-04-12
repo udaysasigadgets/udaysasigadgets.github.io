@@ -42,6 +42,11 @@
 
 	<p></p>
 	<p>Please support the gadget by going easy on any Ad Blockers you may have installed to keep the continued support for this gadget alive.</p>
+	<hr>
+	<p>
+		<strong>Did the above solution work for you?</strong> &nbsp;&nbsp;<button id="worked" class="btn btn-xs btn-success">Yes</button> &nbsp;&nbsp;<button id="doesntwork" class="btn btn-xs btn-danger">No</button>&nbsp;&nbsp;&nbsp;&nbsp;
+		<span id="feedback-message"></span> 
+	</p>
 	<button id="load" class="btn btn-primary hide">Load</button>
 </div>
 
@@ -85,9 +90,24 @@
 			var subscriptionid = generateUUID();
 			validateGeneratedId(subscriptionid);	
 		}
-		
 		assignId();
-
+		
+		$("#worked").click(function() {
+			ga(function(tracker) {
+				tracker.send('event', 'feedback', 'click', 'Y', {
+					nonInteraction: true
+				});
+				$("#feedback-message").html("Good to know, Thanks!");
+			});
+		});
+		$("#doesntwork").click(function() {
+			ga(function(tracker) {
+				tracker.send('event', 'feedback', 'click', 'N', {
+					nonInteraction: true
+				});
+				$("#feedback-message").html("Sorry to hear that!");
+			});
+		});
 	});
 </script>
 <script>

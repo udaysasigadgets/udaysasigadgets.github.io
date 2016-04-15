@@ -37,7 +37,7 @@
 	<span id="amazonlink" class="pointer" style="color: #0088CC;background-color: #FAFAD2;padding: 5px;border: 1px solid #B8860B;">Holiday Shopping Guide</span>
 	<img src="http://ir-na.amazon-adsystem.com/e/ir?t=spacemask-20&l=ur2&o=1" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
 	 -->
-	<div id="adContent" style="clear:both">
+	<div id="myStatsContent" style="clear:both">
 		
 		<!-- GIW_Module -->
 		
@@ -58,6 +58,7 @@
 			style="border: none !important; margin: 0px !important;" />
 		-->	
 	</div>
+	
 	<div class="clearfix"></div>
 	<div class="clearfix alert hide" id="message" style="margin-bottom:0px;padding:2px;">
 		<small>Temporary fix has been put in place for Internet Explorer users. Permanent fix coming soon.</small>  
@@ -289,6 +290,15 @@
 			//Amazon ads
 			//$("#ad"+Math.floor(Math.random()*10)).removeClass('hide');
 			
+			setTimeout(function() {
+				//Check if ads loaded
+				if($(".adsbygoogle iframe").length==0) {
+					$("#myStatsContent").addClass("text-warning").html('<i class="fa fa-child"></i> Please support the gadget by disabling Ad Blockers')
+				} else {
+					$("#myStatsContent").css("overflow", "hidden");
+				}
+			}, 3000);
+					
 			function initWidget() {
 				region = localStore.getItem("region");			
 				showStrength = localStore.getItem("showstrength");
@@ -1088,7 +1098,7 @@
 			   	    		
 			        contentText += "<tr id=\"" + stockTickers[i].symbol + "Row\" onMouseOver=\"showChart('" + stockTickers[i].symbol + "')\"  bgcolor=\""+bgcolor+"\" >";
 			        contentText += "<td width=\"5%\" style=\"padding-right: 3px;width:20px\" align=\"center\"><img src=\""+staticImgUrl[getAlphaNumericName(stockTickers[i].symbol)]+"\" width=\"21\" height=\"14\" border=\"1\"/></td>";
-			        contentText += "<td width=\"35%\" class=\"dynamic\" nowrap style=\"display:\" align=\"left\"><font size=\"-1\"><a class=\"link\" href=\"http://finance.yahoo.com/q?s=" + stockTickers[i].symbol + "\" target=\"blank\"><span rel=\"popover\" style=\"display:\" id=\"" + getAlphaNumericName(stockTickers[i].symbol) + "NameSpan\">" + stockTickers[i].name + "</span></a></font></td>";
+			        contentText += "<td width=\"35%\" class=\"dynamic\" nowrap style=\"overflow:hidden;display:\" align=\"left\"><font size=\"-1\"><a class=\"link\" href=\"http://finance.yahoo.com/q?s=" + stockTickers[i].symbol + "\" target=\"blank\"><span rel=\"popover\" style=\"display:\" id=\"" + getAlphaNumericName(stockTickers[i].symbol) + "NameSpan\">" + stockTickers[i].name + "</span></a></font></td>";
 			        contentText += "<td width=\"20%\" style=\"padding-right: 0.5em;\" align=\"right\"><font size=\"-1\"><span id=\"" + getAlphaNumericName(stockTickers[i].symbol) + "PriceSpan\">" + stockTickers[i].price + "</span></font></td>";
 			        contentText += "<td width=\"15%\" style=\"display:"+changedisplay+";padding-right: 0.5em;\" align=\"right\" nowrap><font size=\"-1\"><span id=\"" + getAlphaNumericName(stockTickers[i].symbol) + "ChangeSpan\">" + stockTickers[i].change + "</span></font></td>";
 			        contentText += "<td width=\"15%\" align=\"right\" style=\"display:"+percentdisplay+"\" nowrap><font size=\"-1\"><span id=\"" + getAlphaNumericName(stockTickers[i].symbol) + "PercentSpan\">" + stockTickers[i].percent + "</span></font></td>";

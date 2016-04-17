@@ -89,7 +89,7 @@
 	</div>
 	<div class="clearfix"></div>
 	<div class="clearfix alert hide" id="message" style="margin-bottom:0px;padding:2px;">
-		<small>Temporary fix has been put in place for Internet Explorer users. Permanent fix coming soon.</small>  
+		<small>There seems to be a problem retrieving your stock list. This is likely a temporary glitch. Please check back later. </small>  
 	</div>  
 	<div id="watchListContent" class="contentData clearfix">
 		<table class="table table-condensed table-striped">
@@ -473,7 +473,7 @@
     				}
     				debugLog('createEntity cloud err => localStorage');
     			} catch(e) {
-    			*/
+    			
     				console.log("seems to be inside an iframe, Using cookie instead..");
     				$.cookie("utest","Luigi", { expires: 365 });
     				console.log("Value read from cookie : "+$.cookie("utest"));
@@ -495,7 +495,7 @@
     					return $.cookie(i);
     				}
     				debugLog('createEntity cloud err => cookie');
-    			/*	
+    			
     			}
     			*/
     			//Inform the user

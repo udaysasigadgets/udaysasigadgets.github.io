@@ -230,6 +230,11 @@
 							</select>
 						  </div>
 						</div>
+						<div class="row">
+							<div class="col-sm-12 text-warning">
+								<strong>Your Stocklist : </strong><span id="importstocklist"></span>
+							</div>
+						</div>
 					</form>
 				</div>
 				<!-- 
@@ -2264,6 +2269,7 @@
 			$("#inputShowStockName > select").val(localStore.getItem("showname"));
 			$("#inputHighlighting > select").val(localStore.getItem("flashing"));
 			//console.log("loading settings from storage");
+			$("#importstocklist").html(getSymbolArray().join(', '));
 		}
 		
 		function saveSettings() {

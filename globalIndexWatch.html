@@ -31,7 +31,7 @@
 	  })();
 	</script>	
 	<a href="#settingsModal" class="btn btn-small pull-right" data-toggle="modal" id="settingsloadbtn" style="margin-left:5px"><i class="icon-cog"></i> Settings</a>
-	<a href="http://udaysasi-gadgets.googlecode.com/svn/trunk/globalIndexWatch.html" class="btn btn-small pull-right" target="newwin" id="fullscreen"><i class="icon-fullscreen"></i> FullScreen</a>
+	<a href="http://udaysasigadgets.github.io/globalIndexWatch.html" class="btn btn-small pull-right" target="newwin" id="fullscreen"><i class="icon-fullscreen"></i> FullScreen</a>
 
 	<!-- 
 	<span id="amazonlink" class="pointer" style="color: #0088CC;background-color: #FAFAD2;padding: 5px;border: 1px solid #B8860B;">Holiday Shopping Guide</span>
@@ -317,7 +317,7 @@
 				stockTickers = convertToArray(strTickers);
 				staticImgUrl = new Array();
 				for (var u = 0; u < stockTickers.length; u++) {
-					staticImgUrl[getAlphaNumericName(stockTickers[u].symbol)] = "http://udaysasi-gadgets.googlecode.com/svn/trunk/"+getAlphaNumericName(stockTickers[u].symbol)+".gif"; 
+					staticImgUrl[getAlphaNumericName(stockTickers[u].symbol)] = "http://udaysasigadgets.github.io/"+getAlphaNumericName(stockTickers[u].symbol)+".gif"; 
 				}
 				if (showchart == 5) {
 				    cURL = "http://ichart.finance.yahoo.com/v?s=";
@@ -1312,7 +1312,7 @@
 					initWidget();
 					paintStockTicker();
 				});
-				$("#fullscreen").attr("href", "http://udaysasi-gadgets.googlecode.com/svn/trunk/globalIndexWatch.html?subscriptionid="+userId);
+				$("#fullscreen").attr("href", "http://udaysasigadgets.github.io/globalIndexWatch.html?subscriptionid="+userId);
 			}
 			 
 			$("#strengthbtn").click(showStrengthContent);

@@ -56,21 +56,16 @@
 </style>
 </head>
 <body>
-	<script type="text/javascript">
-		var _gaq = _gaq || [];
-		_gaq.push(['_setAccount', 'UA-1214589-5']);
-		_gaq.push(['_trackPageview']);
-		(function() {
-			var ga = document.createElement('script');
-			ga.type = 'text/javascript';
-			ga.async = true;
-			ga.src = ('https:' == document.location.protocol
-					? 'https://ssl'
-					: 'http://www')
-					+ '.google-analytics.com/ga.js';
-			var s = document.getElementsByTagName('script')[0];
-			s.parentNode.insertBefore(ga, s);
-		})();
+	<script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	
+	  ga('create', 'UA-1214589-5', 'auto');
+	  //Send pageview after figuring out Adblock information
+	  //ga('send', 'pageview'); 
+	
 	</script>
 	<a href="#settingsModal" class="btn btn-xs btn-primary pull-right" data-toggle="modal" id="settingsloadbtn" style="margin-left:5px"><i class="fa fa-cogs"></i> Settings</a>
 	<a href="http://udaysasigadgets.github.io/quickStockWatch.html" class="btn btn-xs btn-primary pull-right" target="newwin" id="fullscreen"><i class="fa fa-expand"></i> FullScreen</a>
@@ -701,23 +696,23 @@
 		            "Get news relevant to watchlist"];
 		
 		setTimeout(function() {
-			//Add a tip to the top of the gadget (conditionally)
-			var tiphtml = tips[Math.floor(tips.length*Math.random())];
 			//Check if ads loaded
 			if($(".adsbygoogle iframe").length==0) {
 				if(Math.random()>0.7) {
 					$("#myStatsContent").addClass("text-warning").html('<i class="fa fa-child"></i> Please support the gadget by disabling Ad Blockers')
 				} else {
-					//$("<div>").css('clear', 'both').html('<i class="fa fa-lightbulb-o fa-1" style="color:#FF8C00"></i> <strong>Tip</strong>: '+tiphtml).insertBefore($("#myStatsContent"));
 					$("#myStatsContent").remove();
-				}	
-			} else {
-				/*
-				if(Math.random()>0.5) {
-					$("<div>").css('clear', 'both').html('<i class="fa fa-lightbulb-o fa-1" style="color:#FF8C00"></i> <strong>Tip</strong>: '+tiphtml).insertBefore($("#myStatsContent"));
 				}
-				*/
+				//User is blocking Ads. Report the data as part of page view hit
+				ga(function(tracker) {
+					tracker.send('pageview', {'dimension1': 'Yes'});
+				});
+			} else {
 				$("#myStatsContent").css("overflow", "hidden");
+				//User is not blocking Ads. Report the data as part of page view hit
+				ga(function(tracker) {
+					tracker.send('pageview', {'dimension1': 'No'});
+				});
 			}
 		}, 3000);
 		

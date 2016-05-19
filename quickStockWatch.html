@@ -699,14 +699,24 @@
 			//Check if ads loaded
 			if($(".adsbygoogle iframe").length==0) {
 				if(Math.random()>0.7) {
-					$("#myStatsContent").addClass("text-warning").html('<i class="fa fa-child"></i> Please support the gadget by disabling Ad Blockers')
+					$("#myStatsContent").addClass("text-warning").html('<i class="fa fa-child"></i> Please support the gadget by disabling Ad Blockers');
+					//User is blocking Ads. Report the data as part of page view hit
+					ga(function(tracker) {
+						tracker.send('pageview', {'dimension1': 'Yes'});
+					});
+				} else if(Math.random()>0.3) {
+					$("#myStatsContent").html('<i class="fa fa-gift" aria-hidden="true"></i> <a target="amazon" href="http://www.amazon.com/b/?ref_=assoc_tag_ph_1463179518275&_encoding=UTF8&camp=1789&creative=9325&linkCode=pf4&node=502661011&tag=spacemask-20&linkId=MW5CNIHQSYV5EE7C">Best Fathers Day Gifts on Amazon</a><img src="http://ir-na.amazon-adsystem.com/e/ir?t=spacemask-20&l=pf4&o=1" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />');
+					//User is blocking Ads. Report the data as part of page view hit
+					ga(function(tracker) {
+						tracker.send('pageview', {'dimension1': 'Yes, Show Amazon Link'});
+					});
 				} else {
 					$("#myStatsContent").remove();
+					//User is blocking Ads. Report the data as part of page view hit
+					ga(function(tracker) {
+						tracker.send('pageview', {'dimension1': 'Yes'});
+					});
 				}
-				//User is blocking Ads. Report the data as part of page view hit
-				ga(function(tracker) {
-					tracker.send('pageview', {'dimension1': 'Yes'});
-				});
 			} else {
 				$("#myStatsContent").css("overflow", "hidden");
 				//User is not blocking Ads. Report the data as part of page view hit

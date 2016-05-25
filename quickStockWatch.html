@@ -700,7 +700,7 @@
 			//Check if ads loaded
 			if($(".adsbygoogle iframe").length==0) {
 				if(Math.random()>0.7) {
-					$("#myStatsContent").addClass("text-warning").html('<i class="fa fa-child"></i> Please support the gadget by disabling Ad Blockers');
+					$("#myStatsContent").addClass("text-warning").html('<i class="fa fa-child"></i> Please support the gadget by disabling Ad Blockers. <a target="adblock" class="small" href="https://help.getadblock.com/support/solutions/articles/6000055743-how-do-i-tell-adblock-not-to-run-">How?</a>');
 					//User is blocking Ads. Report the data as part of page view hit
 					ga(function(tracker) {
 						tracker.send('pageview', {'dimension1': 'Yes'});

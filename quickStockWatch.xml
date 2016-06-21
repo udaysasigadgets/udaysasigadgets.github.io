@@ -95,7 +95,7 @@
 		<a class="separator" href="#" id="view">Portfolio</a>
 		<a class="separator" href="#" id="profitChart">ProfitChart</a>
 		<a class="separator" href="#" id="emailbtn">Email</a>
-		<a class="separator" href="quickstockwatch/index.html"  target="quickstockwatchhelp">Help</a>
+		<a class="separator" href="http://udaysasigadgets.github.io/quickstockwatch/index.html"  target="quickstockwatchhelp">Help</a>
 		<a class="separator" href="http://groups.google.com/group/quickstockwatch" target="grouppage">Discuss</a>
 		<a class="separator" href="mailto:udaysasi+feedback@gmail.com" target="emailpage">Feedback</a>
 		<a class="separator" href="#" id="problememail">Problems?</a>

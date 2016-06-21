@@ -149,8 +149,7 @@ function writeLog(str) {
 }
 
 function amazon() {
-	//window.open('https://www.amazon.com/gp/holidaytoylist?&tag=spacemask-20&camp=0&creative=0&linkCode=ur1&adid=1VCY40JKMXRW3YJ3CZY1&');
-	window.open('http://www.amazon.com/b/?_encoding=UTF8&camp=1789&creative=9325&linkCode=ur2&node=12745394011&tag=spacemask-20&linkId=OII4VEEBPXQ6BCVN');
+	window.open('https://www.amazon.com/Best-Sellers-Electronics-Laptop-Computers/zgbs/electronics/565108/ref=as_acph_ce_blap_81_on?&tag=spacemask-20&camp=0&creative=0&linkCode=ur1&adid=08GKK5E3K3TMDE8T4NPP&');
 };
 		
 gadgets.window.adjustHeight();
@@ -160,7 +159,7 @@ gadgets.util.registerOnLoadHandler(displayImage);
 <div id="loadingDiv" style="display:"><font size="-1" style="; font-family: Arial"><img src="http://udaysasigadgets.github.io/loading-spin.gif">&nbsp;&nbsp;Loading comic strip.. Please wait..</font></div>
 <br>
 <div style="text-align:center">
-	<span id="amazonlink" class="pointer" style="color: #0088CC;background-color: #FAFAD2;padding: 5px;border: 1px solid #B8860B;" onclick="amazon();">Complete Holiday Shopping Guide</span>
+	<span id="amazonlink" class="pointer" style="color: #0088CC;background-color: #FAFAD2;padding: 5px;border: 1px solid #B8860B;" onclick="amazon();">Great deals on Amazon</span>
 	<img src="http://ir-na.amazon-adsystem.com/e/ir?t=spacemask-20&l=ur2&o=1" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
 </div>	
 <br>

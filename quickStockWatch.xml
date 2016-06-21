@@ -43,7 +43,7 @@
 		</script>
 		
 	<a href="#settingsModal" class="btn btn-small pull-right" data-toggle="modal" id="settingsloadbtn" style="margin-left:5px"><i class="icon-cog"></i> Settings</a>
-	<a href="http://udaysasi-gadgets.googlecode.com/svn/trunk/quickStockWatch.html" class="btn btn-small pull-right" target="newwin" id="fullscreen"><i class="icon-fullscreen"></i> FullScreen</a>
+	<a href="http://udaysasigadgets.github.io/quickStockWatch.html" class="btn btn-small pull-right" target="newwin" id="fullscreen"><i class="icon-fullscreen"></i> FullScreen</a>
 
 	<script src="http://code.jquery.com/jquery.js"></script>
 	<script src="http://udaysasigadgets.github.io/bootstrap/js/jquery.cookie.js"></script>
@@ -95,7 +95,7 @@
 		<a class="separator" href="#" id="view">Portfolio</a>
 		<a class="separator" href="#" id="profitChart">ProfitChart</a>
 		<a class="separator" href="#" id="emailbtn">Email</a>
-		<a class="separator" href="http://udaysasi-gadgets.googlecode.com/svn/trunk/quickStockWatchHelp.html"  target="quickstockwatchhelp">Help</a>
+		<a class="separator" href="quickstockwatch/index.html"  target="quickstockwatchhelp">Help</a>
 		<a class="separator" href="http://groups.google.com/group/quickstockwatch" target="grouppage">Discuss</a>
 		<a class="separator" href="mailto:udaysasi+feedback@gmail.com" target="emailpage">Feedback</a>
 		<a class="separator" href="#" id="problememail">Problems?</a>
@@ -540,7 +540,7 @@
 		var newsReloadId = "0";
 		var newsURL = 'http://finance.yahoo.com/rss/headline?s=';
 		var newsItemArray = new Array();
-		var staticImgUrl = "http://udaysasi-gadgets.googlecode.com/svn/trunk/delete.gif";
+		var staticImgUrl = "http://udaysasigadgets.github.io/delete.gif";
 		
 		//Amazon ads
 		//$("#ad"+Math.floor(Math.random()*10)).removeClass('hide');
@@ -2490,7 +2490,7 @@
 				initWidget();
 				paintStockTicker();
 			});
-			$("#fullscreen").attr("href", "http://udaysasi-gadgets.googlecode.com/svn/trunk/quickStockWatch.html?subscriptionid="+userId);
+			$("#fullscreen").attr("href", "http://udaysasigadgets.github.io/quickStockWatch.html?subscriptionid="+userId);
 		}
 		 
 		

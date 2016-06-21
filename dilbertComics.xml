@@ -74,7 +74,8 @@ function displayImage()
 	document.getElementById("loadingDiv").style.display='';
 	randomDate = getDate();
 	image = new Image();
-	image.src="http://dilbert-comics.googlecode.com/svn/trunk/dilbertColor"+randomDate+".gif";
+	//image.src="http://dilbert-comics.googlecode.com/svn/trunk/dilbertColor"+randomDate+".gif";
+	image.src="https://raw.githubusercontent.com/perfectpluto/dilbert-comics/master/dilbertColor"+randomDate+".gif";
 	writeLog("Requesting to load image : "+image.src);
 	image.onload = function (evt) {
 		writeLog("Image "+image.src+"loaded completely - Height:"+image.height+" and Width:"+image.width);
@@ -167,9 +168,9 @@ gadgets.util.registerOnLoadHandler(displayImage);
 	<tr>
 		<td>
 			<span align="center" id="container" style="cursor:pointer">
-				<div id="part1" style="display:none;width:178px;height:175px; background-image:url('http://dilbert-comics.googlecode.com/svn/trunk/dilbertColor20071221.gif'); background-position: -1px -1px;" ></div>
-				<div id="part2" style="display:none;width:178px;height:175px; background-image:url('http://dilbert-comics.googlecode.com/svn/trunk/dilbertColor20071221.gif'); background-position: -192px -1px;" ></div>
-				<div id="part3" style="display:none;width:178px;height:175px; background-image:url('http://dilbert-comics.googlecode.com/svn/trunk/dilbertColor20071221.gif'); background-position: -383px -1px;" ></div>
+				<div id="part1" style="display:none;width:178px;height:175px; background-image:url('https://raw.githubusercontent.com/perfectpluto/dilbert-comics/master/dilbertColor20071221.gif'); background-position: -1px -1px;" ></div>
+				<div id="part2" style="display:none;width:178px;height:175px; background-image:url('https://raw.githubusercontent.com/perfectpluto/dilbert-comics/master/dilbertColor20071221.gif'); background-position: -192px -1px;" ></div>
+				<div id="part3" style="display:none;width:178px;height:175px; background-image:url('https://raw.githubusercontent.com/perfectpluto/dilbert-comics/master/dilbertColor20071221.gif'); background-position: -383px -1px;" ></div>
 			</span>
 		</td>
 	</tr>

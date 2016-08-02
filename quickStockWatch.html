@@ -387,7 +387,7 @@
 		</div>
 	</div>
 
-	<script src="http://code.jquery.com/jquery.js"></script>
+	<script src="https://code.jquery.com/jquery.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 	<script src="js/jquery-ui-touch-punch.min.js"></script>
 	<script src="bootstrap/js/jquery.cookie.js"></script>
@@ -566,7 +566,7 @@
 			} else {
 				console.log("cookies are not enabled.. Notify the user..");
 				var userBrowserVersion = userBrowser();
-				$("#message").html("<small>Please <a href='http://www.google.com/search?q=enable+third+party+cookies+"+userBrowserVersion+"' target='new'>enable third party cookies</a> on your browser to view the gadget</small>").removeClass("hide");
+				$("#message").html("<small>Please <a href='https://www.google.com/search?q=enable+third+party+cookies+"+userBrowserVersion+"' target='new'>enable third party cookies</a> on your browser to view the gadget</small>").removeClass("hide");
 			}
 			localStore.setItem = function(i,v) {
 				console.log("setting to cookie : "+i+"="+v);
@@ -713,7 +713,7 @@
 					});
 				} else  if(Math.random()>0.2) { 
 					var randomLink = amazonLinks[Math.floor(Math.random() * amazonLinks.length)];
-					$("#myStatsContent").html('<i class="fa fa-tag text-success" aria-hidden="true"></i> '+randomLink+'<img src="http://ir-na.amazon-adsystem.com/e/ir?t=spacemask-20&l=pf4&o=1" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />').css("overflow", "hidden");
+					$("#myStatsContent").html('<i class="fa fa-tag text-success" aria-hidden="true"></i> '+randomLink+'<img src="https://ir-na.amazon-adsystem.com/e/ir?t=spacemask-20&l=pf4&o=1" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />').css("overflow", "hidden");
 					//User is blocking Ads. Report the data as part of page view hit
 					ga(function(tracker) {
 						tracker.send('pageview', {'dimension1': 'Yes, Show Amazon Link'});
@@ -1018,7 +1018,7 @@
             	return;  
             $.ajax({
 			    type: 'GET',
-				url: "http://quote.cnbc.com/quote-html-webservice/quote.htm?symbols=.DJIA&output=jsonp",
+				url: "https://quote.cnbc.com/quote-html-webservice/quote.htm?symbols=.DJIA&output=jsonp",
 				async: false,
 			    jsonpCallback: 'dowCallback',
 			    contentType: "application/json",

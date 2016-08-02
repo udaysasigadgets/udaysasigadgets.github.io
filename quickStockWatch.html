@@ -68,7 +68,7 @@
 	
 	</script>
 	<a href="#settingsModal" class="btn btn-xs btn-primary pull-right" data-toggle="modal" id="settingsloadbtn" style="margin-left:5px"><i class="fa fa-cogs"></i> Settings</a>
-	<a href="http://udaysasigadgets.github.io/quickStockWatch.html" class="btn btn-xs btn-primary pull-right" target="newwin" id="fullscreen"><i class="fa fa-expand"></i> FullScreen</a>
+	<a href="https://udaysasigadgets.github.io/quickStockWatch.html" class="btn btn-xs btn-primary pull-right" target="newwin" id="fullscreen"><i class="fa fa-expand"></i> FullScreen</a>
 	<a href="javascript:void(0)" class="pull-left text-danger" id="messagebtn">Problem?</a>
 	<a href="javascript:void(0)" class="pull-left separator" id="tipsbtn" style="color:#FF8C00"><i class="fa fa-lightbulb-o fa-1"></i> <span class="">Tips</span></a>
 	<a href="quickstockwatch/index.html" class="pull-left separator" target="new"><i class="fa fa-info-circle fa-1"></i> <span class="">Help</span></a>
@@ -342,7 +342,7 @@
 						The gadget comes with 2 stocks <strong>FB</strong> and <strong>GOOG</strong> added to your watchlist by default so you could see it in action. You can add more or delete the default ones. 
 						</p>
 						<p>
-							However, if you add stocks but the gadget reverts to the default list, that is definitely annoying. This intermittent problem exists due to ighome and not the gadget itself. <a href="http://udaysasigadgets.github.io/quickstockwatch-workaround.html" target="_new">Here</a> is a workaround.
+							However, if you add stocks but the gadget reverts to the default list, that is definitely annoying. This intermittent problem exists due to ighome and not the gadget itself. <a href="https://udaysasigadgets.github.io/quickstockwatch-workaround.html" target="_new">Here</a> is a workaround.
 						</p>
 					</div>
 					<div class="modal-footer">
@@ -682,7 +682,7 @@
 		var newDate = new Date().getTime();
 		var reloadId = "0";
 		var newsReloadId = "0";
-		var newsURL = 'http://finance.yahoo.com/rss/headline?s=';
+		var newsURL = 'https://finance.yahoo.com/rss/headline?s=';
 		var newsItemArray = new Array();
 		var staticImgUrl = "delete.png";
 		
@@ -811,7 +811,7 @@
 		    }
 		    symbol += symbolArray[h];
 
-			customAjax("http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20feed%20where%20url%3D'http%3A%2F%2Ffeeds.finance.yahoo.com%2Frss%2F2.0%2Fheadline%3Fs%3D"+encodeURIComponent(encodeURIComponent(symbol))+"%26format%3Djson'&format=json", processNewsResponse);
+			customAjax("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20feed%20where%20url%3D'http%3A%2F%2Ffeeds.finance.yahoo.com%2Frss%2F2.0%2Fheadline%3Fs%3D"+encodeURIComponent(encodeURIComponent(symbol))+"%26format%3Djson'&format=json", processNewsResponse);
 			   
 		}
 		function processNewsResponse(r)
@@ -999,7 +999,7 @@
 		    symbol += symbolArray[h];
 		    var newDate = new Date().getTime();
 
-		    customAjax("http://query.yahooapis.com/v1/public/yql?q=select+*+from+csv+where+url%3D'http%3A%2F%2Fdownload.finance.yahoo.com%2Fd%2Fquotes.csv%3Fs%3D"+encodeURIComponent(encodeURIComponent(symbol))+"%26f%3Dnsl1p2c1p%26c="+(new Date()).getTime()+"'+and+columns%3D'name%2Csymbol%2CLastTradePriceOnly%2CPercentChange%2CChange%2CPreviousClose'&format=json", responseText);
+		    customAjax("https://query.yahooapis.com/v1/public/yql?q=select+*+from+csv+where+url%3D'http%3A%2F%2Fdownload.finance.yahoo.com%2Fd%2Fquotes.csv%3Fs%3D"+encodeURIComponent(encodeURIComponent(symbol))+"%26f%3Dnsl1p2c1p%26c="+(new Date()).getTime()+"'+and+columns%3D'name%2Csymbol%2CLastTradePriceOnly%2CPercentChange%2CChange%2CPreviousClose'&format=json", responseText);
 		    
 		    try {
 		        clearTimeout(reloadId);
@@ -1645,7 +1645,7 @@
 		    for (i = 0; i < stockTickers.length; i++) {
 		    	contentText += "<tr data-ticker='"+getAlphaNumericName(stockTickers[i].symbol)+"' id='" + getAlphaNumericName(stockTickers[i].symbol) + "Row' onMouseOver=\"showChart('" + stockTickers[i].symbol + "')\" onMouseOut=\"hideChart('" + stockTickers[i].symbol + "')\">";
 		        contentText += "<td style='padding: 5px 0px; width:25px;' align='center' data-toggle='tooltip' data-placement='top' data-container='body' title='Delete " + stockTickers[i].symbol + "'><i class='fa fa-times-circle delete-icon pointer' onClick='javascript:deleteStockTicker(" + i + ");'></i></td>";
-		        contentText += "<td align=left style='padding-right: 0.5em; width:100px;'><span rel='popover' id='" + getAlphaNumericName(stockTickers[i].symbol) + "Span'><a href='http://finance.yahoo.com/q?s=" + stockTickers[i].symbol + "' target='blank'>" + stockTickers[i].symbol + "</a></span></td>";
+		        contentText += "<td align=left style='padding-right: 0.5em; width:100px;'><span rel='popover' id='" + getAlphaNumericName(stockTickers[i].symbol) + "Span'><a href='https://finance.yahoo.com/q?s=" + stockTickers[i].symbol + "' target='blank'>" + stockTickers[i].symbol + "</a></span></td>";
 		        contentText += "<td class='handle' nowrap style='display:" + nameDisplay + "' align=left onClick=\"callMoreData('" + stockTickers[i].symbol + "')\" ><span style='display:" + nameDisplay + "' id='" + getAlphaNumericName(stockTickers[i].symbol) + "NameSpan'>" + stockTickers[i].name + "</span></td>";
 		        contentText += "<td class='handle' style='padding-right: 0.5em;' align=right onClick=\"callMoreData('" + stockTickers[i].symbol + "')\" ><span id='" + getAlphaNumericName(stockTickers[i].symbol) + "PriceSpan'>" + stockTickers[i].price + "</span></td>";
 		        contentText += "<td class='handle' style='padding-right: 0.5em;' align=right nowrap onClick=\"callMoreData('" + stockTickers[i].symbol + "')\" ><span id='" + getAlphaNumericName(stockTickers[i].symbol) + "ChangeSpan'>" + stockTickers[i].change + "</span></td>";
@@ -1722,7 +1722,7 @@
 		
 		    for (i = 0; i < stockTickers.length; i++) {
 		        contentText += "<tr id='" + getAlphaNumericName(stockTickers[i].symbol) + "PortfolioRow' style='background:#ffffff;' onMouseOver='highlightColor(this);' onMouseOut='unhighlightColor(this);'>";
-		        contentText += "<td width='15%' align=left><span id='" + getAlphaNumericName(stockTickers[i].symbol) + "Span2'><a href='http://finance.yahoo.com/q?s=" + stockTickers[i].symbol + "' target='blank'>" + stockTickers[i].symbol + "</a></span></td>";
+		        contentText += "<td width='15%' align=left><span id='" + getAlphaNumericName(stockTickers[i].symbol) + "Span2'><a href='https://finance.yahoo.com/q?s=" + stockTickers[i].symbol + "' target='blank'>" + stockTickers[i].symbol + "</a></span></td>";
 		        contentText += "<td width='20%' align=right nowrap onclick='javascript:makeEditable(\""+getAlphaNumericName(stockTickers[i].symbol)+"numshares\", "+i+");' ><span id='span" + getAlphaNumericName(stockTickers[i].symbol) + "numshares' style='display:' >" + stockTickers[i].numshares + "</span><input type='text' class='input-small' size='4' style='text-align:right;display:none' id='text"+getAlphaNumericName(stockTickers[i].symbol)+"numshares' onblur='javascript:makeUnEditable(\""+getAlphaNumericName(stockTickers[i].symbol)+"numshares\", "+i+",\"numshares\");'></td>";
 		        contentText += "<td width='20%' align=right nowrap onclick='javascript:makeEditable(\""+getAlphaNumericName(stockTickers[i].symbol)+"buyprice\", "+i+");' ><span id='span" + getAlphaNumericName(stockTickers[i].symbol) + "buyprice' style='display:' >" + stockTickers[i].buyprice + "</span><input type='text' class='input-small' size='4' style='text-align:right;display:none' id='text"+getAlphaNumericName(stockTickers[i].symbol)+"buyprice' onblur='javascript:makeUnEditable(\""+getAlphaNumericName(stockTickers[i].symbol)+"buyprice\", "+i+",\"buyprice\");'></td>";
 		        contentText += "<td width='20%' align=right nowrap><span id='" + getAlphaNumericName(stockTickers[i].symbol) + "TodayGainLossSpan2'>0.00</span></td>";
@@ -1863,7 +1863,7 @@
 				    }
 				});
 			} else {
-		    	customAjax("http://query.yahooapis.com/v1/public/yql?q=select+*+from+csv+where+url%3D'http%3A%2F%2Fdownload.finance.yahoo.com%2Fd%2Fquotes.csv%3Fs%3D"+encodeURIComponent(encodeURIComponent(sym))+"%26f%3Dnsopvmwt1x%26c="+(new Date()).getTime()+"'+and+columns%3D'name%2Csymbol%2cOpen%2CPreviousClose%2CVolume%2CDaysRange%2CYearRange%2CLastTradeTime%2CStockExchange'&format=json", showMoreData);
+		    	customAjax("https://query.yahooapis.com/v1/public/yql?q=select+*+from+csv+where+url%3D'http%3A%2F%2Fdownload.finance.yahoo.com%2Fd%2Fquotes.csv%3Fs%3D"+encodeURIComponent(encodeURIComponent(sym))+"%26f%3Dnsopvmwt1x%26c="+(new Date()).getTime()+"'+and+columns%3D'name%2Csymbol%2cOpen%2CPreviousClose%2CVolume%2CDaysRange%2CYearRange%2CLastTradeTime%2CStockExchange'&format=json", showMoreData);
 			}
 		}
 		function formatData(str) {
@@ -2304,7 +2304,7 @@
 				initWidget();
 				paintStockTicker();
 			});
-			$("#fullscreen").attr("href", "http://udaysasigadgets.github.io/quickStockWatch.html?subscriptionid="+userId);
+			$("#fullscreen").attr("href", "https://udaysasigadgets.github.io/quickStockWatch.html?subscriptionid="+userId);
 		}
 		 
 		

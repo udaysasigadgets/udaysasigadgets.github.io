@@ -678,7 +678,7 @@
 		var showname, flashing, showchart, refreshrate=30, fontsize='normal', showNews, showStrength, strTickers, stockTickers;
 		var baseURL = "http://download.finance.yahoo.com/d?s=";
 		var sortcol = 'none';
-		var cURL = "http://ichart.finance.yahoo.com/t?s=";
+		var cURL = "https://ichart.finance.yahoo.com/t?s=";
 		var newDate = new Date().getTime();
 		var reloadId = "0";
 		var newsReloadId = "0";
@@ -772,16 +772,16 @@
 			 	stockTickers = sortArray2(stockTickers, sortcol);
 			}
 			if (showchart == 5) {
-			    cURL = "http://ichart.finance.yahoo.com/v?s=";
+			    cURL = "https://ichart.finance.yahoo.com/v?s=";
 			}
 			else if (showchart == 90) {
-			    cURL = "http://ichart.finance.yahoo.com/z?t=3m&l=off&z=b&s=";
+			    cURL = "https://ichart.finance.yahoo.com/z?t=3m&l=off&z=b&s=";
 			}
 			else if (showchart == 180) {
-			    cURL = "http://ichart.finance.yahoo.com/z?t=6m&l=off&z=b&s=";
+			    cURL = "https://ichart.finance.yahoo.com/z?t=6m&l=off&z=b&s=";
 			}
 			else if (showchart == 365) {
-			    cURL = "http://ichart.finance.yahoo.com/z?t=1y&l=off&z=b&s=";
+			    cURL = "https://ichart.finance.yahoo.com/z?t=1y&l=off&z=b&s=";
 			}
 			
 			var title = localStore.getItem("title");

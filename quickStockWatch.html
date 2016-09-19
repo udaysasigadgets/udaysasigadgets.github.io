@@ -708,6 +708,14 @@
 		
 		setTimeout(function() {
 			//Check if ads loaded
+			var parenturl = (window.location != window.parent.location) ? document.referrer : document.location;
+			console.log("??????? "+parenturl);
+			if(parenturl.indexOf("http://www.ighome.com/directory.aspx")!=-1) {
+				//Remove Ad
+				$("#myStatsContent").remove();
+				return;
+			}
+	
 			if($(".adsbygoogle iframe").length==0) {
 				if(Math.random()>0.7) {
 					$("#myStatsContent").addClass("text-warning").html('<i class="fa fa-child"></i> Please support the gadget by disabling Ad Blockers. <a target="adblock" class="small" href="https://help.getadblock.com/support/solutions/articles/6000055743-how-do-i-tell-adblock-not-to-run-">How?</a>');

@@ -706,45 +706,47 @@
 			
 		//var amazonLinks = ['<a class="text-success" target="amazon" href="https://www.amazon.com/b?node=1065840&tag=spacemask-20&camp=0&creative=0&linkCode=ur1&adid=0KB98XXHFJPNFQQAFJNY&">Shop for Back To School Essentials</a>'];
 		
-		setTimeout(function() {
-			//Check if ads loaded
-			var parenturl = (window.location != window.parent.location) ? document.referrer : document.location;
-			console.log("??????? "+parenturl);
-			if(parenturl.indexOf("http://www.ighome.com/directory.aspx")!=-1) {
-				//Remove Ad
-				$("#myStatsContent").remove();
-				return;
-			}
-	
-			if($(".adsbygoogle iframe").length==0) {
-				if(Math.random()>0.7) {
-					$("#myStatsContent").addClass("text-warning").html('<i class="fa fa-child"></i> Please support the gadget by disabling Ad Blockers. <a target="adblock" class="small" href="https://help.getadblock.com/support/solutions/articles/6000055743-how-do-i-tell-adblock-not-to-run-">How?</a>');
-					//User is blocking Ads. Report the data as part of page view hit
-					ga(function(tracker) {
-						tracker.send('pageview', {'dimension1': 'Yes'});
-					});
-				} else  if(Math.random()>0.2) { 
-					var randomLink = amazonLinks[Math.floor(Math.random() * amazonLinks.length)];
-					$("#myStatsContent").html('<i class="fa fa-tag text-success" aria-hidden="true"></i> '+randomLink+'<img src="https://ir-na.amazon-adsystem.com/e/ir?t=spacemask-20&l=pf4&o=1" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />').css("overflow", "hidden");
-					//User is blocking Ads. Report the data as part of page view hit
-					ga(function(tracker) {
-						tracker.send('pageview', {'dimension1': 'Yes, Show Amazon Link'});
-					});
+		var parenturl = (window.location != window.parent.location) ? document.referrer : document.location;
+		console.log("??????? "+parenturl);
+		if(parenturl.indexOf("http://www.ighome.com/directory.aspx")!=-1) {
+			//Remove Ad
+			$("#myStatsContent").remove();
+			return;
+		} else {
+			setTimeout(function() {
+				//Check if ads loaded after 3 seconds
+				if($(".adsbygoogle iframe").length==0) {
+					if(Math.random()>0.7) {
+						$("#myStatsContent").addClass("text-warning").html('<i class="fa fa-child"></i> Please support the gadget by disabling Ad Blockers. <a target="adblock" class="small" href="https://help.getadblock.com/support/solutions/articles/6000055743-how-do-i-tell-adblock-not-to-run-">How?</a>');
+						//User is blocking Ads. Report the data as part of page view hit
+						ga(function(tracker) {
+							tracker.send('pageview', {'dimension1': 'Yes'});
+						});
+					} else  if(Math.random()>0.2) { 
+						var randomLink = amazonLinks[Math.floor(Math.random() * amazonLinks.length)];
+						$("#myStatsContent").html('<i class="fa fa-tag text-success" aria-hidden="true"></i> '+randomLink+'<img src="https://ir-na.amazon-adsystem.com/e/ir?t=spacemask-20&l=pf4&o=1" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />').css("overflow", "hidden");
+						//User is blocking Ads. Report the data as part of page view hit
+						ga(function(tracker) {
+							tracker.send('pageview', {'dimension1': 'Yes, Show Amazon Link'});
+						});
+					} else {
+						$("#myStatsContent").remove();
+						//User is blocking Ads. Report the data as part of page view hit
+						ga(function(tracker) {
+							tracker.send('pageview', {'dimension1': 'Yes'});
+						});
+					}
 				} else {
-					$("#myStatsContent").remove();
-					//User is blocking Ads. Report the data as part of page view hit
+					$("#myStatsContent").css("overflow", "hidden");
+					//User is not blocking Ads. Report the data as part of page view hit
 					ga(function(tracker) {
-						tracker.send('pageview', {'dimension1': 'Yes'});
+						tracker.send('pageview', {'dimension1': 'No'});
 					});
 				}
-			} else {
-				$("#myStatsContent").css("overflow", "hidden");
-				//User is not blocking Ads. Report the data as part of page view hit
-				ga(function(tracker) {
-					tracker.send('pageview', {'dimension1': 'No'});
-				});
-			}
-		}, 3000);
+			}, 3000);
+		}
+	
+
 		
 		function initWidget() {
 			showname = localStore.getItem("showname");

@@ -445,9 +445,10 @@
 	debugLog('1');
 	debugLog(userId);
 	
-	var client = new Usergrid.Client({
-        orgName:'perfectpluto',
-        appName:'sandbox'
+	var client = new Apigee.Client({
+        orgName:'udaysasigadgets',
+        appName:'sandbox',
+        URI: 'https://apibaas-trial.apigee.net'
     });
 	debugLog('client');
 	
@@ -459,10 +460,11 @@
         	getOnExist:true,
         	'gadget':'qsw'
         };
-       	client.createEntity(opts, function(err, pref) {
+    	
+       	client.getEntity(opts, function(err, response) {
         	if(err) {
-        		debugLog('createEntity cloud err');
-        		console.log("Error creating preferences object");
+        		debugLog('getEntity cloud err : '+err.name);
+        		console.log("Error getting preferences object");
         		/*Temporary Fix for IE users*/
         		userId = null;
         		/*
@@ -505,16 +507,23 @@
     			*/
     			//Inform the user
     			$("#message").removeClass("hide");
-    			debugLog('createEntity callback');
+    			debugLog('getEntity callback');
     			callback();
     			/*Temporary Fix for IE users*/
         	} else {
-        		debugLog('createEntity cloud');
-        		console.log("Preferences object : "+pref.get('uuid'));
-        		userPrefs = pref;
+        		console.log('Number of entities found : '+response.entities.length);
+        		var entity = response.getEntity();
+        		var options = {
+       	            client: client,
+       	            data: entity
+       	        };
+       	        userPrefs = new Usergrid.Entity(options);
+       	        
+        		debugLog('getEntity cloud');
+        		console.log("Preferences object : "+userPrefs.get('uuid'));
         		window.clearTimeout(prefTimeout);
     	        console.log("Cleared the timeout call..")
-    	        debugLog('createEntity callback');
+    	        debugLog('getEntity callback');
     	        callback();
         	}
         });
@@ -778,9 +787,9 @@
 			}
 			strTickers = localStore.getItem("tickers");
 			if(strTickers==null || strTickers=='null')
-				strTickers = "GOOG,FB";
+				strTickers = "GOOG|0|0.00,FB|0|0.00";
 			//Dont need this anymore
-			//strTickers = convertToNewFormat(strTickers);
+			strTickers = convertToNewFormat(strTickers);
 			stockTickers = convertToArray2(strTickers);
 			
 			//stockTickers = sortArray(stockTickers);
@@ -1739,8 +1748,8 @@
 		    for (i = 0; i < stockTickers.length; i++) {
 		        contentText += "<tr id='" + getAlphaNumericName(stockTickers[i].symbol) + "PortfolioRow' style='background:#ffffff;' onMouseOver='highlightColor(this);' onMouseOut='unhighlightColor(this);'>";
 		        contentText += "<td width='15%' align=left><span id='" + getAlphaNumericName(stockTickers[i].symbol) + "Span2'><a href='https://finance.yahoo.com/q?s=" + stockTickers[i].symbol + "' target='blank'>" + stockTickers[i].symbol + "</a></span></td>";
-		        contentText += "<td width='20%' align=right nowrap onclick='javascript:makeEditable(\""+getAlphaNumericName(stockTickers[i].symbol)+"numshares\", "+i+");' ><span id='span" + getAlphaNumericName(stockTickers[i].symbol) + "numshares' style='display:' >" + stockTickers[i].numshares + "</span><input type='text' class='input-small' size='4' style='text-align:right;display:none' id='text"+getAlphaNumericName(stockTickers[i].symbol)+"numshares' onblur='javascript:makeUnEditable(\""+getAlphaNumericName(stockTickers[i].symbol)+"numshares\", "+i+",\"numshares\");'></td>";
-		        contentText += "<td width='20%' align=right nowrap onclick='javascript:makeEditable(\""+getAlphaNumericName(stockTickers[i].symbol)+"buyprice\", "+i+");' ><span id='span" + getAlphaNumericName(stockTickers[i].symbol) + "buyprice' style='display:' >" + stockTickers[i].buyprice + "</span><input type='text' class='input-small' size='4' style='text-align:right;display:none' id='text"+getAlphaNumericName(stockTickers[i].symbol)+"buyprice' onblur='javascript:makeUnEditable(\""+getAlphaNumericName(stockTickers[i].symbol)+"buyprice\", "+i+",\"buyprice\");'></td>";
+		        contentText += "<td width='20%' align=right nowrap onclick='javascript:makeEditable(\""+getAlphaNumericName(stockTickers[i].symbol)+"numshares\", "+i+");' ><span id='span" + getAlphaNumericName(stockTickers[i].symbol) + "numshares' style='cursor:pointer;display:' >" + stockTickers[i].numshares + "</span><input type='text' class='input-small' size='4' style='text-align:right;display:none' id='text"+getAlphaNumericName(stockTickers[i].symbol)+"numshares' onblur='javascript:makeUnEditable(\""+getAlphaNumericName(stockTickers[i].symbol)+"numshares\", "+i+",\"numshares\");'></td>";
+		        contentText += "<td width='20%' align=right nowrap onclick='javascript:makeEditable(\""+getAlphaNumericName(stockTickers[i].symbol)+"buyprice\", "+i+");' ><span id='span" + getAlphaNumericName(stockTickers[i].symbol) + "buyprice' style='cursor:pointer;display:' >" + stockTickers[i].buyprice + "</span><input type='text' class='input-small' size='4' style='text-align:right;display:none' id='text"+getAlphaNumericName(stockTickers[i].symbol)+"buyprice' onblur='javascript:makeUnEditable(\""+getAlphaNumericName(stockTickers[i].symbol)+"buyprice\", "+i+",\"buyprice\");'></td>";
 		        contentText += "<td width='20%' align=right nowrap><span id='" + getAlphaNumericName(stockTickers[i].symbol) + "TodayGainLossSpan2'>0.00</span></td>";
 		        contentText += "<td width='25%' align=right nowrap><span id='" + getAlphaNumericName(stockTickers[i].symbol) + "GainLossSpan2'>0.00</span></td>";
 		        contentText += "</tr>";        

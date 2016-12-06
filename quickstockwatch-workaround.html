@@ -63,32 +63,49 @@
 			return guid = (S4() + S4() + "-" + S4() + "-4" + S4().substr(0,3) + "-" + S4() + "-" + S4() + S4() + S4()).toUpperCase().replace(/-/g,'');
 		};
 
-		var client = new Usergrid.Client({
-	        orgName:'perfectpluto',
-	        appName:'sandbox'
+		var client = new Apigee.Client({
+			orgName:'udaysasigadgets',
+	        appName:'sandbox',
+	        URI: 'https://apibaas-trial.apigee.net',
+	        logging: true
 	    });
 		
+		var tries = 0, maxtries = 3;
 		function validateGeneratedId(subscriptionid) {
 			var properties = { 
 				'type':'ighqswprefs',
-				'name':subscriptionid
+				'name':subscriptionid,
+	        	getOnExist:true,
+	        	'gadget':'qsw'
 			}; 
 				
 			client.getEntity(properties, function (error, result) { 
 				console.log(result);
-				if (error) { 
-				  //console.error('Error occured - no such property');
-				  $("#subscriptionid").text('http://udaysasigadgets.github.io/quickStockWatch.html?subscriptionid='+subscriptionid);
+				if (error.name=='entity_not_found') {
+					//console.error('Error occured - no such property');
+					client.createEntity(properties, function(e, resp) {
+						if(e) {
+							console.error('Entity with name '+subscriptionid+' already exists');
+							assignId();
+						} else {
+							$("#subscriptionid").text('http://udaysasigadgets.github.io/quickStockWatch.html?subscriptionid='+subscriptionid);	
+						}	
+					});
+				  
 				} else { 
-					//console.log('Success - property exists');
+					//console.error('Entity with name '+subscriptionid+' already exists');
 					assignId();
 				} 
 			});
 		}
 		
 		function assignId() {
+			if(tries > maxtries) {
+				return;
+			}
 			var subscriptionid = generateUUID();
-			validateGeneratedId(subscriptionid);	
+			validateGeneratedId(subscriptionid);
+			tries++;
 		}
 		assignId();
 		

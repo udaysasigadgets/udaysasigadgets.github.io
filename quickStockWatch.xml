@@ -322,9 +322,10 @@
 	debugLog('1');
 	debugLog(userId);
 	
-	var client = new Usergrid.Client({
-        orgName:'perfectpluto',
-        appName:'sandbox'
+	var client = new Apigee.Client({
+        orgName:'udaysasigadgets',
+        appName:'sandbox',
+        URI: 'https://apibaas-trial.apigee.net'
     });
 	debugLog('client');
 	
@@ -337,7 +338,7 @@
         	'gadget':'qsw'
         };
     			
-       	client.createEntity(opts, function(err, pref) {
+       	client.getEntity(opts, function(err, response) {
         	if(err) {
         		debugLog('createEntity cloud err');
         		console.log("Error creating preferences object");
@@ -373,12 +374,19 @@
     			callback();
     			//Temporary Fix for IE users end
         	} else {
-        		debugLog('createEntity cloud');
-        		console.log("Preferences object : "+pref.get('uuid'));
-        		userPrefs = pref;
+        		console.log('Number of entities found : '+response.entities.length);
+        		var entity = response.getEntity();
+        		var options = {
+       	            client: client,
+       	            data: entity
+       	        };
+       	        userPrefs = new Usergrid.Entity(options);
+       	        
+        		debugLog('getEntity cloud');
+        		console.log("Preferences object : "+userPrefs.get('uuid'));
         		window.clearTimeout(prefTimeout);
     	        console.log("Cleared the timeout call..")
-    	        debugLog('createEntity callback');
+    	        debugLog('getEntity callback');
     	        callback();
         	}
         });

@@ -179,8 +179,9 @@
 		}
 		
 		var client = new Usergrid.Client({
-	        orgName:'perfectpluto',
-	        appName:'sandbox'
+			orgName:'udaysasigadgets',
+	        appName:'sandbox',
+	        URI: 'https://apibaas-trial.apigee.net'
 	    });
 	    
 	    function getUserPrefs(callback) {
@@ -191,7 +192,7 @@
 	        	getOnExist:true,
 	        	'gadget':'giw'
 	        };
-	       	client.createEntity(opts, function(err, pref) {
+	       	client.getEntity(opts, function(err, response) {
 	        	if(err) {
 	        		console.log("Error creating preferences object");
 	        		/*Temporary Fix for IE users*/
@@ -222,8 +223,14 @@
 	    			callback();
 	    			/*Temporary Fix for IE users*/
 	        	} else {
-	        		console.log("Preferences object : "+pref.get('uuid'));
-	        		userPrefs = pref;
+	        		console.log('Number of entities found : '+response.entities.length);
+	        		var entity = response.getEntity();
+	        		var options = {
+	       	            client: client,
+	       	            data: entity
+	       	        };
+	       	        userPrefs = new Usergrid.Entity(options);
+	       	        console.log("Preferences object : "+userPrefs.get('uuid'));
 	        		window.clearTimeout(prefTimeout);
 	    	        console.log("Cleared the timeout call..")
 	    	        callback();

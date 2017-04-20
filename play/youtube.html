@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html ng-app="utube">
+	<head>
+		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+		<style>
+			#glassCover {
+			    /* Do not display it on entry */
+			    display: block; 
+			 
+			    /* Display it on the layer with index 1001.
+			       Make sure this is the highest z-index value
+			       used by layers on that page */
+			    z-index:1001;
+			     
+			    /* make it cover the whole screen */
+			    position: absolute; 
+			    top: 0%; 
+			    left: 0%; 
+			    width: 100%; 
+			    height: calc(100% - 1em);
+			 
+			    /* make it white but fully transparent */
+			    background-color: white; 
+			    opacity:.00; 
+			    filter: alpha(opacity=00); 
+			}
+			
+			.video-wrapper {
+				float: left;
+				width: 320px;
+				height: 180px;
+				border: 3px solid gray;
+				margin: 10px;
+				background-size: cover;
+				position: relative;
+				cursor: pointer;
+			}
+			
+			.video-title {
+				opacity: 0.4;
+			    position: absolute;
+			    bottom: 0px;
+			    right: 0px;
+			    text-align: center;
+			    width: 100%;
+			}
+			
+			.video-duration {
+			    position: absolute;
+			    right: 0px;
+			    top: 0px;
+			    padding: 2px;
+			}
+			
+			.video-wrapper:hover .video-title {
+				opacity: 1;
+			}
+			
+			.back {
+				position: absolute;
+				cursor: pointer;
+				bottom: 0px;
+				left: 10px;
+			}
+			.messageslink {
+				position: absolute;
+				cursor: pointer;
+				bottom: 0px;
+				right: 10px;
+			}
+			#messages-wrapper {
+				height: 200px;
+				width: 200px;
+				position: absolute;
+				bottom: 1em;
+				right: 1em;
+				border: 1px solid gray;
+			}
+			#messages {
+				height: 100%;
+				width:100%;
+			}
+		</style>
+	</head>
+  <body ng-controller="SearchCtrl">
+  	<div id="glassCover" class="hide"></div>
+    <div id="player" class="hide"></div>
+    <div id="back" class="back text-primary" ng-click="refresh()">Back</div>
+    <div id="messageslink" class="messageslink text-primary" ng-click="messageDisplay=!messageDisplay">Messages</div>
+    <div id="messages-wrapper" ng-show="messageDisplay">
+    	<textarea id="messages"></textarea>
+    </div>
+    <div id="searchwrapper">
+    	<p>
+	    	<form class="form-inline text-center">
+			  <div class="form-group">
+			    <input type="text" class="form-control" id="keyword" placeholder="Search for a video" style="width:300px" ng-enter="searchVideos()" value="">
+			  </div>
+			  <button type="button" id="submitbtn" class="btn btn-default" ng-click="searchVideos()">Search</button>
+			</form>
+		</p>
+		<p>
+			<div id="search-container">
+				<div class="text-center text-primary" ng-show="loading"><i class="fa fa-spin fa-spinner fa-pulse fa-5x"></i></div>
+				<div class="video-wrapper" ng-repeat="video in videos" ng-style="{'background-image':'url({{video.snippet.thumbnails.medium.url}})'}" ng-click="initiatePlayer(video.id)">
+					<div class="video-duration bg-primary">{{getDuration(video.contentDetails.duration)}}</div>
+					<div class="video-title bg-primary">{{video.snippet.title}}</div>
+				</div>
+			</div>
+		</p>
+    </div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<script src="https://www.youtube.com/iframe_api"></script>
+	<script>
+    
+	angular
+	  .module('utube', [])
+	  .directive('ngEnter', function () {
+		    return function (scope, element, attrs) {
+		        element.bind("keydown keypress", function (event) {
+		            if(event.which === 13) {
+		                scope.$apply(function (){
+		                    scope.$eval(attrs.ngEnter);
+		                });
+		                event.preventDefault();
+		            }
+		        });
+		    };
+	  })
+	  .controller('SearchCtrl', function($scope) {
+		  
+		  	$scope.messageDisplay = false;
+		  	var messages = ["Come on, Eat your food", "Come on, Eat", "Take a bite", "Chew properly", "Thinu", "Thintunnava?", "No iPad if you dont eat"]
+		  	var player, playPauseTimeout, messageTimeout;
+		  	$("#messages").val(messages.join('\n'));
+    		$scope.searchVideos = function() {
+    			$scope.loading = true;
+			  	var keyword = $('#keyword').val();
+			  	
+			  	var request1 = gapi.client.youtube.search.list({
+				    q: keyword,
+				    part: 'id',
+				    type: 'video',
+				    maxResults: 50,
+				    order: 'viewCount'
+				  });
+			
+				  request1.execute(function(response) {
+					  var ids = $.map(response.result.items, function(v) {
+						 return v.id.videoId;
+					  });
+					  
+					  var request2 = gapi.client.youtube.videos.list({
+						    id: ids.join(','),
+						    part: 'snippet,contentDetails',
+						    type: 'video',
+						    maxResults: 50
+						  });
+					
+						  request2.execute(function(response) {
+							  $scope.$apply(function() {
+								  $scope.videos = response.result.items;
+								  $scope.loading = false;
+							  });
+			    		  });
+	    		  });
+    				
+    		};
+    		
+    		$scope.getDuration = function(d) {
+    			return d.replace('PT', '').replace("H", ":").replace("M", ":").replace("S", "");
+    		}
+    		$scope.refresh = function() {
+    			window.location.reload(true);
+    		}
+    		$scope.showPlayer = function() {
+    			clearTimeout(playPauseTimeout);
+    			clearTimeout(messageTimeout);
+    			$("#player, #glassCover").removeClass("hide");
+    			$("#searchwrapper").addClass("hide");
+    		}
+    		
+    		$scope.hidePlayer = function() {
+    			clearTimeout(playPauseTimeout);
+    			clearTimeout(messageTimeout);
+    			$("#player, #glassCover").addClass("hide");
+    			$("#searchwrapper").removeClass("hide");
+    		}
+    		
+    		$scope.initiatePlayer = function(id) {
+    			$scope.showPlayer();
+    			var winWidth = $(window).width()-20, winHeight = $(window).height()-20;
+    			player = new YT.Player('player', {
+    		          height: winHeight,
+    		          width: winWidth,
+    		          videoId: id,
+    		          playerVars: { 'autoplay': 0, 'controls': 0 },
+    		          events: {
+    		            'onReady': onPlayerReady,
+    		            'onStateChange': onPlayerStateChange
+    		          }
+    		    });
+    		}
+    		
+    		function onPlayerReady(event) {
+            	player.playVideo();
+          	}
+    	
+    		function onPlayerStateChange(event) {
+    	        if (event.data == YT.PlayerState.PLAYING) {
+    	        	playPauseTimeout = setTimeout(pauseVideo, 60000);
+    	        } else {
+    	        	playPauseTimeout = setTimeout(playVideo, 10000);
+    	        }
+    	 	}
+    	    
+    		function playVideo() {
+    	    	player.playVideo();
+    	    }
+    		
+			function pauseVideo() {
+    	    	player.pauseVideo();
+    	    	messageTimeout = setTimeout(deliverMessage, 1500);
+    	    }
+			
+			//setTimeout(initiatePlayer, 1000);
+			
+			
+			$scope.loadVoices = function() {
+		    	  var voices = window.speechSynthesis.getVoices();
+		    	  console.log('Number of Voices ' + voices.length);
+		    	  /*
+		          for (var i = 0; i < voices.length; i++) {
+		            console.log('Voice ' + i + ':');
+		            console.log('  name: ' + voices[i].name);
+		            console.log('  lang: ' + voices[i].lang);
+		          }
+		    	  */
+		      }
+		      function getRandomVoice() {
+		    	  var voices = window.speechSynthesis.getVoices();
+		    	  return voices[Math.floor(Math.random()*voices.length)];
+		      }
+		      function deliverMessage() {
+		    	  var commands = $("#messages").val().split('\n');
+		    	  var msg = new SpeechSynthesisUtterance();
+		    	  msg.text = commands[Math.floor(Math.random()*commands.length)]
+		    	  msg.volume = 1;
+		    	  msg.rate = 1;
+		    	  msg.pitch = 1;
+		    	  msg.voice = getRandomVoice();
+		    	  window.speechSynthesis.speak(msg);
+		      }
+		      window.speechSynthesis.onvoiceschanged = function(e) {
+		    	  $scope.loadVoices();
+		      };
+		      
+		      $scope.loadVoices();
+		      
+    	});
+    	
+    	function init() {
+    		gapi.client.setApiKey("AIzaSyDrJSI9phKT3910m4WEzJzkt2xVj7lAoNo");
+    		gapi.client.load("youtube", "v3", function() {
+    			console.log('Youtube API is ready to use');
+    		});
+    	}
+    </script>
+    <script src="https://apis.google.com/js/client.js?onload=init"></script>
+  </body>
+</html>

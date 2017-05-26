@@ -216,10 +216,12 @@
 						    <select class="form-control">
 							  	<option value="0">None</option>
 								<option value="1">1 day</option>
+								<!--  
 								<option value="5">5 day</option>
 								<option value="90">3 month</option>
 								<option value="180">6 month</option>
 								<option value="365">1 year</option>
+								-->
 							</select>
 						  </div>
 						</div>
@@ -843,6 +845,8 @@
 			    cURL = "https://ichart.finance.yahoo.com/z?t=1y&l=off&z=b&s=";
 			}
 			
+			//Use Google Finance Charts
+			cURL = "https://www.google.com/finance/chart?cht=c&tlf=12h&q=";
 			var title = localStore.getItem("title");
 			if(title!='' && title!="Uday's Quick Stock Watch")
 				title += ' - Quick Stock Watch';

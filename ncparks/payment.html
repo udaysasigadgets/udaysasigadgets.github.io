@@ -1,0 +1,104 @@
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link href="styles.css" rel="stylesheet">
+		<link href="vendor/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+		<style>
+			body {
+				background: url(images/Background.png);
+				background-size: cover;
+			}
+			.plan, .price {
+				text-transform: uppercase;
+				font-size: 120%;
+			}
+			.backbtn {
+				position: absolute;
+				cursor: pointer;
+			}
+		</style>
+	</head>
+	<body>
+		
+		<div class="sk-ab">
+			<div class="row">
+				<div class="col-xs-12 text-center" style="padding:15px 0px 0px 0px">
+					<div style="width: 360px;margin: 0px auto;position: relative;">
+						<div class="backbtn"><img src="images/backbutton@3x.png" height="40"/></div>
+						<img src="images/CAROLINA BEACH STATE@2x.png" height="40"/><br>
+						<img src="images/NCParkLogo@2x.png" height="40"/>
+					</div>		
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12 text-center" style="padding:0px 0px 15px 0px;color:white">
+					<h2>PAYMENT</h2>
+					<h4>You selected <span class="plan"></span> for <span class="price"></span></h4>
+				</div>
+				<div class="col-xs-12 text-center">
+					<img src="images/creditcards@3x.png" style="width: 150px;margin-top:-15px;"/>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-12 text-left" style="padding:15px;color:white">
+					<div style="max-width: 360px;margin: 0px auto;">
+						<div class="form-group">
+							<label><strong>Name on Card</strong></label>
+							<input id="voucher-input" type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Name">
+						</div>
+						<div class="form-group">
+							<label><strong>Card Number</strong></label>
+							<input id="voucher-input" type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter Number">
+						</div>
+						<div class="row">
+							<div class="col-xs-6">
+								<div class="form-group">
+									<label><strong>Expiry Date</strong></label>
+									<input id="voucher-input" type="text" class="form-control" id="exampleInputEmail1" placeholder="MM/YY">
+								</div>
+							</div>
+							<div class="col-xs-6">
+								<div class="form-group">
+									<label><strong>Security Code</strong></label>
+									<input id="voucher-input" type="text" class="form-control" id="exampleInputEmail1" placeholder="XXXX">
+								</div>
+							</div>
+						</div>
+						<br>
+						<button class="btn btn-lg btn-success" style="text-transform:uppercase;width: 100%;background-color:#99E377">Pay <span class="price"></span></button><br>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+		
+		<script src="vendor/jquery/dist/jquery.min.js"></script>
+		<script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+		<script>
+			$(function() {
+				var args = {};
+				if(window.location.hash!='') {
+					var query = window.location.hash.substring(1);
+					var splits = query.split("&");
+					for(var i=0;i<splits.length;i++) {
+						var pairs = splits[i].split('?');
+						for(var j=0;j<pairs.length;j++) {
+							var pos = pairs[j].indexOf('=');
+						    if(pos == -1) continue;
+						    var argname = pairs[j].substring(0,pos);
+						    var value = pairs[j].substring(pos+1);
+						    args[argname] = unescape(value);	
+						}
+					}
+				}
+				
+				$(".plan").text(args["plan"]);
+				$(".price").text("$"+args["price"]);
+				
+				$(".backbtn").click(function() {
+					window.location.href="index.html";
+				});
+			});
+		</script>
+	</body>
+</html>

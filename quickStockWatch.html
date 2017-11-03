@@ -96,8 +96,9 @@
 	</div>
 	<div class="clearfix alert" id="broadcastmessage" style="margin-bottom:0px;padding:2px;">
 		<small class="text-danger">
-			I have received hundreds of emails about this gadget not working. My initial analysis points that the problem is from Yahoo's side. I am investigating further. I will keep you guys posted on this. Please check back frequently for updates. Thank you for your patience. <br><strong>TIP: Please do not delete the gadget as you might lose your data.</strong>
-			<br><small class="text-muted">Update as of 3rd Nov 2017 11:50am PST</small>
+			It has come to my attention that this gadget stopped working. I am investigating further. I will keep you guys posted on this. Please check back frequently for updates. Thank you for your patience. <br><strong>TIP: Please do not delete the gadget as you might lose your data.</strong>
+			<br><small class="text-muted">3rd Nov 2017 11:50am PST</small>: Analyzing the issue. Problem seems to be from Yahoo's side
+			<br><small class="text-muted">3rd Nov 2017 01:00pm PST</small>: Issue is on Yahoo's end - Working on a patch
 		</small>  
 	</div>   
 	<div id="watchListContent" class="contentData clearfix">
@@ -730,7 +731,7 @@
 	
 	$(document).ready(function() {
 		
-		var showname, flashing, showchart, refreshrate=30, fontsize='normal', showNews, showStrength, strTickers, stockTickers;
+		var showname, flashing, showchart, refreshrate=60, fontsize='normal', showNews, showStrength, strTickers, stockTickers;
 		var baseURL = "http://download.finance.yahoo.com/d?s=";
 		var sortcol = 'none';
 		var cURL = "https://ichart.finance.yahoo.com/t?s=";
@@ -1094,12 +1095,14 @@
 		    var newDate = new Date().getTime();
 
 		    $.each(symbolArray, function(i, s) {
-		    	//customAjax("https://query.yahooapis.com/v1/public/yql?q=select+*+from+csv+where+url%3D'http%3A%2F%2Fdownload.finance.yahoo.com%2Fd%2Fquotes.csv%3Fs%3D"+encodeURIComponent(encodeURIComponent(symbol))+"%26f%3Dnsl1p2c1p%26c="+(new Date()).getTime()+"'+and+columns%3D'name%2Csymbol%2CLastTradePriceOnly%2CPercentChange%2CChange%2CPreviousClose'&format=json", responseText);
-		    	setTimeout(function() {
-		    		customAjax("https://query.yahooapis.com/v1/public/yql?q=select+*+from+json+where+url='https%3A%2F%2Fquery2.finance.yahoo.com%2Fv10%2Ffinance%2FquoteSummary%2F"+encodeURIComponent(encodeURIComponent(s))+"%3Fformatted%3Dtrue%26crumb%3D8ldhetOu7RJ%26lang%3Den-US%26region%3DUS%26modules%3DfinancialData%26corsDomain%3Dfinance.yahoo.com'&format=json", function(resp) {
-		    			responseTextV2(resp, s);
-		    		});	
-		    	}, 1000);
+		    	if(s!='^DJI') {
+			    	//customAjax("https://query.yahooapis.com/v1/public/yql?q=select+*+from+csv+where+url%3D'http%3A%2F%2Fdownload.finance.yahoo.com%2Fd%2Fquotes.csv%3Fs%3D"+encodeURIComponent(encodeURIComponent(symbol))+"%26f%3Dnsl1p2c1p%26c="+(new Date()).getTime()+"'+and+columns%3D'name%2Csymbol%2CLastTradePriceOnly%2CPercentChange%2CChange%2CPreviousClose'&format=json", responseText);
+			    	setTimeout(function() {
+			    		customAjax("https://query.yahooapis.com/v1/public/yql?q=select+*+from+json+where+url='https%3A%2F%2Fquery2.finance.yahoo.com%2Fv10%2Ffinance%2FquoteSummary%2F"+encodeURIComponent(encodeURIComponent(s))+"%3Fformatted%3Dtrue%26crumb%3D8ldhetOu7RJ%26lang%3Den-US%26region%3DUS%26modules%3DfinancialData%26corsDomain%3Dfinance.yahoo.com'&format=json", function(resp) {
+			    			responseTextV2(resp, s);
+			    		});	
+			    	}, 1000);
+		    	}
 		    });
 		    
 		    try {

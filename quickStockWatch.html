@@ -93,7 +93,13 @@
 			There seems to be a problem retrieving your stock list. This is likely a temporary glitch. Please check back later. <br>
 			<span class="text-danger">One of the services the gadget uses is experiencing issues. I am currently working with them to resolve the problem. Please do not delete the gadget as you might lose your data. This message will automatically disappear once the gadget starts working. Thank you for your patience.</span>
 		</small>  
-	</div>  
+	</div>
+	<div class="clearfix alert" id="broadcastmessage" style="margin-bottom:0px;padding:2px;">
+		<small class="text-danger">
+			I have received hundreds of emails about this gadget not working. My initial analysis points that the problem is from Yahoo's side. I am investigating further. I will keep you guys posted on this. Please check back frequently for updates. Thank you for your patience. <br><strong>TIP: Please do not delete the gadget as you might lose your data.</strong>
+			<br><small class="text-muted">Update as of 3rd Nov 2017 11:50am PST</small>
+		</small>  
+	</div>   
 	<div id="watchListContent" class="contentData clearfix">
 		<table class="table table-condensed table-striped">
 			<thead>
@@ -1074,6 +1080,38 @@
 		    }
 		}
 		
+		function callServerV2() {
+			getDowData();
+		    var symbolArray = getSymbolArray();
+		    if (symbolArray.length == 0) {
+		        return;
+		    }
+		    var symbol = "";
+		    for (var h = 0; h < symbolArray.length - 1; h++) {
+		        symbol += symbolArray[h] + ",";
+		    }
+		    symbol += symbolArray[h];
+		    var newDate = new Date().getTime();
+
+		    $.each(symbolArray, function(i, s) {
+		    	//customAjax("https://query.yahooapis.com/v1/public/yql?q=select+*+from+csv+where+url%3D'http%3A%2F%2Fdownload.finance.yahoo.com%2Fd%2Fquotes.csv%3Fs%3D"+encodeURIComponent(encodeURIComponent(symbol))+"%26f%3Dnsl1p2c1p%26c="+(new Date()).getTime()+"'+and+columns%3D'name%2Csymbol%2CLastTradePriceOnly%2CPercentChange%2CChange%2CPreviousClose'&format=json", responseText);
+		    	setTimeout(function() {
+		    		customAjax("https://query.yahooapis.com/v1/public/yql?q=select+*+from+json+where+url='https%3A%2F%2Fquery2.finance.yahoo.com%2Fv10%2Ffinance%2FquoteSummary%2F"+encodeURIComponent(encodeURIComponent(s))+"%3Fformatted%3Dtrue%26crumb%3D8ldhetOu7RJ%26lang%3Den-US%26region%3DUS%26modules%3DfinancialData%26corsDomain%3Dfinance.yahoo.com'&format=json", function(resp) {
+		    			responseTextV2(resp, s);
+		    		});	
+		    	}, 1000);
+		    });
+		    
+		    try {
+		        clearTimeout(reloadId);
+		    }
+		    catch (e) {
+		    }    
+			if (refreshrate != -1) {
+				reloadId = setTimeout(callServerV2, refreshrate * 1000);
+		    }
+		}
+		
 		function getDowData() {
 			var curQuoteTicker = "^DJI";
             var pos = getPosition(curQuoteTicker);
@@ -1277,6 +1315,30 @@
 		    }
 		    return str;
 		}
+		
+		function responseTextV2(responseString, symbol) {
+			var pos = getPosition(symbol);
+            if(pos==-1 || symbol=='^DJI') {
+            	return;
+            }
+            
+            var nameSpan = gel(getAlphaNumericName(symbol) + "NameSpan");
+            var priceSpan = gel(getAlphaNumericName(symbol) + "PriceSpan");
+            var changeSpan = gel(getAlphaNumericName(symbol) + "ChangeSpan");
+            var percentSpan = gel(getAlphaNumericName(symbol) + "PercentSpan");
+            var tickerSpan = gel(getAlphaNumericName(symbol) + "Span");
+            
+            var tickerSpan2 = gel(getAlphaNumericName(symbol) + "Span2");
+            var todayGainlossSpan2 = gel(getAlphaNumericName(symbol) + "TodayGainLossSpan2");
+            var gainlossSpan2 = gel(getAlphaNumericName(symbol) + "GainLossSpan2");
+            
+			console.log(symbol+" "+responseString);
+			var obj = responseString.quoteSummary.result.financialData;
+			var curQuotePrice = obj["currentPrice"]["fmt"];
+			setPrice(pos, curQuotePrice);
+			priceSpan.html(curQuotePrice);
+		}
+		
 		function responseText(responseString) {
 		    var result = responseString.row;
 		    try {

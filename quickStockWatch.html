@@ -99,6 +99,7 @@
 			It has come to my attention that this gadget stopped working. I am investigating further. I will keep you guys posted on this. Please check back frequently for updates. Thank you for your patience. <br><strong>TIP: Please do not delete the gadget as you might lose your data.</strong>
 			<br><small class="text-muted">3rd Nov 2017 11:50am PST</small>: Analyzing the issue. Problem seems to be from Yahoo's side
 			<br><small class="text-muted">3rd Nov 2017 01:00pm PST</small>: Issue is on Yahoo's end - Working on a patch
+			<br><small class="text-muted">3rd Nov 2017 01:45pm PST</small>: <span class="text-success">Prices should load now. Still working on Price Change and Percent Change values</span>
 		</small>  
 	</div>   
 	<div id="watchListContent" class="contentData clearfix">
@@ -1101,7 +1102,7 @@
 			    		customAjax("https://query.yahooapis.com/v1/public/yql?q=select+*+from+json+where+url='https%3A%2F%2Fquery2.finance.yahoo.com%2Fv10%2Ffinance%2FquoteSummary%2F"+encodeURIComponent(encodeURIComponent(s))+"%3Fformatted%3Dtrue%26crumb%3D8ldhetOu7RJ%26lang%3Den-US%26region%3DUS%26modules%3DfinancialData%26corsDomain%3Dfinance.yahoo.com'&format=json", function(resp) {
 			    			responseTextV2(resp, s);
 			    		});	
-			    	}, 1000);
+			    	}, i*100);
 		    	}
 		    });
 		    
@@ -1789,7 +1790,7 @@
 		    }
 		    catch (e) {
 		    }
-		    callServer();    
+		    callServerV2();    
 		    
 		    if(sortcol=='none') {
 		    	$("#contentTable tbody tr td.handle").css("cursor", "move");

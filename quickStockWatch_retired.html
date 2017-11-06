@@ -1,0 +1,2483 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Quick Stock Watch</title>
+<meta name="viewport" content="width=width, initial-scale=1.0">
+<link rel="icon" type="imagex-icon" href="favicon.ico">
+<!-- Bootstrap -->
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<style>
+	body {
+		padding: 5px;
+		/*
+		width:1px;
+		min-width:100%;
+		*width: 100%;
+		*/
+		max-width: 500px;
+    	margin: auto;
+	}
+	.separator {
+		margin-left: 10px;
+	}
+	.pointer {
+		cursor: pointer; cursor: hand;
+	}
+	.delete-icon {
+		max-width: none;
+		opacity: 0.4;
+	}
+	tr:hover .delete-icon {
+		opacity: 0.9;
+		color: red;
+	}
+	
+	.form-control {
+    	display: inline-block;
+    	width: auto;
+    }
+    select.form-control {
+    	min-width: 230px;
+    }
+    /*
+    .handle {
+    	cursor: move;
+    }
+    */
+    .placeholder { 
+    	border: 2px dashed #000000;
+    }
+    .news-time {
+    	color: #AAAAAA;
+    }
+    @media only screen and (max-width : 480px) {
+    	.hidden-phone {
+    		display: none;
+    	}   
+    }
+</style>
+</head>
+<body>
+	<script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	
+	  ga('create', 'UA-1214589-5', 'auto');
+	  //Send pageview after figuring out Adblock information
+	  //ga('send', 'pageview'); 
+	
+	</script>
+	<a href="#settingsModal" class="btn btn-xs btn-primary pull-right" data-toggle="modal" id="settingsloadbtn" style="margin-left:5px"><i class="fa fa-cogs"></i> Settings</a>
+	<a href="https://udaysasigadgets.github.io/quickStockWatch.html" class="btn btn-xs btn-primary pull-right" target="newwin" id="fullscreen"><i class="fa fa-expand"></i> FullScreen</a>
+	<a href="javascript:void(0)" class="pull-left text-danger" id="messagebtn">Problem?</a>
+	<a href="javascript:void(0)" class="pull-left separator" id="tipsbtn" style="color:#FF8C00"><i class="fa fa-lightbulb-o fa-1"></i> <span class="">Tips</span></a>
+	<a href="quickstockwatch/index.html" class="pull-left separator" target="new"><i class="fa fa-info-circle fa-1"></i> <span class="">Help</span></a>
+		
+	<div id="myStatsContent" style="clear:both;">
+		<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+		<ins class="adsbygoogle"
+		     style="display:inline-block;width:468px;height:60px"
+		     data-ad-client="ca-pub-9983113299815649"
+		     data-ad-slot="3581915552"></ins>
+		<script>
+		(adsbygoogle = window.adsbygoogle || []).push({});
+		</script>
+	</div>
+	<div class="clearfix"></div>
+	<div class="clearfix alert hide" id="message" style="margin-bottom:0px;padding:2px;">
+		<small>
+			There seems to be a problem retrieving your stock list. This is likely a temporary glitch. Please check back later. <br>
+			<span class="text-danger">One of the services the gadget uses is experiencing issues. I am currently working with them to resolve the problem. Please do not delete the gadget as you might lose your data. This message will automatically disappear once the gadget starts working. Thank you for your patience.</span>
+		</small>  
+	</div>
+	<div class="clearfix alert" id="broadcastmessage" style="margin-bottom:0px;padding:2px;">
+		<small class="text-danger">
+			It has come to my attention that this gadget stopped working. I am investigating further. I will keep you guys posted on this. Please check back frequently for updates. Thank you for your patience. <br><strong>TIP: Please do not delete the gadget as you might lose your data.</strong>
+			<br><small class="text-muted">3rd Nov 2017 11:50am PST</small>: Analyzing the issue. Problem seems to be from Yahoo's side
+			<br><small class="text-muted">3rd Nov 2017 01:00pm PST</small>: Issue is on Yahoo's end - Working on a patch
+			<br><small class="text-muted">3rd Nov 2017 01:45pm PST</small>: <span class="text-success">Prices should load now. Still working on Price Change and Percent Change values</span>
+			<br><small class="text-muted">3rd Nov 2017 03:50pm PST</small>: <span class="text-success">A more permanent fix is being put in. ETA this weekend</span>
+		</small>  
+	</div>   
+	<div id="watchListContent" class="contentData clearfix">
+		<table class="table table-condensed table-striped">
+			<thead>
+				<tr>
+					<th>&nbsp;</th>
+					<th>Sym</th>
+					<th class="namecol">Name</th>
+					<th>Price</th>
+					<th>Change</th>
+					<th>% Change</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td colspan="6" class="text-center"><i class="fa fa-spinner fa-pulse"></i> Loading your watch list..</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div id="portfolioContent" style="display:none;width:100%" class="clearfix">Loading your portfolio. Please wait...</div>
+	<form class="form-inline">
+		<a class="separator" href="#" id="strengthbtn">Strength</a>
+		<a class="separator" href="#" id="newsbtn">News</a>
+		<a class="separator" href="#" id="view">Portfolio</a>
+		<a class="separator" href="#" id="profitChart">ProfitChart</a>
+		<!-- 
+		<a class="separator" href="#" id="emailbtn">Email</a>
+		<a class="separator" href="http://udaysasigadgets.github.io/quickStockWatchHelp.html"  target="quickstockwatchhelp">Help</a>
+		<a class="separator" href="http://groups.google.com/group/quickstockwatch" target="grouppage">Discuss</a>
+		<a class="separator" href="#" id="problememail">Problems?</a>
+		-->
+		<a class="separator" href="mailto:udaysasi+feedback@gmail.com?subject=Feedback+On+Quick+Stock+Watch" target="emailpage">Feedback</a>
+		<div class="pull-right" data-toggle="tooltip" data-placement="left" data-container="body" title="Data and Charts provided by Yahoo! Finance"><i class="fa fa-yahoo" style="color:#800080"></i></div>
+	</form>
+	<div id="myContainer"></div>
+	<div id="newsContent"></div>
+	<table width="99%" id="strengthContent" style="display:none">
+		<tbody>
+		<tr>
+			<td style="width:100%">
+				<table style="align:center" border="0" cellpadding="0" cellspacing="0" width="100%">
+					<tbody>
+					<tr style="height:15px">
+						<td data-toggle="tooltip" data-placement="top" data-container="body" id="n59" style="background-color: #992020;width:0%" title=""></td>
+						<td data-toggle="tooltip" data-placement="top" data-container="body" id="n25" style="background-color: #CC4949;width:0%" title=""></td>
+						<td data-toggle="tooltip" data-placement="top" data-container="body" id="n02" style="background-color: #FF8383;width:0%" title=""></td>
+						<td data-toggle="tooltip" data-placement="top" data-container="body" id="p02" style="background-color: #83FF83;width:0%" title=""></td>
+						<td data-toggle="tooltip" data-placement="top" data-container="body" id="p25" style="background-color: #49CC49;width:0%" title=""></td>
+						<td data-toggle="tooltip" data-placement="top" data-container="body" id="p59" style="background-color: #209920;width:0%" title=""></td>
+					</tr>
+					</tbody>
+				</table>
+			</td>
+		</tr>
+		</tbody>
+	</table>
+	<div id="chartContent" style="align:center;border:1px solid #FFFFFF; width:95%; display:none;">Loading your profit chart.. Please wait..</div>
+	<hr id="chartHorLine" style="display:none;width:99%"/>
+	<div id="emailContent" style="align:left;border:1px solid #FFFFFF; width:99%; display:none; font-family: arial,sans-serif;">
+	Send my <select id="emailOption"><option value="0">watchlist</option><option value="1">portfolio</option></select> via e-mail&nbsp;&nbsp;<input type="button" value="Go" onclick="sendEMail();"></input><br>
+	<span>Uses the default e-mail client on your computer.</span>
+	</div>
+	<hr id="emailHorLine" style="display:none;width:99%"/>
+
+	<!-- Settings Modal -->
+	<div id="settingsModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="settingsModalLabel">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="pull-right btn btn-xs btn-danger" style="margin-left:5px" data-dismiss="modal">Cancel</button>
+					<button type="button" class="pull-right btn btn-xs btn-success settingssavebtn separator" data-dismiss="modal" id="settingssavebtn">Save</button>
+					<!-- 
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					-->
+					<strong>Gadget Settings</strong>
+				</div>
+				<div class="modal-body container-fluid">
+					<form class="form-horizontal" onsubmit="return false;">
+						<div class="form-group">
+						  <label class="col-sm-4 control-label" for="ticker">Stock Lookup</label>  
+						  <div class="col-sm-8 form-inline">
+						  	<input type="text" class="input-md form-control" placeholder="Search Name/Symbol" id="ticker"><button class="btn btn-md btn-primary" id="tickeraddbtn" style="margin-left:5px">Add</button>
+						  	<span id="userMessage" class="hide text-success"><i class="fa fa-check-circle" id="userMessage"></i> Added succesfully</span>
+						  </div>
+						</div>
+						<div class="form-group">
+						  <label class="col-sm-4 control-label" for="inputShowStockName" data-toggle="tooltip" data-placement="top" title="Tip: Hide the name for low-resolution monitors">Stock Name</label>  
+						  <div class="controls col-sm-8" id="inputShowStockName">
+						    <select class="form-control">
+							  	<option value="1">Show the name</option>
+					  			<option value="0">Don't show the name</option>
+							</select>
+						  </div>
+						</div>
+						<div class="form-group">
+						  <label class="col-sm-4 control-label" for="inputSortColumn">Sort Watchlist</label>  
+						  <div class="controls col-sm-8" id="inputSortColumn">
+						    <select class="form-control">
+							  	<option value="symbol">By Symbol</option>
+							  	<option value="none">I'd prefer to order myself</option>
+							</select>
+						  </div>
+						</div>
+						<div class="form-group">
+						  <label class="col-sm-4 control-label" for="inputFontSize">Font Size</label>  
+						  <div class="controls col-sm-8" id="inputFontSize">
+						    <select class="form-control">
+							  	<option value="small">Smaller</option>
+							  	<option value="normal">Normal</option>
+							  	<option value="large">Larger</option>
+							</select>
+						  </div>
+						</div>
+						<div class="form-group">
+						  <label class="col-sm-4 control-label" for="inputShowCharts" data-toggle="tooltip" data-placement="top" title="Mouseover on the ticker symbol to reveal a chart">Chart Type</label>  
+						  <div class="controls col-sm-8" id="inputShowCharts">
+						    <select class="form-control">
+							  	<option value="0">None</option>
+								<option value="1">1 day</option>
+								<!--  
+								<option value="5">5 day</option>
+								<option value="90">3 month</option>
+								<option value="180">6 month</option>
+								<option value="365">1 year</option>
+								-->
+							</select>
+						  </div>
+						</div>
+						<div class="form-group">
+						  <label class="col-sm-4 control-label" for="inputHighlighting" data-toggle="tooltip" data-placement="top" title="Price changes are represented visually">Highlight Changes</label>  
+						  <div class="controls col-sm-8" id="inputHighlighting">
+						    <select class="form-control">
+							  	<option value="0">Off</option>
+							  	<option value="1">On</option>
+							</select>
+						  </div>
+						</div>
+						<div class="row">
+							<div class="col-sm-12 text-warning">
+								<strong>Your Stocklist : </strong><span id="importstocklist"></span>
+							</div>
+						</div>
+					</form>
+				</div>
+				<!-- 
+				<div class="modal-footer hide">
+					<button type="button" class="btn btn-md btn-default" data-dismiss="modal">Cancel</button>
+					<button type="button" class="btn btn-md btn-success settingssavebtn" data-dismiss="modal" id="settingssavebtn">Save</button>
+				</div>
+				-->
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+	
+	<!-- Details Modal -->
+	<div id="detailsModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<strong>More Details on <span class="detailsmodalsymbol"></span></strong>
+				</div>
+				<div class="modal-body container-fluid">
+					<table class="table table-condensed table-striped">
+						<tbody>
+							<tr>
+								<td>Symbol</td>
+								<td><span class="detailsmodalsymbol"></span></td>
+							</tr>
+							<tr>
+								<td>Name</td>
+								<td><span class="detailsmodalname"></span></td>
+							</tr>
+							<tr>
+								<td>Open</td>
+								<td><span class="detailsmodalopen"></span></td>
+							</tr>
+							<tr>
+								<td>PreviousClose</td>
+								<td><span class="detailsmodalprevclose"></span></td>
+							</tr>
+							<tr>
+								<td>Volume</td>
+								<td><span class="detailsmodalvolume"></span></td>
+							</tr>
+							<tr>
+								<td>Days Range</td>
+								<td><span class="detailsmodaldaysrange"></span></td>
+							</tr>
+							<tr>
+								<td>52-week Range</td>
+								<td><span class="detailsmodalyearrange"></span></td>
+							</tr>
+							<tr>
+								<td>Last Trade</td>
+								<td><span class="detailsmodallasttrade"></span></td>
+							</tr>
+							<tr>
+								<td>Exchange</td>
+								<td><span class="detailsmodalexchange"></span></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-md btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+	
+	<!-- Delete Modal -->
+	<div id="deleteModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+					<strong>Delete from Watchlist</strong>
+				</div>
+				<div class="modal-body">
+					<input type="hidden" id="deletekey" value=""/>
+					Are you sure you want to delete <strong><span id="deletemodalname"></span></strong> from your watchlist? Please note that any portfolio details for this stock will be removed as well.
+				</div>
+				<div class="modal-footer">
+					<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+					<button class="btn btn-danger" data-dismiss="modal" id="deletesavebtn">Delete</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Message Modal -->
+	<div id="messageModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<strong>Stock Watch List Disappearing?</strong>
+					</div>
+					<div class="modal-body">
+						<p>
+						The gadget comes with 2 stocks <strong>FB</strong> and <strong>GOOG</strong> added to your watchlist by default so you could see it in action. You can add more or delete the default ones. 
+						</p>
+						<p>
+							However, if you add stocks but the gadget reverts to the default list, that is definitely annoying. This intermittent problem exists due to ighome and not the gadget itself. <a href="https://udaysasigadgets.github.io/quickstockwatch-workaround.html" target="_new">Here</a> is a workaround.
+						</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Tips Modal -->
+	<div id="tipsModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="tipsModalLabel">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<strong>Some Useful Tips</strong>
+					</div>
+					<div class="modal-body">
+						<p>
+							Here are a few tips to make the best use of the gadget:
+							<ul>
+								<li>Re-order your watchlist any way you want</li>
+								<li>Create and monitor your portfolio</li>
+								<li>View profit chart of your portfolio</li>
+								<li>Click a row to view more details</li>
+								<li>Change font size in settings</li>
+								<li>Click on column headers to sort</li>
+								<li>Click Strength to view today's performance</li>
+								<li>Hide the name for low-resolution monitors</li>
+								<li>Get news relevant to your watchlist</li>
+								<li>Some helpful ticker symbols : ^DJI for Dow Jones, ^IXIC for Nasdaq Composite and ^GSPC for S&P500</li>
+							</ul>
+						</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+	<script src="js/jquery-ui-touch-punch.min.js"></script>
+	<script src="bootstrap/js/jquery.cookie.js"></script>
+	<script src="bootstrap/js/bootstrap.min.js"></script>
+	<script src="bootstrap/js/json2.js"></script>
+	<script src="bootstrap/js/storage.js"></script>
+	<script type="text/javascript" src="apigee.min.js"></script>
+	
+	<script type="text/javascript">
+	
+	$('[data-toggle="tooltip"]').tooltip();
+	
+	var userId = null;
+	var userPrefs = null;
+	var debugBuf = []; 
+	
+	if (!window.console) {
+		window.console = { log : function(s) { } };
+	}
+	
+	function debugLog(str) {
+		if(debugBuf.join(",").length<1000) {
+			debugBuf.push(str);
+		}
+	}
+	
+	function userBrowser() {
+	    var ua = navigator.userAgent, tem, 
+	    M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*([\d\.]+)/i) || [];
+	    if(/trident/i.test(M[1])){
+	        tem=  /\brv[ :]+(\d+(\.\d+)?)/g.exec(ua) || [];
+	        return 'IE '+(tem[1] || '');
+	    }
+	    M = M[2]? [M[1], M[2]]:[navigator.appName, navigator.appVersion, '-?'];
+	    if((tem= ua.match(/version\/([\.\d]+)/i))!= null) M[2]= tem[1];
+	    return M[0];
+	}
+	
+    var searchkey = self.location.search;
+	if(searchkey!='') {
+		var s1 = self.location.search;
+		searchkey = s1.substring(s1.lastIndexOf('?')+1);
+		//searchkey = searchkey.substring(1);
+		var pairs = searchkey.split("=");
+		if(pairs[0]=="subscriptionid") {
+			userId = pairs[1];
+			userId = userId.replace("@","");
+			if(userId=="token")
+				userId = null;
+		}
+	}
+	debugLog('1');
+	debugLog(userId);
+	
+	var client = new Apigee.Client({
+        orgName:'udaysasigadgets',
+        appName:'sandbox',
+        URI: 'https://apibaas-trial.apigee.net'
+    });
+	debugLog('client');
+	
+    function getUserPrefs(callback) {
+    	var prefTimeout = window.setTimeout(callback, 10000);
+    	var opts = {
+        	'type':'ighqswprefs',
+        	'name':userId,
+        	getOnExist:true,
+        	'gadget':'qsw'
+        };
+    	
+       	client.getEntity(opts, function(err, response) {
+        	if(err) {
+        		debugLog('getEntity cloud err : '+err.name);
+        		console.log("Error getting preferences object");
+        		
+        		if (err.name=='entity_not_found') {
+					//console.error('Error occured - no such property');
+					client.createEntity(opts, function(e, resp) {
+						if(e) {
+							//Should never happen
+							console.error('Entity with name '+userId+' already exists');
+						} else {
+							//$("#message").removeClass("hide");
+							client.getEntity(opts, function(err, response) {
+								if(!err) {
+									console.log('Number of entities found : '+response.entities.length);
+					        		var entity = response.getEntity();
+					        		var options = {
+					       	            client: client,
+					       	            data: entity
+					       	        };
+					       	        userPrefs = new Usergrid.Entity(options);
+					       	        
+					        		debugLog('getEntity cloud');
+					        		console.log("Preferences object : "+userPrefs.get('uuid'));
+					        		window.clearTimeout(prefTimeout);
+					    	        console.log("Cleared the timeout call..")
+					    	        debugLog('getEntity callback');
+					    	        callback();
+								}
+							});
+						}	
+					});
+				} else {
+					/*Temporary Fix for IE users*/
+	        		userId = null;
+	        		/*
+	        		try {
+	    				var p = window.localStorage;
+	    				localStore.setItem = function(i,v) {
+	    					console.log("setting to localStorage : "+i+"="+v);
+	    					localStorage.setItem(i,v);
+	    				}
+	    				localStore.getItem = function(i) {
+	    					console.log("reading from localStorage : "+i);
+	    					return localStorage.getItem(i);
+	    				}
+	    				debugLog('createEntity cloud err => localStorage');
+	    			} catch(e) {
+	    			
+	    				console.log("seems to be inside an iframe, Using cookie instead..");
+	    				$.cookie("utest","Luigi", { expires: 365 });
+	    				console.log("Value read from cookie : "+$.cookie("utest"));
+	    				if($.cookie("utest")=="Luigi") {
+	    					console.log("cookies are enabled..");
+	    					debugLog('createEntity cookieenabled');
+	    				} else {
+	    					console.log("cookies are not enabled.. Notify the user..");
+	    					var userBrowserVersion = userBrowser();
+	    					$("#message").html("<small>Please <a href='http://www.google.com/search?q=enable+third+party+cookies+"+userBrowserVersion+"' target='new'>enable third party cookies</a> on your browser to view the gadget</small>").removeClass("hide");
+	    					debugLog('createEntity cookiedisabled');
+	    				}
+	    				localStore.setItem = function(i,v) {
+	    					console.log("setting to cookie : "+i+"="+v);
+	    					$.cookie(i, v, { expires: 365 });
+	    				}
+	    				localStore.getItem = function(i) {
+	    					console.log("reading from cookie : "+i);
+	    					return $.cookie(i);
+	    				}
+	    				debugLog('createEntity cloud err => cookie');
+	    			
+	    			}
+	    			*/
+	    			//Inform the user
+	    			$("#message").removeClass("hide");
+	    			debugLog('getEntity callback');
+	    			callback();
+	    			/*Temporary Fix for IE users*/
+				} 
+        	} else {
+        		console.log('Number of entities found : '+response.entities.length);
+        		var entity = response.getEntity();
+        		var options = {
+       	            client: client,
+       	            data: entity
+       	        };
+       	        userPrefs = new Usergrid.Entity(options);
+       	        
+        		debugLog('getEntity cloud');
+        		console.log("Preferences object : "+userPrefs.get('uuid'));
+        		window.clearTimeout(prefTimeout);
+    	        console.log("Cleared the timeout call..")
+    	        debugLog('getEntity callback');
+    	        callback();
+        	}
+        });
+    }
+	
+	var autocomplete = null;
+	var localStore = {
+		setItem : null,
+		getItem : null
+	};
+	
+	if(userId!=null) {
+		localStore.setItem = function(i,v) {
+			if(userId=='token')
+				return;
+			console.log("setting to cloud : "+i+"="+v);
+			userPrefs.set(i,v);
+			userPrefs.save(function(err) {
+				if(err) {
+					console.log("Prefs not saved in the cloud - "+err);
+					debugLog("ClS-Error");
+				} else {
+					debugLog("ClS"+i);
+				}
+			});
+		}
+		localStore.getItem = function(i) {
+			//console.log("reading from cloud : "+i);
+			return userPrefs.get(i);
+		}
+		debugLog('cloud');
+	} else {
+		/*
+		try {
+			var p = window.localStorage;
+			localStore.setItem = function(i,v) {
+				console.log("setting to localStorage : "+i+"="+v);
+				localStorage.setItem(i,v);
+			}
+			localStore.getItem = function(i) {
+				console.log("reading from localStorage : "+i);
+				return localStorage.getItem(i);
+			}
+			debugLog('localStorage');
+		} catch(e) {
+		*/	
+			console.log("seems to be inside an iframe, Using cookie instead..");
+			$.cookie("utest","Luigi", { expires: 365 });
+			console.log("Value read from cookie : "+$.cookie("utest"));
+			if($.cookie("utest")=="Luigi") {
+				console.log("cookies are enabled..");
+			} else {
+				console.log("cookies are not enabled.. Notify the user..");
+				var userBrowserVersion = userBrowser();
+				$("#message").html("<small>Please <a href='https://www.google.com/search?q=enable+third+party+cookies+"+userBrowserVersion+"' target='new'>enable third party cookies</a> on your browser to view the gadget</small>").removeClass("hide");
+			}
+			localStore.setItem = function(i,v) {
+				console.log("setting to cookie : "+i+"="+v);
+				$.cookie(i, v, { expires: 365 });
+			}
+			localStore.getItem = function(i) {
+				console.log("reading from cookie : "+i);
+				return $.cookie(i);
+			}
+			debugLog('cookie');
+		/*	
+		}
+		*/
+	}
+	
+	function gel(id) {
+		return $('#'+id);	
+	}
+	
+	var YAHOO = {
+	        util: {
+	        	ScriptNodeDataSource: {
+		            	
+		            	callbacks : function(feed) {  	  
+		    				if (feed == null || feed["ResultSet"]==null || feed["ResultSet"]["Result"]==null){ 
+		    					gel("myContainer").html("Error retrieving data");
+		    					return;
+		    			  	}
+		    			  	var html = "", numResults = 0;
+		    				dataArray = feed["ResultSet"]["Result"];
+		    				var queryStr = feed["ResultSet"]["Query"];
+		    				if(dataArray && dataArray.length)
+		    				{
+		    				  numResults  = dataArray.length;
+		    				}
+		    				
+	                        //Filter out your own parameters. Populate them into an array, since this is what typeahead's source requires
+	                        var arr = [], i=numResults;
+	                        while(i--){
+	                            arr[i] = dataArray[i]['name']
+	                        }
+	                        autocomplete.data('typeahead').source = function(query, process) {
+	                        	suggests = [];
+	                            map = {};  
+	                         
+	                            $.each(dataArray, function (i, d) {
+	                                map[d.symbol+" -> "+d.name] = d;
+	                                suggests.push(d.symbol+" -> "+d.name);
+	                            });
+	                         
+	                            process(suggests);
+	                        };
+	                        autocomplete.data('typeahead').updater = function (item) {
+	                            selectedSymbol = map[item].symbol;
+	                            return selectedSymbol;
+	                        }
+	                        autocomplete.trigger('keyup');
+	                        autocomplete.data('active', false);
+	                        //console.log("Unlocked and Ready for next input");
+		    			  }
+		            }
+	        	
+	        }
+	};
+	
+	function searchTicker()
+	{ 
+	  var inputVal = gel("ticker").val();
+	  var commaIndex = inputVal.lastIndexOf(",");
+	  var prevStr = inputVal.substring(0, commaIndex);
+	  var queryStr = inputVal.substring(commaIndex+1);
+	  queryStr = trim(queryStr);
+
+	   /*//Throwing a 400 from March 30th 2016
+		$.ajax({
+            type: "GET",
+            url: "https://s.yimg.com/aq/autoc",
+            data: {query: escape(queryStr), region: 'US', lang : 'en-US'},
+            dataType: "jsonp",
+            async : false,
+            jsonp : "callback",
+            jsonpCallback: "YAHOO.util.ScriptNodeDataSource.callbacks"
+        });
+		*/	
+		$.ajax({
+	        type: "GET",
+	        url: "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D'http%3A%2F%2Fd.yimg.com%2Faq%2Fautoc%3Fquery%3D"+encodeURI(escape(queryStr))+"%26region%3DUS%26lang%3Den-US'&format=json&callback=",
+	        dataType: "json",
+	        success: function(data) {
+	        	YAHOO.util.ScriptNodeDataSource.callbacks(JSON.parse(data.query.results.body));
+	        }
+	    });
+		
+	}
+	
+	function getSelectedStr(origStr, matchStr)
+	{
+		var rg = new RegExp("\\b"+matchStr, "ig");
+		var finalStr = origStr.replace(rg, "<b>"+origStr.match(rg)+"</b>");
+		return finalStr;
+	}
+
+	function trim(str) {
+	    return str.replace(/^\s*|\s*$/g, "");
+	}
+	
+	$(document).ready(function() {
+		
+		var showname, flashing, showchart, refreshrate=60, fontsize='normal', showNews, showStrength, strTickers, stockTickers;
+		var baseURL = "http://download.finance.yahoo.com/d?s=";
+		var sortcol = 'none';
+		var cURL = "https://ichart.finance.yahoo.com/t?s=";
+		var newDate = new Date().getTime();
+		var reloadId = "0";
+		var newsReloadId = "0";
+		var newsURL = 'https://finance.yahoo.com/rss/headline?s=';
+		var newsItemArray = new Array();
+		var staticImgUrl = "delete.png";
+		
+		var tips = ["Re-order watchlist any way you want",
+		            "Enter purchase details to manage portfolio",
+		            "View profit chart of your portfolio",
+		            "Click a row to view more details",
+		            "Change font size in settings",
+		            "Click on column headers to sort",
+		            "Click Strength to view today's performance",
+		            "Hide the name for low-resolution monitors",
+		            "Get news relevant to watchlist"];
+		
+		/*
+		var amazonLinks = ['<a class="text-success" target="amazon" href="https://www.amazon.com/Best-Sellers-Electronics-Laptop-Computers/zgbs/electronics/565108/ref=as_acph_ce_blap_81_on?&tag=spacemask-20&camp=0&creative=0&linkCode=ur1&adid=08GKK5E3K3TMDE8T4NPP&">Best Selling Laptops</a>',
+		                   '<a class="text-success" target="amazon" href="https://www.amazon.com/Best-Sellers-Electronics-Computer-Monitors/zgbs/electronics/1292115011/ref=as_acph_ce_bmonb_81_on?&tag=spacemask-20&camp=0&creative=0&linkCode=ur1&adid=1D9RZ4MNA2H3DB2XKJYS&">Best Selling Monitors</a>',
+		                   '<a class="text-success" target="amazon" href="https://www.amazon.com/s/ref=as_acph_cp_laptopu400_on_on?node=565108&field-price-mp-owner-bin=00000-40000&tag=spacemask-20&camp=0&creative=0&linkCode=ur1&adid=17K35DEHEBY51X200X7P&">Laptops under $400</a>',
+		                   '<a class="text-success" target="amazon" href="https://www.amazon.com/s/ref=as_acph_cp_tabletu300_on_on?rh=i%3Acomputers%2Cn%3A1232597011&field-price-mp-owner-bin=00000-30000&tag=spacemask-20&camp=0&creative=0&linkCode=ur1&adid=0RVP3Q403M281DKH8F4C&">Tablets under $300</a>',
+		                   '<a class="text-success" target="amazon" href="https://www.amazon.com/Headphones-Accessories-Supplies/b/ref=as_acph_ce_headphones_52_on?ie=UTF8&node=172541&tag=spacemask-20&camp=0&creative=0&linkCode=ur1&adid=0CPWMAJF5SSWSX0MDJPZ&">Top brand headphones</a>',
+		                   '<a class="text-success" target="amazon" href="https://www.amazon.com/s/ref=as_acph_ce_ipadb_5515_on?rh=i%3Acomputers%2Cn%3A2348628011&hidden-keywords=-B002FU6KF2&field-pct-off-mp-owner=50-&field-enc-merchantbin=ATVPDKIKX0DER&ie=UTF8&tag=spacemask-20&camp=0&creative=0&linkCode=ur1&adid=142SMQZBE0X1V14NJ368&">50% off iPad accessories</a>'];
+		*/
+		var amazonLinks = ['<a class="text-success" target="amazon" href="https://www.amazon.com/?&tag=spacemask-20&camp=0&creative=0&linkCode=ur1&adid=0VY2QAGDYF9FKV7ZZ7ZX&">Support gadget by shopping on Amazon</a>'];
+		
+		var parenturl = (window.location != window.parent.location) ? document.referrer : document.location.href;
+		if(parenturl.indexOf("www.ighome.com/directory.aspx")!=-1 || navigator.userAgent.match(/iPad/i)) {
+			//Remove Ad
+			$("#myStatsContent").remove();
+		} else {
+			setTimeout(function() {
+				//Check if ads loaded after 3 seconds
+				if($(".adsbygoogle iframe").length==0) {
+					if(Math.random()>0.7) {
+						$("#myStatsContent").addClass("text-warning").html('<i class="fa fa-child"></i> Please support the gadget by disabling Ad Blockers. <a target="adblock" class="small" href="https://help.getadblock.com/support/solutions/articles/6000055743-how-do-i-tell-adblock-not-to-run-">How?</a>');
+						//User is blocking Ads. Report the data as part of page view hit
+						ga(function(tracker) {
+							tracker.send('pageview', {'dimension1': 'Yes'});
+						});
+					} else  if(Math.random()>0.2) { 
+						var randomLink = amazonLinks[Math.floor(Math.random() * amazonLinks.length)];
+						$("#myStatsContent").html('<i class="fa fa-tag text-success" aria-hidden="true"></i> '+randomLink+'<img src="https://ir-na.amazon-adsystem.com/e/ir?t=spacemask-20&l=pf4&o=1" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />').css("overflow", "hidden");
+						//User is blocking Ads. Report the data as part of page view hit
+						ga(function(tracker) {
+							tracker.send('pageview', {'dimension1': 'Yes, Show Amazon Link'});
+						});
+					} else {
+						$("#myStatsContent").remove();
+						//User is blocking Ads. Report the data as part of page view hit
+						ga(function(tracker) {
+							tracker.send('pageview', {'dimension1': 'Yes'});
+						});
+					}
+				} else {
+					$("#myStatsContent").css("overflow", "hidden");
+					//User is not blocking Ads. Report the data as part of page view hit
+					ga(function(tracker) {
+						tracker.send('pageview', {'dimension1': 'No'});
+					});
+				}
+			}, 3000);
+		}
+	
+
+		
+		function initWidget() {
+			showname = localStore.getItem("showname");
+			if(showname==null || showname=='null')
+				showname = "0";
+			flashing = localStore.getItem("flashing");
+			if(flashing==null || flashing=='null')
+				flashing = "0";
+			showchart = localStore.getItem("showchart");
+			if(showchart==null || showchart=='null')
+				showchart = "1";
+			showNews = localStore.getItem("shownews");
+			if(showNews==null || showNews=='null')
+				showNews = "0";
+			showStrength = localStore.getItem("showstrength");
+			if(showStrength==null || showStrength=='null')
+				showStrength = "0";
+			sortcol = localStore.getItem("sortcol");
+			if(sortcol==null || sortcol=='null') {
+				sortcol = "none";
+				localStore.setItem("sortcol", sortcol);
+			}
+			fontsize = localStore.getItem("fontsize");
+			if(fontsize==null || fontsize=='null') {
+				fontsize = "normal";
+				localStore.setItem("fontsize", fontsize);
+			}
+			strTickers = localStore.getItem("tickers");
+			if(strTickers==null || strTickers=='null')
+				strTickers = "GOOG|0|0.00,FB|0|0.00";
+			//Dont need this anymore
+			strTickers = convertToNewFormat(strTickers);
+			stockTickers = convertToArray2(strTickers);
+			
+			//stockTickers = sortArray(stockTickers);
+			if(sortcol=='symbol') {
+			 	stockTickers = sortArray2(stockTickers, sortcol);
+			}
+			if (showchart == 5) {
+			    cURL = "https://ichart.finance.yahoo.com/v?s=";
+			}
+			else if (showchart == 90) {
+			    cURL = "https://ichart.finance.yahoo.com/z?t=3m&l=off&z=b&s=";
+			}
+			else if (showchart == 180) {
+			    cURL = "https://ichart.finance.yahoo.com/z?t=6m&l=off&z=b&s=";
+			}
+			else if (showchart == 365) {
+			    cURL = "https://ichart.finance.yahoo.com/z?t=1y&l=off&z=b&s=";
+			}
+			
+			//Use Google Finance Charts
+			cURL = "https://www.google.com/finance/chart?cht=c&tlf=12h&q=";
+			var title = localStore.getItem("title");
+			if(title!='' && title!="Uday's Quick Stock Watch")
+				title += ' - Quick Stock Watch';
+			
+		}
+		
+		function NewsItem(title, link, time){ this.title = title;this.link = link;this.time = time;}
+		
+		function getAlphaNumericName(txtString)
+		{
+			txtString = txtString.toLowerCase();
+			txtString = txtString.replace(/[^a-zA-Z 0-9]+/g,"");
+			return txtString;
+		}
+
+		function callNewsServer()
+		{ 
+			var symbolArray = getSymbolArray();
+		    if (symbolArray.length == 0) {
+		        return;
+		    }
+		    var symbol = "";
+		    for (var h = 0; h < symbolArray.length - 1; h++) {
+		        symbol += symbolArray[h] + ",";
+		    }
+		    symbol += symbolArray[h];
+
+			customAjax("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20feed%20where%20url%3D'http%3A%2F%2Ffeeds.finance.yahoo.com%2Frss%2F2.0%2Fheadline%3Fs%3D"+encodeURIComponent(encodeURIComponent(symbol))+"%26format%3Djson'&format=json", processNewsResponse);
+			   
+		}
+		function processNewsResponse(r)
+		{
+			try 
+			{ 
+				var itemList = r["item"];	
+				newsItemArray = new Array(); 
+				for (var i = 0; i < itemList.length ; i++)  
+				{ 
+					if(i>=4) 
+						break; 
+					var node = itemList[i]; 
+					var title = node["title"], link=node["link"], pubDate = node["pubDate"], diff;
+					var newdate = new Date(pubDate);
+					var curdate = new Date(new Date().toGMTString());
+					diff = (curdate-newdate)/1000;
+					if(isNaN(diff))
+						diff = '';
+					else if(diff<60)
+						diff = ' - '+diff+' sec ago';
+					else if(diff<60*60)
+						diff = ' - '+Math.floor(diff/60) + ' min ago';
+					else if(diff<60*60*24)
+						diff = ' - '+Math.floor((diff/3600))+' hr '+Math.floor((diff%3600)/60)+' min ago';
+					else{
+						var days = Math.floor((diff/86400));
+						diff = ' - '+days+(days>1?' days ago':' day ago');
+					}
+					newsItemArray = newsItemArray.concat(new NewsItem(title, link, diff)); 
+				} 
+				displayNewsContent();	 
+			}
+			catch(e){ }   
+			
+			newsReloadId = setTimeout(callNewsServer, 300000);	
+		}
+		
+		function displayNewsContent()
+		{
+			var header = ''; 
+			var footer = ''; 
+			var contentText = '';  
+			if(newsItemArray.length==0) 
+				contentText = 'No news available for stocks in your watchlist'; 
+			for (i=0;i<newsItemArray.length;i++) 
+				contentText+='<li><a href="'+newsItemArray[i].link+'" target="newsT">'+newsItemArray[i].title+'</a><span class="news-time">'+newsItemArray[i].time+'</span></li>'; 		
+			
+			gel('newsContent').html(header+contentText+footer);		
+		}
+		
+		showNewsContent = function() {
+			clearTimeout(newsReloadId);
+			showNews = localStore.getItem("shownews");
+			if(showNews==0)
+			{
+				gel('newsContent').html('Loading news on stocks in your watch list..');
+				gel('newsContent').css('display', '');
+				gel('newsHorLine').css('display', '');
+				callNewsServer();
+				showNews = 1;		
+				localStore.setItem("shownews", 1);
+			}
+			else
+			{
+				gel('newsContent').css('display', 'none');		
+				gel('newsContent').html('');		
+				gel('newsHorLine').css('display', 'none');		
+				showNews = 0;
+				localStore.setItem("shownews", 0);
+			}
+		}
+		showStrengthContent = function() {
+			showStrength = localStore.getItem("showstrength");
+			if(showStrength==0)
+			{
+				gel('strengthContent').css('display', '');
+				gel('strHorLine').css('display', '');
+				showStrength = 1;		
+				localStore.setItem("showstrength", 1);
+			}
+			else
+			{
+				gel('strengthContent').css('display', 'none');		
+				gel('strHorLine').css('display', 'none');		
+				showStrength = 0;
+				localStore.setItem("showstrength", 0);
+			}
+		}
+		
+		function convertToString(arr) {
+		    var returnString = "";
+		    for (var g = 0; g < arr.length; g++) {
+		        returnString += arr[g].symbol + ",";
+		    }
+		    return returnString;
+		}
+		
+		function convertToString2(arr) {
+		    var returnString = "";
+		    for (var g = 0; g < arr.length; g++) {
+		        returnString += arr[g].symbol + "|" + arr[g].numshares + "|" + arr[g].buyprice + ",";
+		    }
+		    return returnString;	
+		}
+		
+		function convertToArray(str) {
+		    var returnArray = new Array();
+		    str = str.replace(/ /g, ",");
+		    var ticks = str.split(",");
+		    ticks.sort();
+		    for (var d = 0; d < ticks.length; d++) {
+		        var curTicker = ticks[d];
+		        curTicker = curTicker.toUpperCase();
+		        if (curTicker == "") {
+		            continue;
+		        }
+		        returnArray.push(new StockTicker(curTicker, "Loading..", "0", "0", "(0%)"));
+		    }
+		    return returnArray;
+		}
+		
+		function convertToNewFormat(str) {
+			if(str.indexOf("|")!=-1)
+				return str;
+		    var returnString = "";
+		    str = str.replace(/ /g, ",");
+		    var ticks = str.split(",");
+		    ticks.sort();
+		    for (var d = 0; d < ticks.length; d++) {
+		        var curTicker = ticks[d];
+		        curTicker = curTicker.toUpperCase();
+		        if (curTicker == "") {
+		            continue;
+		        }
+		        returnString += curTicker + "|0|0.00,";        
+		    }
+		    return returnString;		
+		}
+		
+		function convertToArray2(str) {
+		    var returnArray = new Array();
+		    str = str.replace(/ /g, ",");
+		    var ticks = str.split(",");
+		    //ticks.sort();
+		    for (var d = 0; d < ticks.length; d++) {
+		        var curTicker = ticks[d];
+		        curTicker = curTicker.toUpperCase();
+		        var curTickerData = curTicker.split("|");
+		        if (curTickerData[0] == "") {
+		            continue;
+		        }
+		        returnArray.push(new StockTicker(curTickerData[0], "Loading..", "0", "0", "(0%)", curTickerData[1], curTickerData[2]));
+		    }
+		    return returnArray;
+		}
+		
+		function StockTicker(symbol, name, price, change, percent, numshares, buyprice) {
+		    this.symbol = symbol;
+		    this.name = name;
+		    this.price = price;
+		    this.change = change;
+		    this.percent = percent;
+		    this.numshares = numshares;
+		    this.buyprice = buyprice;
+		}
+		function getSymbolArray() {
+		    var symbolArray = new Array();
+		    for (u = 0; u < stockTickers.length; u++) {
+		        symbolArray = symbolArray.concat(stockTickers[u].symbol);
+		    }
+		    return symbolArray;
+		}
+		
+		function callServer() {
+			getDowData();
+		    var symbolArray = getSymbolArray();
+		    if (symbolArray.length == 0) {
+		        return;
+		    }
+		    var symbol = "";
+		    for (var h = 0; h < symbolArray.length - 1; h++) {
+		        symbol += symbolArray[h] + ",";
+		    }
+		    symbol += symbolArray[h];
+		    var newDate = new Date().getTime();
+
+		    customAjax("https://query.yahooapis.com/v1/public/yql?q=select+*+from+csv+where+url%3D'http%3A%2F%2Fdownload.finance.yahoo.com%2Fd%2Fquotes.csv%3Fs%3D"+encodeURIComponent(encodeURIComponent(symbol))+"%26f%3Dnsl1p2c1p%26c="+(new Date()).getTime()+"'+and+columns%3D'name%2Csymbol%2CLastTradePriceOnly%2CPercentChange%2CChange%2CPreviousClose'&format=json", responseText);
+		    
+		    try {
+		        clearTimeout(reloadId);
+		    }
+		    catch (e) {
+		    }    
+			if (refreshrate != -1) {
+				reloadId = setTimeout(callServer, refreshrate * 1000);
+		    }
+		}
+		
+		function callServerV2() {
+			getDowData();
+		    var symbolArray = getSymbolArray();
+		    if (symbolArray.length == 0) {
+		        return;
+		    }
+		    var symbol = "";
+		    for (var h = 0; h < symbolArray.length - 1; h++) {
+		        symbol += symbolArray[h] + ",";
+		    }
+		    symbol += symbolArray[h];
+		    var newDate = new Date().getTime();
+
+		    $.each(symbolArray, function(i, s) {
+		    	if(s!='^DJI') {
+			    	//customAjax("https://query.yahooapis.com/v1/public/yql?q=select+*+from+csv+where+url%3D'http%3A%2F%2Fdownload.finance.yahoo.com%2Fd%2Fquotes.csv%3Fs%3D"+encodeURIComponent(encodeURIComponent(symbol))+"%26f%3Dnsl1p2c1p%26c="+(new Date()).getTime()+"'+and+columns%3D'name%2Csymbol%2CLastTradePriceOnly%2CPercentChange%2CChange%2CPreviousClose'&format=json", responseText);
+			    	setTimeout(function() {
+			    		customAjax("https://query.yahooapis.com/v1/public/yql?q=select+*+from+json+where+url='https%3A%2F%2Fquery2.finance.yahoo.com%2Fv10%2Ffinance%2FquoteSummary%2F"+encodeURIComponent(encodeURIComponent(s))+"%3Fformatted%3Dtrue%26crumb%3D8ldhetOu7RJ%26lang%3Den-US%26region%3DUS%26modules%3DfinancialData%26corsDomain%3Dfinance.yahoo.com'&format=json", function(resp) {
+			    			responseTextV2(resp, s);
+			    		});	
+			    	}, i*100);
+		    	}
+		    });
+		    
+		    try {
+		        clearTimeout(reloadId);
+		    }
+		    catch (e) {
+		    }    
+			if (refreshrate != -1) {
+				reloadId = setTimeout(callServerV2, refreshrate * 1000);
+		    }
+		}
+		
+		function getDowData() {
+			var curQuoteTicker = "^DJI";
+            var pos = getPosition(curQuoteTicker);
+            if(pos==-1)
+            	return;  
+            $.ajax({
+			    type: 'GET',
+				url: "https://quote.cnbc.com/quote-html-webservice/quote.htm?symbols=.DJIA&output=jsonp",
+				async: false,
+			    jsonpCallback: 'dowCallback',
+			    contentType: "application/json",
+			    dataType: 'jsonp',
+			    success: function(json) {
+			       //console.log(json);
+			       dowCallback(json);
+			    },
+			    error: function(e) {
+			       console.log("Error getting Dow data : "+e.message);
+			    }
+			});
+		}
+		
+		function dowCallback(responseData) {
+			if(!(responseData && responseData["QuickQuoteResult"] && responseData["QuickQuoteResult"]["QuickQuote"]))
+				return;
+			var curQuote = responseData["QuickQuoteResult"]["QuickQuote"];
+            
+            var curQuoteTicker = curQuote["shortName"];
+            curQuoteTicker = "^DJI";
+            var pos = getPosition(curQuoteTicker);
+            if(pos==-1)
+            	return;
+        	
+            var symbol = getSymbol(pos);
+            if (symbol == "") {
+                return;
+            }
+            var nameSpan = gel(getAlphaNumericName(symbol) + "NameSpan");
+            var priceSpan = gel(getAlphaNumericName(symbol) + "PriceSpan");
+            var changeSpan = gel(getAlphaNumericName(symbol) + "ChangeSpan");
+            var percentSpan = gel(getAlphaNumericName(symbol) + "PercentSpan");
+            var tickerSpan = gel(getAlphaNumericName(symbol) + "Span");
+            
+            var tickerSpan2 = gel(getAlphaNumericName(symbol) + "Span2");
+            var gainlossSpan2 = gel(getAlphaNumericName(symbol) + "GainLossSpan2");            
+            
+            var row = gel(getAlphaNumericName(symbol) + "Row");
+            var curQuoteName = "Dow Jones Industrial Average";
+            //curQuoteName = getRefinedName(curQuoteName);
+            if (symbol == curQuoteName) {
+                curQuoteName = "Invalid symbol";
+            }
+            //curQuoteName = getInitCaps(curQuoteName);
+            if(curQuoteName.length>18)
+            	curQuoteName = curQuoteName.substring(0,18);
+            nameSpan.html(curQuoteName);
+            if (showname == 0) {
+                tickerSpan.attr("title", curQuoteName);
+                tickerSpan2.attr("title", curQuoteName);
+            }
+            setName(pos, curQuoteName);
+            var curQuotePrice = removeBold(curQuote["last"]);
+            curQuotePrice = removeImageTag(curQuotePrice);
+            curQuotePrice = removeItalics(curQuotePrice);
+            var curQuoteChange = removeBold(curQuote["change"]);
+            curQuoteChange = removeItalics(curQuoteChange);
+            try {
+                curQuotePrice = parseFloat(curQuotePrice.replace(",",""));
+                if (curQuotePrice > 1) {
+                    curQuotePrice = roundNumber(curQuotePrice);
+                    curQuotePrice = round2Decimals(curQuotePrice);
+                }
+            } catch (e) {
+                curQuotePrice = "N/A";
+            }
+            var curQuotePercentChange ="";
+            try {
+            	curQuotePercentChange = curQuote["change_pct"];
+            } catch (e) {
+					 curQuotePercentChange = "N/A";
+			}
+            curQuotePercentChange = removeBold(curQuotePercentChange);
+            curQuotePercentChange = removeItalics(curQuotePercentChange);
+            curQuotePercentChange = trim(curQuotePercentChange);
+            try {
+                curQuotePercentChange = parseFloat(curQuotePercentChange.replace(",",""));
+                if (curQuotePrice > 1) {
+                    curQuotePercentChange = roundNumber(curQuotePercentChange);
+                    curQuotePercentChange = round2Decimals(curQuotePercentChange);
+                }
+            }
+            catch (e) {
+                curQuotePercentChange = "N/A";
+            }
+            priceSpan.html(curQuotePrice);
+            
+            var curQuoteOldPrice = getPrice(pos);
+            if (curQuoteOldPrice != "N/A" && curQuotePrice != "N/A" && flashing == 1) {
+                if (curQuoteOldPrice > curQuotePrice) {
+                	priceSpan.css('color', '#990000');
+                	nameSpan.css('color', '#990000');
+                } else {
+                    if (curQuoteOldPrice < curQuotePrice) {
+                    	priceSpan.css('color', '#009900');
+                    	nameSpan.css('color', '#009900');
+                    } else {
+                    	priceSpan.css('color', '#000000')
+                    	nameSpan.css('color', '#000000')
+                    }
+                }
+            }
+            setTimeout("javascript:restoreColor('" + symbol + "');", 600);
+            setPrice(pos, curQuotePrice);
+            if (isNaN(curQuoteChange)) {
+                curQuoteChange = "N/A";
+            } else {
+            	try {
+				    curQuoteChange = parseFloat(curQuoteChange.replace(",",""));
+				    if (curQuotePrice > 1 || curQuoteChange==0) {
+				        curQuoteChange = roundNumber(curQuoteChange);
+				        curQuoteChange = round2Decimals(curQuoteChange);
+				    } else {
+				        curQuoteChange = Math.round(curQuoteChange * Math.pow(10, 3)) / Math.pow(10, 3);
+				    }
+            	} catch (e) {
+                    curQuoteChange = "N/A";
+            	}
+            }
+            setChange(pos, curQuoteChange);
+            if (curQuoteChange != 'N/A' && curQuoteChange >= 0) {
+                curQuoteChange = "+" + curQuoteChange;
+            }
+            changeSpan.html(curQuoteChange);
+            if (isNaN(curQuotePercentChange)) {
+                curQuotePercentChange = "N/A";
+            } else {
+                curQuotePercentChange = roundNumber(curQuotePercentChange);
+                curQuotePercentChange = round2Decimals(curQuotePercentChange);
+                if (curQuotePercentChange >= 0) {
+                    curQuotePercentChange = "+" + curQuotePercentChange;
+                }
+            }
+            /*
+            if (curQuotePercentChange < -3) {
+                n59c++;
+            } else {
+                if (curQuotePercentChange < -1) {
+                    n25c++;
+                } else {
+                    if (curQuotePercentChange < 0) {
+                        n02c++;
+                    } else {
+                        if (curQuotePercentChange > 3) {
+                            p59c++;
+                        } else {
+                            if (curQuotePercentChange > 1) {
+                                p25c++;
+                            } else {
+                                p02c++;
+                            }
+                        }
+                    }
+                }
+            }
+            */
+            setPercentChange(pos, curQuotePercentChange);
+            percentSpan.html("(" + curQuotePercentChange + "%)");
+            if (parseFloat(curQuotePercentChange.replace(",","")) < 0 || parseFloat(curQuoteChange.replace(",","")) < 0) {
+                changeSpan.css('color', '#990000');
+                percentSpan.css('color', '#990000');
+            } else if (parseFloat(curQuotePercentChange.replace(",","")) > 0 || parseFloat(curQuoteChange.replace(",","")) > 0) {
+                changeSpan.css('color', '#009900');
+                percentSpan.css('color', '#009900');
+            } else {
+                changeSpan.css('color', '#666666');
+                percentSpan.css('color', '#666666');
+            }
+		}
+		
+		function customAjax(myurl, callback) {
+			$.ajax({
+		        type: "GET",
+		        url: myurl,
+		        dataType: "json",
+		        success: function(data) {
+					callback(data.query.results);
+		        }
+		    });
+		}
+		
+		function fixCommas(str) {
+		    var x = 0;
+		    while (str.indexOf("\"", x) >= 0) {
+		        var y = str.indexOf("\"", x);
+		        var z = str.indexOf("\"", y + 1);
+		        var w = str.indexOf(",", y);
+		        if (w > y && w < z) {
+		            str = str.substring(0, w) + "." + str.substring(w + 1);
+		        }
+		        x = z + 1;
+		    }
+		    return str;
+		}
+		
+		function responseTextV2(responseString, symbol) {
+			var pos = getPosition(symbol);
+            if(pos==-1 || symbol=='^DJI') {
+            	return;
+            }
+            
+            var nameSpan = gel(getAlphaNumericName(symbol) + "NameSpan");
+            var priceSpan = gel(getAlphaNumericName(symbol) + "PriceSpan");
+            var changeSpan = gel(getAlphaNumericName(symbol) + "ChangeSpan");
+            var percentSpan = gel(getAlphaNumericName(symbol) + "PercentSpan");
+            var tickerSpan = gel(getAlphaNumericName(symbol) + "Span");
+            
+            var tickerSpan2 = gel(getAlphaNumericName(symbol) + "Span2");
+            var todayGainlossSpan2 = gel(getAlphaNumericName(symbol) + "TodayGainLossSpan2");
+            var gainlossSpan2 = gel(getAlphaNumericName(symbol) + "GainLossSpan2");
+            
+			console.log(symbol+" "+responseString);
+			var obj = responseString.quoteSummary.result.financialData;
+			var curQuotePrice = obj["currentPrice"]["fmt"];
+			setPrice(pos, curQuotePrice);
+			priceSpan.html(curQuotePrice);
+		}
+		
+		function responseText(responseString) {
+		    var result = responseString.row;
+		    try {
+		    	var quotes = new Array();
+		    	quotes.push(result);
+		    	if($.isArray(result)) {
+		    		quotes = result;
+		    	}
+		        var n59p = 0, n25p = 0, n02p = 0, p25p = 0, p02p = 0, p59p = 0;
+		        var n59c = 0, n25c = 0, n02c = 0, p25c = 0, p02c = 0, p59c = 0;
+		        var totalGainLoss = 0, portfolioValue = 0, todayTotalGainLoss = 0;
+		        var totalGainLossSpan2 = gel("TotalGainLossSpan2");
+		        var portfolioValueSpan2 = gel("PortfolioValueSpan2");
+		        var todayTotalGainLossSpan2 = gel("TodayTotalGainLossSpan2");
+		        
+		        for (var c = 0; c < quotes.length; c++) {
+		        
+			    	var curQuote = quotes[c];
+		            //var curQuoteDetail = fixCommas(curQuote).split(",");
+		            var curQuoteTicker = curQuote["symbol"];
+		            //curQuoteTicker = getRefinedSymbol(curQuoteTicker);
+		            var pos = getPosition(curQuoteTicker);
+		            if(pos==-1 || curQuoteTicker=='^DJI') {
+		            	continue;
+		            }
+		        	
+		            var symbol = getSymbol(pos);
+		            if (symbol == "") {
+		                continue;
+		            }
+		            var nameSpan = gel(getAlphaNumericName(symbol) + "NameSpan");
+		            var priceSpan = gel(getAlphaNumericName(symbol) + "PriceSpan");
+		            var changeSpan = gel(getAlphaNumericName(symbol) + "ChangeSpan");
+		            var percentSpan = gel(getAlphaNumericName(symbol) + "PercentSpan");
+		            var tickerSpan = gel(getAlphaNumericName(symbol) + "Span");
+		            
+		            var tickerSpan2 = gel(getAlphaNumericName(symbol) + "Span2");
+		            var todayGainlossSpan2 = gel(getAlphaNumericName(symbol) + "TodayGainLossSpan2");
+		            var gainlossSpan2 = gel(getAlphaNumericName(symbol) + "GainLossSpan2");            
+		            
+		            var row = gel(getAlphaNumericName(symbol) + "Row");
+		            var curQuoteName = curQuote["name"]
+		            //curQuoteName = getRefinedName(curQuoteName);
+		            if (symbol == curQuoteName) {
+		                curQuoteName = "Invalid symbol";
+		            }
+		            //curQuoteName = getInitCaps(curQuoteName);
+		            nameSpan.html(curQuoteName);
+		            if (showname == 0) {
+		                tickerSpan.attr("title", curQuoteName);
+		                tickerSpan2.attr("title", curQuoteName);
+		            }
+		            setName(pos, curQuoteName);
+		            var curQuotePrice = removeBold(curQuote["LastTradePriceOnly"]);
+		            curQuotePrice = removeImageTag(curQuotePrice);
+		            curQuotePrice = removeItalics(curQuotePrice);
+		            var curQuoteChange = removeBold(curQuote["Change"]);
+		            curQuoteChange = removeItalics(curQuoteChange);
+		            try {
+		                curQuotePrice = parseFloat(curQuotePrice);
+		                if (curQuotePrice > 1) {
+		                    curQuotePrice = roundNumber(curQuotePrice);
+		                    curQuotePrice = round2Decimals(curQuotePrice);
+		                }
+		            } catch (e) {
+		                curQuotePrice = "N/A";
+		            }
+		            var curQuotePercentChange ="";
+		            try {
+		            	curQuotePercentChange = curQuote["PercentChange"];
+		            } catch (e) {
+							 curQuotePercentChange = "N/A";
+					}
+		            curQuotePercentChange = removeBold(curQuotePercentChange);
+		            curQuotePercentChange = removeItalics(curQuotePercentChange);
+		            curQuotePercentChange = trim(curQuotePercentChange);
+		            try {
+		                curQuotePercentChange = parseFloat(curQuotePercentChange);
+		                if (curQuotePrice > 1) {
+		                    curQuotePercentChange = roundNumber(curQuotePercentChange);
+		                    curQuotePercentChange = round2Decimals(curQuotePercentChange);
+		                }
+		            }
+		            catch (e) {
+		                curQuotePercentChange = "N/A";
+		            }
+		            priceSpan.html(curQuotePrice);
+		            
+		            //Previous Close Price
+		            var prevClosePrice = removeBold(curQuote["PreviousClose"]);
+		            prevClosePrice = removeImageTag(prevClosePrice);
+		            prevClosePrice = removeItalics(prevClosePrice);
+		            try {
+		            	prevClosePrice = parseFloat(prevClosePrice);
+		                if (prevClosePrice > 1) {
+		                	prevClosePrice = roundNumber(prevClosePrice);
+		                	prevClosePrice = round2Decimals(prevClosePrice);
+		                }
+		            } catch (e) {
+		            	prevClosePrice = "N/A";
+		            }
+		            
+		            
+		            var curQuoteOldPrice = getPrice(pos);
+		            if (curQuoteOldPrice != "N/A" && curQuotePrice != "N/A" && flashing == 1) {
+		                if (curQuoteOldPrice > curQuotePrice) {
+		                	priceSpan.css('color', '#990000');
+		                	nameSpan.css('color', '#990000');
+		                } else {
+		                    if (curQuoteOldPrice < curQuotePrice) {
+		                    	priceSpan.css('color', '#009900');
+		                    	nameSpan.css('color', '#009900');
+		                    } else {
+		                    	priceSpan.css('color', '#000000')
+		                    	nameSpan.css('color', '#000000')
+		                    }
+		                }
+		            }
+		            setTimeout("javascript:restoreColor('" + symbol + "');", 600);
+		            setPrice(pos, curQuotePrice);
+		            if (isNaN(curQuoteChange)) {
+		                curQuoteChange = "N/A";
+		            } else {
+		            	try {
+						    curQuoteChange = parseFloat(curQuoteChange);
+						    if (curQuotePrice > 1 || curQuoteChange==0) {
+						        curQuoteChange = roundNumber(curQuoteChange);
+						        curQuoteChange = round2Decimals(curQuoteChange);
+						    } else {
+						        curQuoteChange = Math.round(curQuoteChange * Math.pow(10, 3)) / Math.pow(10, 3);
+						    }
+		            	} catch (e) {
+		                    curQuoteChange = "N/A";
+		            	}
+		            }
+		            setChange(pos, curQuoteChange);
+		            if (curQuoteChange != 'N/A' && curQuoteChange >= 0) {
+		                curQuoteChange = "+" + curQuoteChange;
+		            }
+		            changeSpan.html(curQuoteChange);
+		            if (isNaN(curQuotePercentChange)) {
+		                curQuotePercentChange = "N/A";
+		            } else {
+		                curQuotePercentChange = roundNumber(curQuotePercentChange);
+		                curQuotePercentChange = round2Decimals(curQuotePercentChange);
+		                if (curQuotePercentChange >= 0) {
+		                    curQuotePercentChange = "+" + curQuotePercentChange;
+		                }
+		            }
+		            if (curQuotePercentChange < -3) {
+		                n59c++;
+		            } else {
+		                if (curQuotePercentChange < -1) {
+		                    n25c++;
+		                } else {
+		                    if (curQuotePercentChange < 0) {
+		                        n02c++;
+		                    } else {
+		                        if (curQuotePercentChange > 3) {
+		                            p59c++;
+		                        } else {
+		                            if (curQuotePercentChange > 1) {
+		                                p25c++;
+		                            } else {
+		                                p02c++;
+		                            }
+		                        }
+		                    }
+		                }
+		            }
+		            setPercentChange(pos, curQuotePercentChange);
+		            percentSpan.html("(" + curQuotePercentChange + "%)");
+		            if (parseFloat(curQuotePercentChange) < 0 || parseFloat(curQuoteChange) < 0) {
+		                changeSpan.css('color', '#990000');
+		                percentSpan.css('color', '#990000');
+		            } else if (parseFloat(curQuotePercentChange) > 0 || parseFloat(curQuoteChange) > 0) {
+		                changeSpan.css('color', '#009900');
+		                percentSpan.css('color', '#009900');
+		            } else {
+		                changeSpan.css('color', '#666666');
+		                percentSpan.css('color', '#666666');
+		            }
+		            
+					var gainLossValue = 0;
+					var buyPrice = getBuyPrice(pos);
+					var numShares = getNumShares(pos);
+					if (isNaN(buyPrice))
+						buyPrice = 0;
+					if (isNaN(numShares))
+						numShares = 0;	
+					if (isNaN(curQuotePrice))
+						curQuotePrice = 0;				
+					gainLossValue = (curQuotePrice-buyPrice)*numShares;			
+					gainLossValue = roundNumber(gainLossValue);
+					gainLossValue = round2Decimals(gainLossValue);
+		            gainlossSpan2.html(gainLossValue);
+		            if(parseFloat(gainLossValue) < 0)
+		            	gainlossSpan2.css('color', '#990000');
+		            else if(parseFloat(gainLossValue) > 0)
+		            	gainlossSpan2.css('color', '#009900');
+					else            	
+		            	gainlossSpan2.css('color', '#000000');
+		            totalGainLoss = parseFloat(totalGainLoss) + parseFloat(gainLossValue);
+		            portfolioValue = parseFloat(portfolioValue) + parseFloat(curQuotePrice*numShares);
+		            
+		            //Todays Gain/Loss
+		            if (isNaN(prevClosePrice)) {
+		            	
+		            } else {
+			            var todayGainLossValue = 0;
+			            todayGainLossValue = (curQuotePrice-prevClosePrice)*numShares;			
+			            todayGainLossValue = roundNumber(todayGainLossValue);
+			            todayGainLossValue = round2Decimals(todayGainLossValue);
+			            todayGainlossSpan2.html(todayGainLossValue);
+			            if(parseFloat(todayGainLossValue) < 0)
+			            	todayGainlossSpan2.css('color', '#990000');
+			            else if(parseFloat(todayGainLossValue) > 0)
+			            	todayGainlossSpan2.css('color', '#009900');
+						else            	
+							todayGainlossSpan2.css('color', '#000000');
+			            todayTotalGainLoss = parseFloat(todayTotalGainLoss) + parseFloat(todayGainLossValue);
+		            }
+		            
+		        }
+		        todayTotalGainLoss = roundNumber(todayTotalGainLoss);
+		        todayTotalGainLoss = round2Decimals(todayTotalGainLoss);
+		        todayTotalGainLossSpan2.html(todayTotalGainLoss);
+				if(parseFloat(todayTotalGainLoss) < 0)
+					todayTotalGainLossSpan2.css('color', '#990000');
+				else if(parseFloat(todayTotalGainLoss) > 0)
+					todayTotalGainLossSpan2.css('color', '#009900');
+				else            	
+					todayTotalGainLossSpan2.css('color', '#000000');
+				
+		        totalGainLoss = roundNumber(totalGainLoss);
+		        totalGainLoss = round2Decimals(totalGainLoss);
+		        totalGainLossSpan2.html(totalGainLoss);
+				if(parseFloat(totalGainLoss) < 0)
+					totalGainLossSpan2.css('color', '#990000');
+				else if(parseFloat(totalGainLoss) > 0)
+					totalGainLossSpan2.css('color', '#009900');
+				else            	
+					totalGainLossSpan2.css('color', '#000000');        
+		
+		        portfolioValue = roundNumber(portfolioValue);
+		        portfolioValue = round2Decimals(portfolioValue);
+		        portfolioValueSpan2.html(portfolioValue);
+		        
+		        var total = n59c + n25c + n02c + p02c + p25c + p59c;
+		        n59p = roundNumber(n59c * 100 / total);
+		        n25p = roundNumber(n25c * 100 / total);
+		        n02p = roundNumber(n02c * 100 / total);
+		        p02p = roundNumber(p02c * 100 / total);
+		        p25p = roundNumber(p25c * 100 / total);
+		        p59p = roundNumber(p59c * 100 / total);
+		        gel("n59").css('width', n59p + "%");
+		        gel("n59").attr('title', n59c+" of "+total+" stocks in your watchlist down over 3%");
+		        gel("n59").attr('data-original-title', n59c+" of "+total+" stocks in your watchlist down over 3%");
+		        gel("n25").css('width', n25p + "%");
+		        gel("n25").attr('title', n25c+" of "+total+" stocks in your watchlist down between 1% and 3%");
+		        gel("n25").attr('data-original-title', n25c+" of "+total+" stocks in your watchlist down between 1% and 3%");
+		        gel("n02").css('width', n02p + "%");
+		        gel("n02").attr('title', n02c+" of "+total+" stocks in your watchlist down between 0% and 1%");
+		        gel("n02").attr('data-original-title', n02c+" of "+total+" stocks in your watchlist down between 0% and 1%");
+		        gel("p02").css('width', p02p + "%");
+		        gel("p02").attr('title', p02c+" of "+total+" stocks in your watchlist up between 0% and 1%");
+		        gel("p02").attr('data-original-title', p02c+" of "+total+" stocks in your watchlist up between 0% and 1%");
+		        gel("p25").css('width', p25p + "%");
+		        gel("p25").attr('title', p25c+" of "+total+" stocks in your watchlist up between 1% and 3%");
+		        gel("p25").attr('data-original-title', p25c+" of "+total+" stocks in your watchlist up between 1% and 3%");
+		        gel("p59").css('width', p59p + "%");
+		        gel("p59").attr('title', p59c+" of "+total+" stocks in your watchlist up over 3%");
+		        gel("p59").attr('data-original-title', p59c+" of "+total+" stocks in your watchlist up over 3%");
+		    }
+		    catch (e) {
+		    }
+		    
+		}
+		
+		restoreColor = function(symbol) {
+		    var priceSpan = gel(getAlphaNumericName(symbol) + "PriceSpan");
+		    var nameSpan = gel(getAlphaNumericName(symbol) + "NameSpan");
+		    priceSpan.css('color', '#000000');
+		    nameSpan.css('color', '#000000');
+		}
+		function getPrice(c) {
+		    return stockTickers[c].price;
+		}
+		function setPrice(c, newPrice) {
+		    stockTickers[c].price = newPrice;
+		}
+		function setPercentChange(c, newPercent) {
+		    stockTickers[c].percent = newPercent;
+		}
+		function getSymbol(c) {
+		    if (c < stockTickers.length) {
+		        return stockTickers[c].symbol;
+		    } else {
+		        return "";
+		    }
+		}
+		function getName(c) {
+		    return stockTickers[c].name;
+		}
+		function setName(c, newName) {
+		    stockTickers[c].name = newName;
+		}
+		function setChange(c, newChange) {
+		    stockTickers[c].change = newChange;
+		}
+		function getNumShares(c) {
+		    return stockTickers[c].numshares;
+		}
+		function getBuyPrice(c) {
+		    return stockTickers[c].buyprice;
+		}
+		function setBuyPrice(c, newBuyPrice) {
+		    stockTickers[c].buyprice = newBuyPrice;
+		}
+		function setNumShares(c, newNumShares) {
+		    stockTickers[c].numshares = newNumShares;
+		}
+		
+		function getRefinedSymbol(str) {
+		    return str.substring(1, str.length - 1);
+		}
+		function getRefinedName(str) {
+		    return str.substring(1, str.length - 1);
+		}
+		function addStockTicker() {
+		    gel("myContainer").html(""); 
+		    currentSelection=-1;
+		
+		    var newTickerString = gel("ticker").val();
+		    if (newTickerString == "Enter Symbol(s)") {
+		        return;
+		    }
+
+		    var userMessageTicker = newTickerString;
+		    gel("ticker").attr("autocomplete", "off");
+		    newTickerString = newTickerString.replace(/ /g, ",");
+		    var newTickerArray = newTickerString.split(",");
+		    var symbolArray = getSymbolArray();
+			 
+			 var symbol = "";
+			 for (var h = 0; h < symbolArray.length; h++) {
+				 symbol += symbolArray[h] + ",";
+			 }
+		 	 for (var d = 0; d < newTickerArray.length; d++) {
+				 symbol += newTickerArray[d] + ",";	
+			 }
+		 	// Check for URL too large error
+			 if(symbol.length>400) {
+			 	 gel("ticker").val("");
+			 	 
+				 gel("logger").html("<span style='color:#ff5555'>You have reached the allowable limit on the number of stocks you can add to this gadget. Please delete a few symbols and try adding again..</span>");
+				 gel("logger").css('display', '');  
+				 
+			 	 setTimeout("gel('logger').html('');gel('logger').css('display', 'none');", 5000);
+			 	 return;
+			 }
+		    
+			 for (var d = 0; d < newTickerArray.length; d++) {
+		        var currentTicker = newTickerArray[d];
+		        currentTicker = currentTicker.toUpperCase();
+		        if (currentTicker == "") {
+		            continue;
+		        }
+		        var symbolPresent = false;
+		        for (var g = 0; g < stockTickers.length; g++) {
+		            if (stockTickers[g].symbol == currentTicker) {
+		                symbolPresent = true;
+		            }
+		        }
+		        if (symbolPresent) {
+		            continue;
+		        }
+		        stockTickers.push(new StockTicker(currentTicker, "Loading..", "0", "0", "0", "0", "0.00"));
+			 }
+			 localStore.setItem("tickers", convertToString2(stockTickers));
+			 //$("#settingsModal").modal('hide');
+			 //Do not sort by symbol
+			 if(sortcol=='symbol') {
+			 	stockTickers = sortArray2(stockTickers, sortcol);
+			 }
+			 paintStockTicker();
+			 gel("ticker").val("");
+			 $("#userMessage").removeClass("hide"); 
+			 setTimeout(function() {
+				 $("#userMessage").addClass("hide");
+			 }, 5000);
+		}
+		function paintStockTicker() {
+			 if(showNews==1)
+			 {
+			 	 gel('newsContent').html('Loading news on stocks in your watch list..');
+				 gel('newsContent').css('display', '');
+				 gel('newsHorLine').css('display', '');
+				 clearTimeout(newsReloadId);
+				 callNewsServer();
+			 }
+			 if(showStrength==1)
+			 {
+			 	 gel('strengthContent').css('display', '');
+				 gel('strHorLine').css('display', '');
+			 }	 
+			 	
+		    var nameDisplay;
+		    if (showname == 1) {
+		        nameDisplay = "";
+		    } else {
+		        nameDisplay = "none";
+		    }
+		    
+		    var header = "<table class='table table-condensed table-striped table-hover' id='contentTable'>";
+		    header+= "<thead>";
+			header+= "<tr>";
+			header+="<td align=left>&nbsp;</td>";
+			header+="<td align=left style='padding-right: 0.5em;'><a title='Click to sort by symbol' href='javascript:void(0);' onclick=\"javascript:sortByColumn('symbol');\"><strong>Sym</strong></a></td>";
+			header+="<td align=left style='display:" + nameDisplay + "' ><a title='Click to sort by name' href='javascript:void(0);' onclick=\"javascript:sortByColumn('name');\"><strong>Name</strong></a></td>";
+			header+="<td align=right style='padding-right: 0.5em;'><a title='Click to sort by price' href='javascript:void(0);' onclick=\"javascript:sortByColumn('price');\"><strong>Price</strong></a></td>";
+			header+="<td align=right style='padding-right: 0.5em;'><a title='Click to sort by price change' href='javascript:void(0);' onclick=\"javascript:sortByColumn('change');\"><strong>Chng</strong></a></td>";
+			header+="<td align=right><a title='Click to sort by percentage change' href='javascript:void(0);' onclick=\"javascript:sortByColumn('percent');\"><strong>%Chng</strong></a></td>";
+			header+="</tr>";
+			header+= "</thead>";
+		    
+		    var footer = "</table>";
+		    var contentText = "<tbody>";
+		    for (i = 0; i < stockTickers.length; i++) {
+		    	contentText += "<tr data-ticker='"+getAlphaNumericName(stockTickers[i].symbol)+"' id='" + getAlphaNumericName(stockTickers[i].symbol) + "Row' onMouseOver=\"showChart('" + stockTickers[i].symbol + "')\" onMouseOut=\"hideChart('" + stockTickers[i].symbol + "')\">";
+		        contentText += "<td style='padding: 5px 0px; width:25px;' align='center' data-toggle='tooltip' data-placement='top' data-container='body' title='Delete " + stockTickers[i].symbol + "'><i class='fa fa-times-circle delete-icon pointer' onClick='javascript:deleteStockTicker(" + i + ");'></i></td>";
+		        contentText += "<td align=left style='padding-right: 0.5em; width:100px;'><span rel='popover' id='" + getAlphaNumericName(stockTickers[i].symbol) + "Span'><a href='https://finance.yahoo.com/q?s=" + stockTickers[i].symbol + "' target='blank'>" + stockTickers[i].symbol + "</a></span></td>";
+		        contentText += "<td class='handle' nowrap style='display:" + nameDisplay + "' align=left onClick=\"callMoreData('" + stockTickers[i].symbol + "')\" ><span style='display:" + nameDisplay + "' id='" + getAlphaNumericName(stockTickers[i].symbol) + "NameSpan'>" + stockTickers[i].name + "</span></td>";
+		        contentText += "<td class='handle' style='padding-right: 0.5em;' align=right onClick=\"callMoreData('" + stockTickers[i].symbol + "')\" ><span id='" + getAlphaNumericName(stockTickers[i].symbol) + "PriceSpan'>" + stockTickers[i].price + "</span></td>";
+		        contentText += "<td class='handle' style='padding-right: 0.5em;' align=right nowrap onClick=\"callMoreData('" + stockTickers[i].symbol + "')\" ><span id='" + getAlphaNumericName(stockTickers[i].symbol) + "ChangeSpan'>" + stockTickers[i].change + "</span></td>";
+		        contentText += "<td class='handle' align=right nowrap onClick=\"callMoreData('" + stockTickers[i].symbol + "')\" ><span id='" + getAlphaNumericName(stockTickers[i].symbol) + "PercentSpan'>" + stockTickers[i].percent + "</span></td>";
+		        contentText += "</tr>";
+		    }
+		    contentText += "</tbody>";
+		    gel("watchListContent").html(header + contentText + footer);
+		    $("td[align='right']").css("text-align", "right");
+		    paintPortfolio();
+		    try {
+		        clearTimeout(reloadId);
+		    }
+		    catch (e) {
+		    }
+		    callServerV2();    
+		    
+		    if(sortcol=='none') {
+		    	$("#contentTable tbody tr td.handle").css("cursor", "move");
+			    $("#contentTable tbody").sortable({
+				      cursor: "move",
+				      handle: ".handle",
+				      placeholder: "placeholder",
+				      stop: function( event, ui ) {
+				    	  var rearrangedTickers = $("#contentTable tbody tr").map(function() {
+				    		  return $(this).attr('data-ticker');
+				    	  });
+				    	  saveRearrangedTickers(rearrangedTickers);
+				      }
+				});
+		    }
+		    $('[data-toggle="tooltip"]').tooltip();
+		    //Set the font size set by the user
+		    var classNames = {'small': 'small', 'normal': '', 'large': 'lead'};
+		    $("#watchListContent, #portfolioContent").removeClass('lead small').addClass(classNames[fontsize]);
+		}
+		
+		function saveRearrangedTickers(rearrangedTickers) {
+			var newStockTickers = new Array();
+			$.each(rearrangedTickers, function(i,sym) {
+				var stockTickerObject = getStockTickerObject(sym);
+				newStockTickers.push(stockTickerObject);
+			});
+			localStore.setItem("tickers", convertToString2(newStockTickers));
+		}
+		
+		function getStockTickerObject(alphanumericSymbol) {
+			for (var g = 0; g < stockTickers.length; g++) {
+	            if (getAlphaNumericName(stockTickers[g].symbol) == alphanumericSymbol) {
+	                return stockTickers[g];
+	            }
+	        }
+			return null;
+		}
+		
+		function paintPortfolio() {
+		    var nameDisplay;
+		    if (showname == 1) {
+		        nameDisplay = "";
+		    } else {
+		        nameDisplay = "none";
+		    }	
+		    var header = "<table class='table table-condensed table-striped'>";
+			 header+= "<tr>";
+			 header+="<td align=left><a href='javascript:void(0);'><strong>Sym</strong></a></td>";
+			 header+="<td align=right><a href='javascript:void(0);'><strong>Qty</strong></a></td>";
+			 header+="<td align=right><a href='javascript:void(0);'><strong>Buy Price</strong></a></td>";
+			 header+="<td align=right><a href='javascript:void(0);'><strong>Today's Change</strong></a></td>";
+			 header+="<td align=right><a href='javascript:void(0);'><strong>Total Gain/Loss</strong></a></td>";
+			 header+="</tr>";
+		     
+			var footer = "<tr><td align='right' colspan='3'>Portfolio Value : <strong><span id='PortfolioValueSpan2'>0.00</span></strong></td> <td align='right'><strong><span id='TodayTotalGainLossSpan2'>0.00</span><strong></td>	<td align='right'><strong><span id='TotalGainLossSpan2'>0.00</span><strong></td></tr></table>";
+			var contentText = "";
+		
+		    for (i = 0; i < stockTickers.length; i++) {
+		        contentText += "<tr id='" + getAlphaNumericName(stockTickers[i].symbol) + "PortfolioRow' style='background:#ffffff;' onMouseOver='highlightColor(this);' onMouseOut='unhighlightColor(this);'>";
+		        contentText += "<td width='15%' align=left><span id='" + getAlphaNumericName(stockTickers[i].symbol) + "Span2'><a href='https://finance.yahoo.com/q?s=" + stockTickers[i].symbol + "' target='blank'>" + stockTickers[i].symbol + "</a></span></td>";
+		        contentText += "<td width='20%' align=right nowrap onclick='javascript:makeEditable(\""+getAlphaNumericName(stockTickers[i].symbol)+"numshares\", "+i+");' ><span id='span" + getAlphaNumericName(stockTickers[i].symbol) + "numshares' style='cursor:pointer;display:' >" + stockTickers[i].numshares + "</span><input type='text' class='input-small' size='4' style='text-align:right;display:none' id='text"+getAlphaNumericName(stockTickers[i].symbol)+"numshares' onblur='javascript:makeUnEditable(\""+getAlphaNumericName(stockTickers[i].symbol)+"numshares\", "+i+",\"numshares\");'></td>";
+		        contentText += "<td width='20%' align=right nowrap onclick='javascript:makeEditable(\""+getAlphaNumericName(stockTickers[i].symbol)+"buyprice\", "+i+");' ><span id='span" + getAlphaNumericName(stockTickers[i].symbol) + "buyprice' style='cursor:pointer;display:' >" + stockTickers[i].buyprice + "</span><input type='text' class='input-small' size='4' style='text-align:right;display:none' id='text"+getAlphaNumericName(stockTickers[i].symbol)+"buyprice' onblur='javascript:makeUnEditable(\""+getAlphaNumericName(stockTickers[i].symbol)+"buyprice\", "+i+",\"buyprice\");'></td>";
+		        contentText += "<td width='20%' align=right nowrap><span id='" + getAlphaNumericName(stockTickers[i].symbol) + "TodayGainLossSpan2'>0.00</span></td>";
+		        contentText += "<td width='25%' align=right nowrap><span id='" + getAlphaNumericName(stockTickers[i].symbol) + "GainLossSpan2'>0.00</span></td>";
+		        contentText += "</tr>";        
+		    }
+		    gel("portfolioContent").html(header + contentText + footer);
+		    $("td[align='right']").css("text-align", "right");
+		}
+		deleteStockTicker = function(k) {
+			loadDeleteModal(k);
+		}
+		loadDeleteModal = function(k) {
+			var name = getName(k)+' ['+getSymbol(k)+']';
+			$("#deletekey").val(k);
+			$("#deletemodalname").html(name);
+			$("#deleteModal").modal('show');	
+		}
+		confirmDeleteModal = function() {
+			var k = $("#deletekey").val();
+			stockTickers.splice(k, 1);
+			localStore.setItem("tickers", convertToString2(stockTickers));
+			//Do not sort by symbol
+			if(sortcol=='symbol') {
+		    	stockTickers = sortArray2(stockTickers, sortcol);
+			}
+		    paintStockTicker();
+		}
+		
+		function roundNumber(num) {
+		    var rlength = 2;
+		    var newnumber = Math.round(num * Math.pow(10, rlength)) / Math.pow(10, rlength);
+		    return newnumber;
+		}
+		highlightColor = function (highlightRow) {
+		    highlightRow.style.backgroundColor = '#EEEEFF';
+		}
+		unhighlightColor = function (highlightRow) {
+			highlightRow.style.backgroundColor = '#FFFFFF';
+		}
+		showChart = function (sym) {
+		    if (showchart == 0) {
+		        return;
+		    }
+		    var img = "<img src='" + cURL + sym + "'/>";
+		    gel(getAlphaNumericName(sym) + "Span").popover({'title':'', 'content': img, 'trigger':'hover', 'html': true});
+		}
+		hideChart = function (sym) {
+		    if (showchart == 0) {
+		        return;
+		    }
+		    gel("logger").html("");
+		    gel("logger").css('display', 'none');
+		}
+		function getPosition(sym) {
+			var pos = 0;
+			var arr = stockTickers;
+			for(var l = 0; l < arr.length; l++) {
+				if(arr[l].symbol.toUpperCase()==sym.toUpperCase())
+					return (l);
+			}
+			return -1;
+		}
+		
+		function processMoreData(responseArr) {
+			if(!(responseArr && responseArr.length>0))
+				return;
+			
+			var curQuote = responseArr[0];
+			
+			var newObjForModal = { row : {
+				"symbol" : "^DJI",
+				"name" : "Dow Jones Industrial Average",
+				"Open" : "Unavailable",
+				"PreviousClose" : "Unavailable",
+				"Volume" : "Unavailable",
+				"DaysRange" : "Unavailable",
+				"YearRange" : "Unavailable",
+				"LastTradeTime" : curQuote["ltt"],
+				"StockExchange" : curQuote["e"]
+			} };
+			showMoreData(newObjForModal);
+		}
+		
+		function showMoreData(responseString) {
+			var results = responseString.row;
+			$(".detailsmodalsymbol").html(results["symbol"]);
+			$(".detailsmodalname").html(results["name"]);
+			$(".detailsmodalopen").html(results["Open"]);
+			$(".detailsmodalprevclose").html(results["PreviousClose"]);
+			$(".detailsmodalvolume").html(results["Volume"]);
+			$(".detailsmodaldaysrange").html(results["DaysRange"]);
+			$(".detailsmodalyearrange").html(results["YearRange"]);
+			$(".detailsmodallasttrade").html(results["LastTradeTime"]);
+			$(".detailsmodalexchange").html(results["StockExchange"]);
+			
+			$("#detailsModal").modal('show');
+			return;
+		}
+		hideMoreDiv = function(sym) {
+		    var chartDiv = gel(getAlphaNumericName(sym) + "chartDiv");
+		    chartDiv.css('display', 'none');
+		    chartDiv.html("");    
+		    gel("logger").html("");
+		    gel("logger").css('display', 'none');
+		    
+		}
+		function hideAllMoreDivs(arr) {
+		    for (var l = 0; l < arr.length; l++) {
+		        hideMoreDiv(arr[l].symbol);
+		    }    
+		}
+		
+		function _IG_Callback(callbackFunction, parameters) {
+		  var args = arguments;
+		  return function() {
+		    var combinedArgs = Array.prototype.slice.call(arguments);
+		    callbackFunction.apply(null,
+		      combinedArgs.concat(Array.prototype.slice.call(args,1)))
+		  }
+		}
+		
+		callMoreData = function(sym) {
+			if(sym=="^DJI") {
+				//customAjax("http://query.yahooapis.com/v1/public/yql?q=SELECT%20*%20FROM%20google.igoogle.stock%20WHERE%20stock%3D%22.DJI%22&format=json&env=http%3A%2F%2Fdatatables.org%2Falltables.env", processMoreData);
+	            $.ajax({
+				    type: 'GET',
+				    url: "http://finance.google.com/finance/info?client=ig&q=.DJI",
+				    async: false,
+				    jsonpCallback: 'processMoreData',
+				    contentType: "application/json",
+				    dataType: 'jsonp',
+				    success: function(json) {
+				       processMoreData(json);
+				    },
+				    error: function(e) {
+				       console.log("Error getting Dow data : "+e.message);
+				    }
+				});
+			} else {
+		    	customAjax("https://query.yahooapis.com/v1/public/yql?q=select+*+from+csv+where+url%3D'http%3A%2F%2Fdownload.finance.yahoo.com%2Fd%2Fquotes.csv%3Fs%3D"+encodeURIComponent(encodeURIComponent(sym))+"%26f%3Dnsopvmwt1x%26c="+(new Date()).getTime()+"'+and+columns%3D'name%2Csymbol%2cOpen%2CPreviousClose%2CVolume%2CDaysRange%2CYearRange%2CLastTradeTime%2CStockExchange'&format=json", showMoreData);
+			}
+		}
+		function formatData(str) {
+		    str = str.replace("\n", "").replace("\r", "");
+		    if (str.indexOf("\"") == -1) {
+		        return str;
+		    } else {
+		        return str.substring(1, str.length - 1);
+		    }
+		}
+		function round2Decimals(n) {
+		    var stringNumber = "" + n;
+		    if (stringNumber.indexOf(".") == -1) {
+		        stringNumber += ".00";
+		    } else {
+		        if (stringNumber.substring(stringNumber.indexOf(".") + 1).length == 1) {
+		            stringNumber += "0";
+		        }
+		    }
+		    return stringNumber;
+		}
+		function sortArray(arr) {
+		    if (arr.length == 0) {
+		        return arr;
+		    }
+		    var newArray = new Array();
+		    var stA = new Array();
+		    for (var l = 0; l < arr.length; l++) {
+		        stA.push(arr[l].symbol);
+		    }
+		    stA.sort();
+		    for (var h = 0; h < stA.length; h++) {
+		        for (var o = 0; o < arr.length; o++) {
+		            if (stA[h] == arr[o].symbol) {
+		                newArray.push(arr[o]);
+		            }
+		        }
+		    }
+		    return newArray;
+		}
+		
+		function sortArray2(tickcopy, col) {
+			sortcol = col;
+		
+			var exp = 'tickers[l].'+col;
+		
+			var tickers = new Array();
+			var nA = new Array();
+			var stA = new Array();	
+			for(k=0;k<tickcopy.length;k++)
+				tickers.push(tickcopy[k]);
+		
+			for (var l = 0; l < tickers.length; l++) {
+				if(parseFloat(eval(exp)))
+					stA.push(parseFloat(eval(exp)));
+				else
+					stA.push(eval(exp));
+			}
+			if(col=='price' || col=='change' || col=='percent')
+			{
+				try{
+					stA.sort(sortNumber);
+				}catch(e) {
+					stA.sort();
+				}
+			}
+			else
+				stA.sort();
+		
+			for (var h = 0; h < stA.length; h++) {
+				for (var l = 0; l < tickers.length; l++) {
+					if(nA.contains(tickers[l]))
+						continue;
+			
+					if(parseFloat(stA[h]))
+					{
+						if (parseFloat(stA[h]) == parseFloat(eval(exp))) {					
+							nA.push(tickers[l]);
+						}
+					}
+					else
+					{
+						if (stA[h] == eval(exp)) {
+							nA.push(tickers[l]);
+						}
+					}
+				}
+			}
+			tickers = nA;
+		
+			return tickers;
+		}
+		function sortNumber(a,b)
+		{
+			if(a-b)
+				return a-b;
+			else
+				return true;
+		}
+		sortByColumn = function (col)
+		{
+			stockTickers = sortArray2(stockTickers, col);
+			paintStockTicker();
+		}
+		
+		function removeBold(str) {
+		    var boldIndexStart = str.indexOf("<b>");
+		    var boldIndexEnd = str.lastIndexOf("</b>");
+		    if (boldIndexStart == -1) {
+		        return str;
+		    }
+		    var curQuotePrice = str.substring(boldIndexStart + 3, boldIndexEnd);
+		    return curQuotePrice;
+		}
+		function removeItalics(str) {
+		    var italicIndexStart = str.indexOf("<i>");
+		    var italicIndexEnd = str.lastIndexOf("</i>");
+		    if (italicIndexStart == -1) {
+		        return str;
+		    }
+		    var curQuotePrice = str.substring(italicIndexStart + 3, italicIndexEnd);
+		    return curQuotePrice;
+		}
+		function removeImageTag(str) {
+			var imgstart = str.indexOf("<img");
+		    if (imgstart == -1) {
+		        return str;
+		    }	
+		    var csis = str.indexOf(">", imgstart);
+		    var curQuotePrice = str.substring(0,imgstart)+str.substring(csis + 1);
+		    return curQuotePrice;
+		}
+		function dismissMessage(i) {
+			localStore.setItem("promo" + i, 1);
+		}
+		function joinString(a, b) {
+		    var onelen = a.length;
+		    var twolen = (a.length + b.length > 20) ? (20 - a.length) : b.length;
+		    if (twolen != b.length) {
+		        b = b.substring(0, twolen) + "..";
+		    }
+		    var res = b + " (" + a + ")";
+		    return res;
+		}
+		boxFocus = function(val) {
+		    var newTickerString = gel("ticker").val();
+		    if (val == 0) {
+				gel("ticker").attr("autocomplete","off");    
+		        if (newTickerString == "Enter Symbol(s)") {
+		            gel("ticker").val("");
+		            gel("ticker").css('color', '#000000');
+		        }
+		    } else {
+		        if (newTickerString == "") {
+		            gel("ticker").val("Enter Symbol(s)");
+		            gel("ticker").css('color', '#AAAAAA');
+		        }
+		    }
+		}
+		function getInitCaps(nt) {
+		    var sarr = nt.split(" ");
+		    var r = "";
+		    for (i = 0; i < sarr.length; i++) {
+		        var s = sarr[i].toLowerCase();
+		        for (j = 0; j < s.length; j++) {
+		            if (j == 0) {
+		                r += s.charAt(j).toUpperCase();
+		            } else {
+		                r += s.charAt(j);
+		            }
+		        }
+		        r += " ";
+		    }
+		    r = r.substring(0, r.length - 1);
+		    return r;
+		}
+		
+		Array.prototype.contains = function(element)   {
+			for (var i = 0; i < this.length; i++)
+				if (this[i] == element)
+					return true;
+			return false;
+		}
+		
+		var view = "watchlist";
+		toggleView = function() {
+			view = gel('view').html().toLowerCase();
+			if(view=='portfolio')
+			{
+				showPortfolio();	
+				gel('view').html('Watchlist');
+				gel('profitChart').css('display', '');
+			}
+			else
+			{
+				showWatchlist();						
+				gel('view').html('Portfolio');
+				gel('profitChart').css('display', 'none');
+				gel('chartContent').css('display', 'none');
+				gel('chartHorLine').css('display', 'none');
+			}	
+			
+		}
+		
+		function showPortfolio()
+		{
+			gel("portfolioContent").css('display', '');
+			gel("watchListContent").css('display', 'none');	
+			
+		}
+		
+		function showWatchlist()
+		{
+			gel("portfolioContent").css('display', 'none');
+			gel("watchListContent").css('display', '');	
+			
+		}
+		
+		makeEditable = function (objname, i)
+		{
+			var textObj = gel('text'+objname);
+			var spanObj = gel('span'+objname);
+		
+			textObj.val(spanObj.html());
+			spanObj.css('display', 'none');
+			textObj.css('display', '');
+			textObj.select();
+		}
+		
+		makeUnEditable = function (objname, i, attr)
+		{
+			var textObj = gel('text'+objname);
+			var spanObj = gel('span'+objname);
+			if(textObj.val()=='')
+				textObj.val(0);
+		
+			var val = textObj.val();
+			if (!isNaN(val))
+			{
+				if(val>1||val<=0) {
+					val = roundNumber(val);
+					if(objname.indexOf('buyprice')!=-1)
+						textObj.val(round2Decimals(val));
+				}
+				spanObj.html(textObj.val());
+				textObj.css('display', 'none');
+				spanObj.css('display', '');
+		
+				if(attr=='buyprice')
+					setBuyPrice(i, spanObj.html());
+				else if(attr=='numshares')
+					setNumShares(i, spanObj.html());
+				paintStockTicker();
+				localStore.setItem("tickers", convertToString2(stockTickers));
+			} 
+		}
+			
+		showEmailContent = function() {
+			if(gel('emailContent').css('display')=='none')
+			{
+			 gel('emailContent').css('display', '');
+			 gel('emailHorLine').css('display', '');	 
+			}
+			else
+			{
+			 gel('emailContent').css('display', 'none');
+			 gel('emailHorLine').css('display', 'none');	 	
+			}
+		}
+		
+		sendEMail = function() {
+			if(stockTickers.length<1)
+				return;
+			var emailSection = gel('emailOption').val();
+			var ticks = '';var j=0;
+			if(emailSection=='0')
+			{	
+				for(j=0;j<stockTickers.length-1;j++)
+				{
+					ticks += stockTickers[j].symbol+', ';
+				}
+				ticks += stockTickers[j].symbol;
+				var sub = 'My Watchlist on Quick Stock Watch';
+				var body = 'Hi there, %0A%0AHere are the stocks in my watchlist on Quick Stock Watch : '+ticks+'%0A%0AThanks';
+			}
+			else
+			{
+				var tempArr = new Array();
+				for(p=0;p<stockTickers.length;p++)
+				{
+					if(stockTickers[p].numshares!='0')
+						tempArr.push(stockTickers[p]);
+				}
+				if(tempArr.length<1)
+					return;				
+				for(j=0;j<tempArr.length-1;j++)
+				{
+					ticks += 'Bought '+tempArr[j].numshares+' shares of '+tempArr[j].symbol+' at '+tempArr[j].buyprice+' - Gain/Loss: '+gel(tempArr[j].symbol+'GainLossSpan2').html()+'%0A';
+				}
+				ticks += 'Bought '+tempArr[j].numshares+' shares of '+tempArr[j].symbol+' at '+tempArr[j].buyprice+' - Gain/Loss: '+gel(tempArr[j].symbol+'GainLossSpan2').html();
+				var sub = 'My Portfolio on Quick Stock Watch';
+				var body = 'Hi there, %0A%0AHere is my portfolio on Quick Stock Watch : %0A%0A'+ticks+'%0A%0AThanks';
+			}
+			window.open('mailto:?subject='+sub+'&body='+body);	
+		}
+		
+		var numResults = 0;
+		var currentSelection = -1;
+		
+		
+		function log(str) {
+		  // gel("logger").html(gel("logger").html() + str+'<br>');
+		}
+		
+		var simpleEncoding = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+		
+		var showProfitChart = function() {
+			
+			if(gel('chartContent').css('display')=='none')
+			{
+				gel('chartContent').html('Loading your profit chart.. Please wait..');
+				gel('chartContent').css('display', '');
+				gel('chartHorLine').css('display', '');
+			}
+			else
+			{
+				gel('chartContent').css('display', 'none');
+				gel('chartHorLine').css('display', 'none');
+				return;
+			}
+			var chartData = ['s:'];
+			var legendData = [''];
+			var colorData = [''];
+			var amounts = new Array();
+			var values = new Array();
+			var symbols = new Array();
+			var maxValue = 0;
+			var maxAmountValue = 0;
+			for (var i=0; i<stockTickers.length; i++)
+			{
+				if(stockTickers[i].numshares==0)
+					continue;
+				var val = 100*(stockTickers[i].price-stockTickers[i].buyprice)/stockTickers[i].buyprice;		
+				val = roundNumber(val);
+				val = round2Decimals(val);
+				values.push(val);
+				symbols.push(stockTickers[i].symbol);
+				if(Math.abs(val)>maxValue)
+					maxValue = Math.abs(val);
+				var amount = stockTickers[i].numshares*stockTickers[i].buyprice;		
+				amount = roundNumber(amount);
+				amount = round2Decimals(amount);
+				amounts.push(amount);
+				if(Math.abs(amount)>maxAmountValue)
+					maxAmountValue = Math.abs(amount);		
+			}
+			for (var i=0; i<values.length; i++) {
+				var currentValue = amounts[i];
+				currentValue = Math.abs(currentValue);
+				if (!isNaN(currentValue) && currentValue >= 0) {
+					chartData.push(simpleEncoding.charAt(Math.round((simpleEncoding.length-1) * currentValue / maxAmountValue)));
+				}
+				else {
+					chartData.push('_');
+				}
+				
+				if(i==0) {
+					legendData.push(symbols[i]+'('+values[i]+'%)');
+					if(values[i]<0)
+						colorData.push(convertToHex(values[i], maxValue)+'0000');
+					else
+						colorData.push('00'+convertToHex(values[i], maxValue)+'00');
+				}
+				else {
+					legendData.push('|'+symbols[i]+'('+values[i]+'%)');
+					if(values[i]<0)
+						colorData.push(','+convertToHex(values[i], maxValue)+'0000');
+					else
+						colorData.push(','+'00'+convertToHex(values[i], maxValue)+'00');
+				}
+					
+			}
+			
+			var html = 'You do not have any stocks in your portfolio. Please edit your portfolio by adding the number of shares purchased and price paid for the stocks you own and then try again. Click on the number in the Qty and BuyPrice columns to edit.';
+			if(values.length!=0)	
+			{
+				returnVal = '&chd='+chartData.join('')+'&chl='+legendData.join('')+'&chco='+colorData.join('');
+				var url = 'http://chart.apis.google.com/chart?cht=p&chs=320x100&chco=00ff00'+returnVal;
+				var imgobj = new Image();
+				imgobj.src = url;
+				imgobj.onload = function(){
+					html = '<img border="0" src="'+imgobj.src+'" alt="Your Portfolio Chart" />';
+					gel('chartContent').html(html);	
+						
+				}
+				imgobj.onerror = function(){
+					html = 'Sorry, Unable to load your portfolio chart at this time. Please try again later.';
+					gel('chartContent').html(html);	
+						
+				}		
+			}
+			else
+				gel('chartContent').html(html);	
+				
+		}
+		
+		function convertToHex(value, maxValue) { 	
+			var val = 255-(Math.abs(value)*153/maxValue);	
+			return Math.round(val).toString(16);
+		}
+		
+		function loadSettings() {
+			$("#inputFontSize > select").val(localStore.getItem("fontsize"));
+			$("#inputSortColumn > select").val(localStore.getItem("sortcol"));
+			$("#inputShowCharts > select").val(localStore.getItem("showchart"));
+			$("#inputShowStockName > select").val(localStore.getItem("showname"));
+			$("#inputHighlighting > select").val(localStore.getItem("flashing"));
+			//console.log("loading settings from storage");
+			$("#importstocklist").html(getSymbolArray().join(', '));
+		}
+		
+		function saveSettings() {
+			localStore.setItem("fontsize", $("#inputFontSize > select").val());
+			localStore.setItem("sortcol", $("#inputSortColumn > select").val());
+			localStore.setItem("showchart", $("#inputShowCharts > select").val());
+			localStore.setItem("showname", $("#inputShowStockName > select").val());
+			localStore.setItem("flashing", $("#inputHighlighting > select").val());
+			//console.log("saved settings to storage");
+			initWidget();
+			paintStockTicker();
+		}
+		
+		if(userId==null) {
+			initWidget();
+			paintStockTicker();
+		} else {
+			getUserPrefs(function() {
+				initWidget();
+				paintStockTicker();
+			});
+			$("#fullscreen").attr("href", "https://udaysasigadgets.github.io/quickStockWatch.html?subscriptionid="+userId);
+		}
+		 
+		
+		$("#tickeraddbtn").click(addStockTicker);
+		$("#newsbtn").click(showNewsContent);
+		$("#view").click(toggleView);
+		$("#strengthbtn").click(showStrengthContent);
+		$("#profitChart").click(showProfitChart);
+		$("#emailbtn").click(showEmailContent);
+		$("#settingsloadbtn").click(loadSettings);
+		$(".settingssavebtn").click(saveSettings);
+		$("#deletesavebtn").click(confirmDeleteModal);
+		$("#messagebtn").click(function() {
+			$("#messageModal").modal('show');
+		});
+		$("#tipsbtn").click(function() {
+			$("#tipsModal").modal('show');
+		});
+		
+		
+		$("#problememail").click(function() {
+			var sub = "Problem report on Quick Stock Watch";
+			var body = "I am having problems using the gadget. %0A%0A"+debugBuf.join(",")+"%0A%0A"+navigator.appVersion;
+			window.open("mailto:udaysasi+feedback@gmail.com?subject="+sub+"&body="+body);
+		})
+
+		autocomplete = $('#ticker').typeahead({source: []})
+        	.on('keyup', function(ev){
+	            ev.stopPropagation();
+	            ev.preventDefault();
+            	if( $.inArray(ev.keyCode,[40,38,9,13,27]) === -1 ){
+                	var self = $(this);
+                	self.data('typeahead').source = [];
+ 	               	if( !self.data('active') && self.val().length > 0){
+	                    self.data('active', true);
+	                    //console.log("Locked for further inputs");
+	                    searchTicker();
+    	            } 
+            	}
+ 	                         
+        });
+		
+	});
+	</script>
+</body>
+</html>

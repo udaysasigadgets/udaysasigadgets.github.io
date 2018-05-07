@@ -2,34 +2,14 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Fancy borders</title>
+<title>Video Test</title>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <style>
-	.fancy {
-	}
-	.padded {
-		border: 1px solid #00f;
-		padding: 10px;
-	}
-	.outer {
-		border: 5px solid #999;
-		border-radius : 5px;
-	}
-	.outermost {
-		border: 5px solid #eee;
-		border-radius : 5px;
-	}
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
-
-	<div class="fancy padded hide">
-		This is some sample html<br>
-		<b>bold text</b> <i>some more styling</i>
-		<div style="color:#0f0">I am green</div>
-	</div>
 
 	<div id="log"></div>
 	
@@ -40,18 +20,6 @@
     
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$(".fancy").each(function(){
-				/*
-				var newDiv = $("<div>").insertBefore($(this));
-				newDiv.addClass("outer").html($(this).html());
-				$(this).remove();
-				*/
-				var outermostDiv = $("<div>").addClass("outermost").insertBefore($(this));
-				var outerDiv = $("<div>").addClass("outer").appendTo(outermostDiv);
-				outerDiv.html($(this).html());
-				$(this).remove();
-				
-			});
 			
 		});
 

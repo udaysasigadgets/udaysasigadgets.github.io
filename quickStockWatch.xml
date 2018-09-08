@@ -35,7 +35,7 @@
 		prefs.set('subscriptionid', userId);
 	}
 	
-	self.location.href="http://www.quickstockwatch.com/quickStockWatch.html?subscriptionid="+userId;
+	self.location.href="https://qsw.herokuapp.com/quickStockWatch.html?subscriptionid="+userId;
 	
 	</script>
 

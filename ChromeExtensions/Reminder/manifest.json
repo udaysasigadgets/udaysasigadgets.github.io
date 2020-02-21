@@ -1,0 +1,14 @@
+{
+  "name": "Hydrate",
+  "version": "1.0",
+  "manifest_version": 1,
+  "description": "Reminder to be hydrated",
+  "browser_action": {
+    "default_icon": "water.png",
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "notifications"
+  ],
+"background": { "scripts": ["background.js"] }
+}

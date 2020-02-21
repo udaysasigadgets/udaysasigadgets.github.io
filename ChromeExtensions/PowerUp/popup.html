@@ -1,0 +1,174 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Cricket Live Notifications</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="switchery.min.css" />
+    <!-- Custom Fonts -->
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <style>
+      body {
+        min-width: 357px;
+        overflow-x: hidden;
+      }
+      .text {
+      	font-family: Arial;
+      	font-size : 12px;
+      }
+      .hide {
+      	display: none;
+      }
+      .summary {
+      	border-bottom:1px dashed gray;
+      	text-align: center;
+      	padding: 10px 5px;
+        color:#489E07;
+      }
+      .charging-details {
+        border-bottom:1px dashed gray;
+        text-align: center;
+        padding: 10px 5px;
+        color:#489E07;
+      }
+      .charginginfo-heading {
+        font-size:125%;
+      }
+      hr {
+        margin: 5px;
+      }
+
+      .available-stations-heading {
+        font-size:150%;
+        text-transform: uppercase;
+        text-decoration: underline;
+      }
+      .station {
+        padding: 10px 5px;
+      }
+      .station:hover {
+        background-color: #EEEEEE;
+      }
+      .station-img {
+        float:left;
+      }
+      .station-img img {
+        width: 48px;
+      }
+      .station-content {
+        text-align: left;
+        margin-left: 64px;
+      }
+      .station-name {
+        font-size: 125%;
+      }
+      .station-address {
+        color: #BBBBBB;
+        font-size: 90%
+      }
+      .station-port-info {
+        font-size: 95%;
+      }
+      .no-stations-available-msg {
+        padding:10px 25px;
+      }
+      .notif-wrapper {
+        padding:5px;
+        color:#489E07;
+        font-size: 14px;
+      }
+      .switchery-small {
+        height: 5px;
+        box-shadow: none;
+      }
+      .switchery-small>small {
+        top: -4px;
+      }
+      #audio-notification {
+        width: 16px;height:16px;
+      }
+      #audio-notification.active {
+        background: url('activenotification.png');
+      }
+      #audio-notification.inactive {
+        background: url('inactivenotification.png');
+      }
+      .no-padding {
+        padding: 0px;
+      }
+    </style>
+
+  </head>
+  <body>
+      <div class="clearfix">
+        
+      <div class="dropdown pull-right">
+        <button class="btn btn-success btn-xs dropdown-toggle hide" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+          Share this plugin
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdownMenu1">
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="mailto:?subject=Cricket Live Notifications&body=I found this cool plugin to keep track of any ongoing Cricket match around the world. https://chrome.google.com/webstore/detail/cricket-live-notification/ipaloicnjcpbhbbdffpbfgnabnmniikk Thought you'd like it too." target="share"><img src="email.png" height="12" width="12" style="margin-right:5px"/>Email</a></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.facebook.com/sharer/sharer.php?u=https://chrome.google.com/webstore/detail/cricket-live-notification/ipaloicnjcpbhbbdffpbfgnabnmniikk" target="share"><img src="facebook.png" height="12" width="12" style="margin-right:5px"/>Facebook</a></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="http://www.twitter.com/share?url=https://chrome.google.com/webstore/detail/cricket-live-notification/ipaloicnjcpbhbbdffpbfgnabnmniikk" target="share"><img src="twitter.png" height="12" width="12" style="margin-right:5px"/>Twitter</a></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="https://plus.google.com/share?url=https://chrome.google.com/webstore/detail/cricket-live-notification/ipaloicnjcpbhbbdffpbfgnabnmniikk" target="share"><img src="gplus.png" height="12" width="12" style="margin-right:5px"/>Google Plus</a></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.linkedin.com/cws/share?url=https://chrome.google.com/webstore/detail/cricket-live-notification/ipaloicnjcpbhbbdffpbfgnabnmniikk" target="share"><img src="linkedin.png" height="12" width="12" style="margin-right:5px"/>LinkedIn</a></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="http://www.reddit.com/submit?url=https://chrome.google.com/webstore/detail/cricket-live-notification/ipaloicnjcpbhbbdffpbfgnabnmniikk" target="share"><img src="reddit.png" height="12" width="12" style="margin-right:5px"/>Reddit</a></li>
+        </ul>
+      </div>
+      <span class="notif-wrapper">
+          <input type="checkbox" class="js-switch"/> Visual Notification
+      </span>
+      <span class="notif-wrapper">
+          <input type="checkbox" class="js-switch2"/> Audio
+      </span>
+
+      </div>
+      <a href=""></a> <!--Hack-->
+  		<div class="text">
+  			<div class="summary">
+            <span class="available-stations-heading">Available Stations</span><br>
+            <div> Your position in Queue: <span id="queue-position"></span></div>
+            <div id="availableStations" style="color:#489E07"><img src="loading.gif"> Loading..</div>
+  			</div>
+        <div class="charging-details hide">
+            <span class="charginginfo-heading"><i class="fa fa-battery-three-quarters"></i> Your vehicle is currently charging <b id="charging-percent"></b></span><br>
+            <div id="charginginfo" class="row">
+              <div class="col-xs-4 text-center no-padding">
+                <h5>Power</h5>
+                <h4 id="charging-power"><img src="loading.gif"></h4>
+              </div>
+              <div class="col-xs-4 text-center no-padding">
+                <h5>Energy</h5>
+                <h4 id="charging-energy"><img src="loading.gif"></h4>
+              </div>
+              <div class="col-xs-4 text-center no-padding">
+                <h5>Duration</h5>
+                <h4 id="charging-duration"><img src="loading.gif"></h4>
+              </div>
+            </div>
+        </div>  
+  			<div style="font-size:85%;padding:10px 5px;color:#999999">
+		  		Thank you for downloading <span style="font-weight:bold">PowerUp</span>. <a href="options.html" target="options">Customize your notifications here</a>. Please share this app with your friends.
+		  		<br><br>
+		  		Designed & Developed by <a href="mailto:udaysasi+feedback@gmail.com?subject=Feedback : PowerUp" target="_blank">Uday Kumar Pyda</a>
+
+	  		</div> 
+  		</div>
+
+
+    <!--
+      - JavaScript and HTML must be in separate files: see our Content Security
+      - Policy documentation[1] for details and explanation.
+      -
+      - [1]: http://developer.chrome.com/extensions/contentSecurityPolicy.html
+     -->
+     <!-- Bootstrap Core JavaScript -->
+     <!-- <script src="google-analytics-bundle.js"></script> -->
+     <script src="jquery-1.9.1.min.js"></script>
+     <script src="js/bootstrap.min.js"></script>
+     <script src="switchery.min.js"></script>
+     <script src="popup.js"></script>
+  </body>
+</html>
+

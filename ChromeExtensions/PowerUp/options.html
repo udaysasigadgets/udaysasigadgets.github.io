@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>PowerUp</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-switch.css" rel="stylesheet">
+    <link href="css/bootstrap-select.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/grayscale.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+<link rel="stylesheet" href="switchery.css" />
+<script src="switchery.js"></script>
+
+</head>
+
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+
+    <!-- Intro Header -->
+    <header class="intro">
+        <div class="intro-body">
+            <div class="container">
+                <div class="row" style="margin-top:10px">
+                    <div class="col-md-12 text-center" style="color: #07a6eb;padding: 20px">
+                        <h2 style="margin:10px 0px">PowerUp - Options</h2>
+                    </div>
+                    <div class="col-sm-8 text-left" style="margin-top:50px;padding-right:5%">
+                    	<div class="step">Preferred Location</div>
+                        <div class="searchbox pull-right">
+                            <div class="input-group custom-search-form">
+                                <input id="searchinput" type="text" class="form-control" placeholder="Search..">
+                                <span class="input-group-btn">
+                                    <button class="text-muted" type="button"><i class="fa fa-search"></i></button>
+                                </span>
+                            </div>
+                        </div>
+                        <div>Pan and Zoom the map to the area you are interested in..</div>
+                    	<div id="map"></div>
+                    </div>	
+                    <div class="col-sm-4 text-left" style="margin-top:50px">
+                    	<span class="step">Login</span>  (optional)
+                    	<div>
+                            <div>Helps if you like to keep track of your car charging status</div>
+                            <hr>
+                            <span style="position: absolute;right: 20px;top: 5px;"><button type="button" id="loginclearprefs" class="pull-right text-muted clearprefs" style="background: none;border: none;" title="Clear Login Details"><i class="fa fa-times-circle"></i></button></span>
+                            <div class="form-horizontal clearfix">
+                              <div class="form-group">
+                                <label for="ce" class="col-sm-3 control-label">Username</label>
+                                <div class="col-sm-offset-1 col-sm-8">
+                                  <input type="email" class="form-control powerupinput" id="ce" placeholder="Enter your email address">
+                                </div>
+                              </div>
+                              <div class="form-group">
+                                <label for="cp" class="col-sm-3 control-label">Password</label>
+                                <div class="col-sm-offset-1 col-sm-8">
+                                  <input type="password" class="form-control powerupinput" id="cp" placeholder="Enter your password">
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+                        <br><br>
+                        <span class="step">Notifications</span> <small class="text-primary" style="padding-left:10px">(Coming soon)</small>
+                        <div>
+                            <div>Enter your phone number if you like to receive text messages when a charging station is available</div>
+                            <hr>
+                            <form class="form-horizontal">
+                              <div class="form-group">
+                                <label for="cph" class="col-sm-4 control-label">Phone Number</label>
+                                <div class="col-sm-8">
+                                  <input type="tel" class="form-control powerupinput" id="cph" placeholder="Enter your phone number"> <span style="position: absolute;right: 20px;top: 5px;"><button type="button" id="phoneclearprefs" class="text-muted clearprefs" style="background: none;border: none;"><i class="fa fa-times-circle"></i></button></span>
+                                </div>
+                              </div>
+                            </form>
+                        </div>
+                        
+
+                    </div>	
+                </div>
+
+            </div>
+        </div>
+        <div class="clearfix"/>
+        <div class="text-center" style="display:table-row">
+        	<small style="bottom: 5px;position: absolute;right: 10px;">Designed and Developed by <a href="https://www.linkedin.com/in/udaysasi" target="_blank">Uday Kumar Pyda</a></small>
+        </div>
+    </header>
+
+
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap-switch.js"></script>
+    <script src="js/bootstrap-select.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&key=AIzaSyAx0aCb5RuQoTwXA782Yh2DTPXNo1ytx7E"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="js/grayscale.js"></script>
+
+
+</body>
+
+</html>

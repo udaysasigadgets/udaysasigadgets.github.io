@@ -1,0 +1,12 @@
+{
+  "name": "Udays First Extension",
+  "version": "1.0",
+  "description": "Routine Hello World Extension",
+  "browser_action": {
+    "default_icon": "stockIcon.png",
+    "popup": "blanktd.html"
+  },
+  "permissions": [
+    "http://api.flickr.com/"
+  ]
+}

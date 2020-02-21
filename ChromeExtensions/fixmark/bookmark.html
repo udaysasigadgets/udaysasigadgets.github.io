@@ -1,0 +1,296 @@
+
+
+<style>
+body {
+  min-width:500px;
+  #height:300px;
+  #overflow-x:hidden;
+  #overflow-y:scroll;
+  font-family: Arial, Serif;
+  font-size: smaller;
+}
+
+a.original{
+	color:#0000FF;
+}
+
+a.duplicate {
+	color:#ff0000;
+}
+
+a {
+	text-decoration:none;
+}
+
+a:hover{
+	text-decoration:underline;
+}
+div.outer {
+	padding-left:3px;
+	display:table;
+	position:relative;
+	margin-left:0px;
+	margin-right:0px;
+}
+
+div.inner {
+	margin-left:15px;
+	margin-right:15px;
+	display:table;
+	position:relative;
+}
+
+
+</style>
+
+<div id="logDiv" style="display:;"></div>
+<div id="bookmarkDiv" style="display:none;"><font color="#ff6666" size="-1"><b>All duplicates are marked in Red</b></font></div>
+<script language="Javascript" src="hashtable.js"></script>
+<script>
+
+var indent = -1;
+var color="dddddd";
+var sequence = 100;
+var duplicateTable = new Hashtable();
+
+function dumpBookmarks() {
+	var bookmarkTreeNodes = chrome.bookmarks.getTree(
+	  function(bookmarkTreeNodes) {
+		document.getElementById("bookmarkDiv").innerHTML += dumpTreeNodes(bookmarkTreeNodes);
+		//writeLog(duplicateTable.toString());
+		updateDuplicateMessage();
+	  });
+}
+
+function updateDuplicateMessage() {
+	var origNodes = getElementsByClassName('original', 'bookmarkDiv');
+	var dupNodes = getElementsByClassName('duplicate', 'bookmarkDiv');
+	writeLog('Number of bookmarks : '+(origNodes.length+dupNodes.length));
+	var actions = '';
+	actions += '<a href="#" onClick="toggleDiv(\'bookmarkDiv\');">View details</a>'
+	if(dupNodes.length==0){
+		writeLog('Well done organizing your bookmarks. No duplicate bookmarks found');
+	} else {
+		writeLog('Number of duplicates found : '+dupNodes.length);
+		actions += '&nbsp;&nbsp;<a href="#" onClick="deleteDuplicates();">Delete duplicates</a>'
+	}
+
+	actions += '&nbsp;&nbsp;<a href="mailto:udaysasi+feedback@gmail.com" target="newwin">Feedback</a>'
+	writeLog(actions);
+
+	/*
+	for(var p=0;p<origNodes.length;p++) {
+		var url = origNodes[p].title;
+		var content = duplicateTable.get(url);
+		var count = content.length;
+		count--;
+		if(count>0)
+			origNodes[p].innerHTML += ' - '+count+(count==1?' duplicate':' duplicates');
+	}
+	*/
+}
+
+function getElementsByClassName(classname, nodeId)  {
+	 if(!node) node = document.getElementsByTagName("body")[0];
+	 var a = [];
+	 var re = new RegExp('\\b' + classname + '\\b');
+	 var node = document.getElementById(nodeId);
+	 var els = node.getElementsByTagName("*");
+	 for(var i=0,j=els.length; i<j; i++)
+		  if(re.test(els[i].className))a.push(els[i]);
+	 return a;
+}
+
+function dumpTreeNodes(bookmarkNodes) {
+	var list = '';
+	var i;
+	for (var i=0; i<bookmarkNodes.length; i++) {
+	  list += dumpNode(bookmarkNodes[i]);
+	}
+	return list;
+}
+
+function dumpNode(bookmarkNode) {
+	var li = '';
+	if (bookmarkNode.children && bookmarkNode.children.length > 0) {
+		indent++;
+		//color=getNewColor();
+		color="#ffffff"
+		var divId = getNewColor();
+		li += '<div class="outer" style="display:;background-color:#'+color+';">';
+		var title = bookmarkNode.title;
+		if(bookmarkNode.id==0)
+			title="Browser Root";
+		li += '<img title="Expand/Collapse" src="collapse.png" onClick="toggleDiv(\''+divId+'\'); changeImage(this);">&nbsp;<u>'+addIndent()+title+'</u>&nbsp;&nbsp;<img src="delete.png" title="Click to delete folder" onClick="deleteBookmarks(\''+bookmarkNode.id+'\');"><br>';
+		li += '<div class="inner" id="'+divId+'" style="display:;background-color:#'+color+';">';
+		li += dumpTreeNodes(bookmarkNode.children);
+		li+= '</div>';
+		li+= '</div>';
+		indent--;
+	} else {
+		var content = duplicateTable.get(bookmarkNode.url);
+
+		if(bookmarkNode.url =='http://glms.cisco.com/ems')
+			k=0;
+
+		//var count = duplicateTable.get(bookmarkNode.url);
+		if(content && content.length>0) {
+			//count++;
+			content = content.concat(bookmarkNode.id);
+			li = '<div class="highlight" style="display:;" id="'+sequence+'" title="'+bookmarkNode.url+'">'+addIndent()+'<a class="duplicate" href=\'>'+bookmarkNode.url+'\'>'+bookmarkNode.title+'</a>&nbsp;&nbsp;<img src="delete.png" title="Click to delete" onClick="deleteBookmark(\''+bookmarkNode.id+'\', \''+sequence+'\');"></div>';
+		}
+		else {
+			content = new Array();
+			content = content.concat(bookmarkNode.id);
+			//count=1;
+			li = '<div class="highlight" style="display:" id="'+sequence+'" title="'+bookmarkNode.url+'">'+addIndent()+'<a class="original" href=\'>'+bookmarkNode.url+'\'>'+bookmarkNode.title+'</a>&nbsp;&nbsp;<img src="delete.png" title="Click to delete" onClick="deleteBookmark(\''+bookmarkNode.id+'\', \''+sequence+'\');"></div>';
+		}
+		duplicateTable.put(bookmarkNode.url, content);
+
+		sequence++;
+	}
+
+	return li;
+}
+
+function changeImage(imgObj) {
+	if(imgObj.src.indexOf("expand.png")!=-1)
+		imgObj.src = imgObj.src.replace("expand.png", "collapse.png");
+	else
+		imgObj.src = imgObj.src.replace("collapse.png","expand.png");
+}
+
+function resetData() {
+	document.getElementById("bookmarkDiv").innerHTML = '';
+	document.getElementById("logDiv").innerHTML = '';
+	indent = -1;
+	sequence = 100;
+	duplicateTable = new Hashtable();
+}
+function deleteDuplicates(){
+
+	var dupNodes = getElementsByClassName('duplicate', 'bookmarkDiv');
+	var count = dupNodes.length;
+	//var answer = confirm('You are about to delete '+count+' duplicate bookmarks. This operation cannot be undone. Are you sure you want to continue?');
+	//if(!answer)
+	//	return;
+	var keys = duplicateTable.getKeys();
+	var j=0;
+	for(var k=0;k<keys.length;k++) {
+		var key = keys[k];
+		var content = duplicateTable.get(key);
+		if(content && content.length>0) {
+			for(var l=0;l<content.length;l++){
+				if(l==0) {
+					//writeLog('Original : '+content[l]);
+				} else {
+					//writeLog('Duplicate : '+content[l] +' - To be deleted');
+					var bookmarkNodeId = content[l];
+					chrome.bookmarks.remove(bookmarkNodeId);
+					j++;
+					//writeLog('Duplicate : '+content[l] +' - To be deleted');
+				}
+			}
+		}
+	}
+	if(j>0)
+		writeLog(j+(j==1?' bookmark':' bookmarks')+' deleted successfully');
+	//resetData();
+	//dumpBookmarks();
+}
+
+function deleteBookmark(bookmarkNodeId, sequence) {
+	//alert('Deleting bookmark with id : '+bookmarkNodeId);
+	chrome.bookmarks.remove(bookmarkNodeId);
+	document.getElementById(sequence).style.display="none";
+	//resetData();
+	//dumpBookmarks();
+}
+
+function deleteBookmarks(bookmarkNodeId, sequence) {
+	//alert('Deleting bookmark tree with id : '+bookmarkNodeId);
+	chrome.bookmarks.removeTree(bookmarkNodeId);
+	//document.getElementById(sequence).style="display:none";
+	resetData();
+	dumpBookmarks();
+}
+
+function getNewColor() {
+	var red = getRandomNumber(200,250);
+	var green = getRandomNumber(200,250);
+	var blue = getRandomNumber(200,250);
+	return decimalToHex(red)+decimalToHex(green)+decimalToHex(blue);
+}
+
+function getRandomNumber(minVal, maxVal) {
+	return minVal+Math.floor(Math.random()*(maxVal-minVal));
+}
+
+function decimalToHex(d) {
+	var k = d.toString(16);
+	if(k.length<2)
+		k = '0'+k;
+	return k;
+}
+
+function addIndent() {
+	var indentText = '';
+	//for(var i=0;i<indent;i++)
+	//	indentText+= '0';
+	return indentText;
+}
+
+function toggleDiv(divId) {
+	if(document.getElementById(divId).style.display=='none') {
+		document.getElementById(divId).style.display='';
+		//alert('Showing the div');
+	}
+	else {
+		document.getElementById(divId).style.display='none';
+		//alert('Hiding the div');
+	}
+	document.getElementById(divId).innerHTML += '';
+}
+
+/*
+function listBookmarks() {
+	var bookmarksText = "";
+
+	var bookmarkTreeNodes = chrome.bookmarks.getTree(function(bookmarkTreeNodes) {
+        for(var p=0;p<bookmarkTreeNodes.length;p++) {
+        	bookmarksText += getNodeDetails(bookmarkTreeNodes[p]);
+        }
+        document.getElementById("bookmarkDiv").innerHTML = bookmarksText;
+      });
+}
+
+function getNodeDetails(node) {
+	var nodeContent = '';
+	if(node.children && node.children.length > 0) {
+		var children1 = chrome.bookmarks.getChildren(node.id, function(children) {
+			for(var p=0;p<children.length;p++) {
+				nodeContent += '<br>'+node.id+'->'+p+') '+children[p].title+' : '+children[p].parentId;
+			}
+		});
+	}
+	return nodeContent;
+}
+*/
+
+setTimeout("dumpBookmarks();", 200);
+
+
+//////////////////////////////////
+
+function writeLog(str) {
+	document.getElementById("logDiv").innerHTML += str+'<br>';
+}
+
+//////////////////////////////////
+
+</script>
+
+
+
+
+<!-- stockTiker icon : Courtesy http://www.visualpharm.com/ -->

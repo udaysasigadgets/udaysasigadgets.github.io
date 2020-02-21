@@ -1,0 +1,139 @@
+<!doctype html>
+<html>
+  <head>
+    <title>FIFA 2018 World Cup Live Notifications</title>
+    <link rel="stylesheet" href="bootstrap.css">
+    <style>
+      body {
+        min-width: 400px;
+        overflow-x: hidden;
+        padding: 20px;
+      }
+      .text {
+      	font-family: Arial;
+      	font-size : 14px;
+      }
+      .hide {
+      	display: none;
+      }
+      .summary {
+      	border:1px solid lightgray;
+      	text-align: center;
+      	padding-top: 15px;
+	    background-color: #F6F6F6;
+	    color: #AAAAAA;
+	    margin-bottom: 20px;
+      }
+      .ongoing-summary {
+      	border:1px solid #b8fcbe;
+      	text-align: center;
+      	padding-top: 15px;
+	    background-color: #eaffec;
+	    color: #666666;
+      }
+      .small-flag {
+     	width: 24px;
+	    margin-right: 10px;
+	    margin-bottom: 3px;
+      }
+      .score {
+      	font-size: 24px;
+      }
+      .footer-text {
+		font-size: 11px;
+	  }
+	  .strong {
+	  	font-weight: bold;
+	  	color: #222222;
+	  }
+	  .pointer {
+	  	cursor: pointer;
+	  }
+	  .notif-wrapper {
+        padding:5px;
+        font-size: 14px;
+      }
+      .switchery-small {
+        height: 5px;
+        box-shadow: none;
+      }
+      .switchery-small>small {
+        top: -4px;
+      }
+      #audio-notification {
+        width: 16px;height:16px;
+      }
+      #audio-notification.active {
+        background: url('activenotification.png');
+      }
+      #audio-notification.inactive {
+        background: url('inactivenotification.png');
+      }
+      .mycheckbox {
+	    width: 17px;
+	    height: 17px;
+	    border: 2px solid darkgray;
+	    border-radius: 20px;
+	    display: inline-block;
+	    cursor: pointer;
+	    margin-bottom: -3px;
+	    margin-right: 4px;
+      }
+      .mycheckbox.selected {
+		background-color: green;
+	    box-shadow: 0 0 10px green;
+	    border: 2px solid green;
+      }
+      hr {
+	    margin-top: 10px;
+	    margin-bottom: 10px;
+	  }
+    </style>
+
+    <!--
+      - JavaScript and HTML must be in separate files: see our Content Security
+      - Policy documentation[1] for details and explanation.
+      -
+      - [1]: http://developer.chrome.com/extensions/contentSecurityPolicy.html
+     -->
+     
+  </head>
+  <body>
+  		<div class="text">
+  			<div style="margin-bottom:10px;">
+  				<span class="notif-wrapper">
+			    	<div class="mycheckbox" id="visual"></div> Visual notifications
+			    </span>
+			    <span class="notif-wrapper">
+			        <div class="mycheckbox" id="audio"></div> Audio notifications
+			    </span>
+  			</div>
+  			<hr>
+  			<div id="completedMatchSummary" style="color:#a94442;" class="hide">
+  			</div>
+  			<div id="liveMatchSummary" style="color:#3c763d;" class="summary hide">
+  			</div>
+  			<div id="upcomingMatchSummary" style="color:#428bca;" class="hide">
+  			</div>
+  			<div id="noMatchSummary" style="color:#31708f;" class="summary hide">
+  				No more matches for the day
+  			</div>
+  			<div style="font-size:85%;color:#999999">
+		  		Designed & Developed by <a href="https://www.linkedin.com/in/udaysasi/" target="_blank">Uday Kumar Pyda</a>
+		  		<span style="float:right">
+			  		<a href="https://www.facebook.com/sharer/sharer.php?u=https://chrome.google.com/webstore/detail/fifa-2018-world-cup-live/oaipafdngonpilnffhmbfmjphljhcack" target="share"><img src="facebook.png" height="12" width="12" style="margin-right:3px"/></a>
+			  		<a href="http://www.twitter.com/share?url=https://chrome.google.com/webstore/detail/fifa-2018-world-cup-live/oaipafdngonpilnffhmbfmjphljhcack" target="share"><img src="twitter.png" height="12" width="12" style="margin-right:3px"/></a>
+			  		<a href="https://plus.google.com/share?url=https://chrome.google.com/webstore/detail/fifa-2018-world-cup-live/oaipafdngonpilnffhmbfmjphljhcack" target="share"><img src="gplus.png" height="12" width="12" style="margin-right:3px"/></a>
+			  		<a href="options.html" target="options">Help</a>
+		  		</span>
+	  		</div> 
+  		</div>
+  		
+  		<script src="jquery-1.9.1.min.js"></script>
+	     <script src="bootstrap.min.js"></script>
+	     <script src="moment.js"></script>
+	     <script src="popup.js"></script>
+  </body>
+  
+</html>
+

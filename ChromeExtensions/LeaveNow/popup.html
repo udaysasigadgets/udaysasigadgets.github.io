@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Cricket Live Notifications</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="switchery.min.css" />
+    <!-- Custom Fonts -->
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <style>
+      body {
+        min-width: 357px;
+        overflow-x: hidden;
+      }
+      .text {
+      	font-family: Arial;
+      	font-size : 12px;
+      }
+      .hide {
+      	display: none;
+      }
+      .destinations-summary {
+      	border-bottom:1px dashed gray;
+      	text-align: center;
+      	padding: 10px 5px;
+        color:#337ab7;
+      }
+      .destinations-heading {
+        font-size:150%;
+        text-transform: uppercase;
+        border-bottom: 2px solid #337ab7;
+      }
+      
+      .destination {
+        border-top: 1px solid #EEEEEE;
+        padding-top: 5px;
+      }
+      .no-padding {
+        padding: 0px;
+      }
+      .size-lg {
+        font-size: 16px;
+      }
+      .size-sm {
+        font-size: 11px;
+      }
+    </style>
+
+  </head>
+  <body>
+      <div class="clearfix">
+        
+      <div class="dropdown pull-right">
+        <button class="btn btn-success btn-xs dropdown-toggle hide" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+          Share this plugin
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdownMenu1">
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="mailto:?subject=Cricket Live Notifications&body=I found this cool plugin to keep track of any ongoing Cricket match around the world. https://chrome.google.com/webstore/detail/cricket-live-notification/ipaloicnjcpbhbbdffpbfgnabnmniikk Thought you'd like it too." target="share"><img src="email.png" height="12" width="12" style="margin-right:5px"/>Email</a></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.facebook.com/sharer/sharer.php?u=https://chrome.google.com/webstore/detail/cricket-live-notification/ipaloicnjcpbhbbdffpbfgnabnmniikk" target="share"><img src="facebook.png" height="12" width="12" style="margin-right:5px"/>Facebook</a></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="http://www.twitter.com/share?url=https://chrome.google.com/webstore/detail/cricket-live-notification/ipaloicnjcpbhbbdffpbfgnabnmniikk" target="share"><img src="twitter.png" height="12" width="12" style="margin-right:5px"/>Twitter</a></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="https://plus.google.com/share?url=https://chrome.google.com/webstore/detail/cricket-live-notification/ipaloicnjcpbhbbdffpbfgnabnmniikk" target="share"><img src="gplus.png" height="12" width="12" style="margin-right:5px"/>Google Plus</a></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.linkedin.com/cws/share?url=https://chrome.google.com/webstore/detail/cricket-live-notification/ipaloicnjcpbhbbdffpbfgnabnmniikk" target="share"><img src="linkedin.png" height="12" width="12" style="margin-right:5px"/>LinkedIn</a></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="http://www.reddit.com/submit?url=https://chrome.google.com/webstore/detail/cricket-live-notification/ipaloicnjcpbhbbdffpbfgnabnmniikk" target="share"><img src="reddit.png" height="12" width="12" style="margin-right:5px"/>Reddit</a></li>
+        </ul>
+      </div>
+
+      </div>
+      <a href=""></a> <!--Hack-->
+  		<div class="text">
+  			<div class="destinations-summary">
+            <div class="destinations-heading">Drive Times</div>
+            <div id="destinations">
+              <br><img src="loading.gif"> Loading your drive times..
+            </div>
+  			</div>
+         
+  			<div style="font-size:85%;padding:10px 5px;color:#999999">
+		  		Designed & Developed by <a href="mailto:udaysasi+feedback@gmail.com?subject=Feedback : LeaveNow" target="_blank">Uday Kumar Pyda</a>
+
+	  		</div> 
+  		</div>
+
+
+    <!--
+      - JavaScript and HTML must be in separate files: see our Content Security
+      - Policy documentation[1] for details and explanation.
+      -
+      - [1]: http://developer.chrome.com/extensions/contentSecurityPolicy.html
+     -->
+     <!-- Bootstrap Core JavaScript -->
+     <script src="google-analytics-bundle.js"></script>
+     <script src="jquery-1.9.1.min.js"></script>
+     <script src="js/bootstrap.min.js"></script>
+     <script src="js/moment.js"></script>
+     <script src="switchery.min.js"></script>
+     <script src="popup.js"></script>
+     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&callback=LeaveNow.init" async defer></script>
+  </body>
+</html>
+

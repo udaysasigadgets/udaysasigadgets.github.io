@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+  <head>
+    <title>FIFA 2014 World Cup Live Notifications</title>
+    <style>
+      body {
+        min-width: 357px;
+        overflow-x: hidden;
+      }
+      .text {
+      	font-family: Monaco;
+      	font-size : 12px;
+      }
+      .hide {
+      	display: none;
+      }
+      .summary {
+      	border-bottom:1px dashed gray;
+      	text-align: center;
+      	padding: 10px 5px;
+      }
+    </style>
+
+    <!--
+      - JavaScript and HTML must be in separate files: see our Content Security
+      - Policy documentation[1] for details and explanation.
+      -
+      - [1]: http://developer.chrome.com/extensions/contentSecurityPolicy.html
+     -->
+     <script src="jquery-1.9.1.min.js"></script>
+     <script src="popup.js"></script>
+  </head>
+  <body>
+  		<div class="text">
+  			<div id="completedMatchSummary" style="color:#a94442;" class="summary hide">
+  			</div>
+  			<div id="liveMatchSummary" style="color:#3c763d;" class="summary hide">
+  			</div>
+  			<div id="upcomingMatchSummary" style="color:#428bca;" class="summary hide">
+  			</div>
+  			<div id="noMatchSummary" style="color:#31708f;" class="summary hide">
+  				No more matches for the day
+  			</div>
+  			<div style="font-size:85%;padding:10px 5px;color:#999999">
+		  		<!-- Thank you for downloading <span style="font-weight:bold">FIFA 2014 World Cup Live Updates</span>. Please support by sharing the word.<br><br> -->
+		  		<br>
+		  		Designed & Developed by <a href="mailto:udaysasi+feedback@gmail.com?subject=Feedback : FIFA 2014 World Cup Live Updates" target="_blank">Uday Kumar Pyda</a>
+		  		<span style="float:right">
+			  		<a href="https://www.facebook.com/sharer/sharer.php?u=https://chrome.google.com/webstore/detail/fifa-2014-world-cup-live/giamacaapkhfeefgiiolakbceilffgon" target="share"><img src="facebook.png" height="12" width="12" style="margin-right:3px"/></a>
+			  		<a href="http://www.twitter.com/share?url=https://chrome.google.com/webstore/detail/fifa-2014-world-cup-live/giamacaapkhfeefgiiolakbceilffgon" target="share"><img src="twitter.png" height="12" width="12" style="margin-right:3px"/></a>
+			  		<a href="https://plus.google.com/share?url=https://chrome.google.com/webstore/detail/fifa-2014-world-cup-live/giamacaapkhfeefgiiolakbceilffgon" target="share"><img src="gplus.png" height="12" width="12" style="margin-right:3px"/></a>
+			  		<a href="options.html" target="options">Help</a>
+		  		</span>
+	  		</div> 
+  		</div>
+  </body>
+</html>
+

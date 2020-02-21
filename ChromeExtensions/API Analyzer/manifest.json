@@ -1,0 +1,28 @@
+{
+  "name": "DNAC API Analyzer",
+  "version": "1.0",
+  "description": "Visualize API performances across DNAC",
+  "browser_action": {
+    "default_icon": "dnac-api-analyzer.png",
+    "default_title": "DNAC API Analyzer",    
+    "default_popup": "popup.html"
+  },
+  "background": { "page": "background.html" },
+  "icons": { 
+  	"48": "dnac-api-analyzer48.png",
+	"128": "dnac-api-analyzer128.png" 
+  },
+  "manifest_version": 2,
+  "options_page": "options.html",
+  "permissions": [
+    "webRequest",
+    "*://*/api/*",
+    "notifications",
+    "storage",
+    "tts"
+  ],
+  "content_security_policy": "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; script-src https://*.gstatic.com/* https://*.googleapis.com 'unsafe-eval'; connect-src https://*.googleapis.com; img-src https://*.googleapis.com/ https://*.gstatic.com/; default-src https://*.googleapis.com",
+  "web_accessible_resources": [
+    "dnac-api-analyzer48.png"
+  ]
+}

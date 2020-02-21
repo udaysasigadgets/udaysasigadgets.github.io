@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Document</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+	<!-- Include your CSS here -->
+</head>
+<body>
+    <!--[if lt IE 9]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a
+        href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <!-- Add your site or application content here -->
+ 
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <!-- Include your JavaScript files here -->
+    
+    <form action="http://test.com">
+    	<div class="row">
+    		<div class="col-sm-6">
+    			<input type="file" class="UploadedFilesGroup form-control" id="file1">
+    		</div>
+    		<div class="col-sm-6">
+    			<select disabled id="documentType1">
+    				<option>1</option>
+    				<option>2</option>
+    				<option>3</option>
+    			</select>
+    		</div>
+    	</div>
+    	<div class="row">
+    		<div class="col-sm-6">
+    			<input type="file" class="UploadedFilesGroup form-control" id="file2">
+    		</div>
+    		<div class="col-sm-6">
+    			<select disabled id="documentType2">
+    				<option>1</option>
+    				<option>2</option>
+    				<option>3</option>
+    			</select>
+    		</div>
+    	</div>
+    	<div class="row">
+    		<div class="col-sm-6">
+    			<input type="file" class="UploadedFilesGroup form-control" id="file3">
+    		</div>
+    		<div class="col-sm-6">
+    			<select disabled id="documentType3">
+    				<option>1</option>
+    				<option>2</option>
+    				<option>3</option>
+    			</select>
+    		</div>
+    	</div>
+    	<div class="row">
+    		<div class="col-sm-6">
+    			<input type="file" class="UploadedFilesGroup form-control" id="file4">
+    		</div>
+    		<div class="col-sm-6">
+    			<select disabled id="documentType4">
+    				<option>1</option>
+    				<option>2</option>
+    				<option>3</option>
+    			</select>
+    		</div>
+    	</div>
+    	<div class="row">
+    		<div class="col-sm-6">
+    			<input type="file"k class="UploadedFilesGroup form-control" id="file5">
+    		</div>
+    		<div class="col-sm-6">
+    			<select disabled id="documentType5">
+    				<option>1</option>
+    				<option>2</option>
+    				<option>3</option>
+    			</select>
+    		</div>
+    	</div>
+    	<input type="submit" value="Go"></input>
+    </form>
+    
+    
+    <div>
+         <div>
+             <Label>Privacy Notice</Label>
+         </div>
+         <textarea id="privacynoticetext" rows="5" cols="40">The Trump administration, confronted with further evidence of a cover-up in the killing of the journalist Jamal Khashoggi, veered on Monday between defending the value of its alliance with Saudi Arabia and pressing the Saudi government for answers.
+The White House sent the director of the C.I.A., Gina Haspel, to Istanbul to help the Turkish government with its investigation into the killing, according to an official. But in Riyadh, Treasury Secretary Steven Mnuchin held a wide-ranging meeting with Saudi Arabia’s crown prince, Mohammed bin Salman, who is suspected of playing a role in the killing of Mr. Khashoggi, a Saudi dissident.
+Mr. Mnuchin, who canceled his attendance at this week’s Saudi investment conference in the wake of Mr. Khashoggi’s killing at the Saudi Consulate in Istanbul, traded views with Prince Mohammed on economic ties and counterterrorism initiatives, as well as on the investigation into Mr. Khashoggi’s death, according to a Treasury Department spokesman.
+There are also fresh doubts about the Saudi government’s claim that Mr. Khashoggi was strangled accidentally after he got into a fist fight with 15 Saudi operatives, with video of a body double surfacing on Monday. A Saudi operative donned Mr. Khashoggi’s clothes after he was killed and left the building to create a misleading trail of evidence, surveillance images leaked by Turkey show.</textarea>
+     </div>
+     <div>
+         <input type="checkbox" name="PrivacyNotice" id="PrivacyNotice" value="" disabled />
+         <Label>I hereby acknowledge I have read and agree to the privacy policy</Label>
+     </div>
+    
+    <script type="text/javascript">
+		$(function() {
+			$(".UploadedFilesGroup").on('change', function() {
+				console.log('Document added');
+				var inputid = $(this).attr("id");
+				inputidnum = parseInt(inputid.substr(inputid.length-1));
+				$("#documentType"+inputidnum).prop("disabled", false);
+			});
+			
+			$('#privacynoticetext').scroll(function () {
+				if($(this).scrollTop() + $(this).innerHeight()>=$(this)[0].scrollHeight) {
+		          console.log('end reached');
+		          $('#PrivacyNotice').removeAttr('disabled');
+		        }
+		    });
+			
+		});
+    </script>
+</body>
+</html>

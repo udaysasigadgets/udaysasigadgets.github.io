@@ -1,0 +1,64 @@
+<script src="JSClass/FusionCharts.js" type="text/javascript"></script>
+<style>
+body {
+  min-width:357px;
+  overflow-x:hidden;
+}
+
+img {
+  margin:5px;
+  border:2px solid black;
+  vertical-align:middle;
+  width:75px;
+  height:75px;
+}
+</style>
+
+<div id="logDiv" style="border:2px solid black"></div>
+<div id="chartDiv"></div>
+
+<script>
+var req = new XMLHttpRequest();
+req.open(
+    "GET",
+    "http://api.flickr.com/services/rest/?" +
+        "method=flickr.photos.search&" +
+        "api_key=90485e931f687a9b9c2a66bf58a3861a&" +
+        "text=hello%20world&" +
+        "safe_search=1&" +  // 1 is "safe"
+        "content_type=1&" +  // 1 is "photos only"
+        "sort=relevance&" +  // another good one is "interestingness-desc"
+        "per_page=20",
+    true);
+req.onload = showPhotos;
+req.send(null);
+
+function showPhotos() {
+  var photos = req.responseXML.getElementsByTagName("photo");
+
+  for (var i = 0, photo; photo = photos[i]; i++) {
+    var img = document.createElement("image");
+    img.src = constructImageURL(photo);
+    document.body.appendChild(img);
+  }
+}
+
+// See: http://www.flickr.com/services/api/misc.urls.html
+function constructImageURL(photo) {
+
+  document.getElementById("logDiv").innerHTML += "<br>Construction imageURL for "+photo;
+  return "http://farm" + photo.getAttribute("farm") +
+      ".static.flickr.com/" + photo.getAttribute("server") +
+      "/" + photo.getAttribute("id") +
+      "_" + photo.getAttribute("secret") +
+      "_s.jpg";
+}
+
+
+var myChart = new FusionCharts("Charts/Pie3D.swf", "myChartId", "300", "200", "0", "1");
+myChart.setDataXML("<chart caption='Number of requests (by Country)' palette='2' animation='1' formatNumberScale='0' pieSliceDepth='30' startingAngle='125' showBorder='1' borderColor='1D8BD1' borderThickness='2'><set label='United States' value='49' displayValue='United States, 49 (62.0%)' isSliced='1' /><set label='Private' value='29' displayValue='Private, 29 (37.0%)' isSliced='1' /></chart>");
+myChart.render("chartDiv");
+
+
+</script>
+

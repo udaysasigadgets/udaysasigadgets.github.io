@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Leave Now</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="switchery.min.css" />
+    <!-- Custom Fonts -->
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <style>
+      body {
+        min-width: 357px;
+        overflow-x: hidden;
+      }
+      .text {
+      	font-family: Arial;
+      	font-size : 12px;
+      }
+      .hide {
+      	display: none;
+      }
+      .summary {
+      	border-bottom:1px dashed gray;
+      	text-align: center;
+      	padding: 10px 5px;
+        color:#489E07;
+      }
+      .charging-details {
+        border-bottom:1px dashed gray;
+        text-align: center;
+        padding: 10px 5px;
+        color:#489E07;
+      }
+      .charginginfo-heading {
+        font-size:125%;
+      }
+      hr {
+        margin: 5px;
+      }
+      .switchery-small {
+        height: 5px;
+        box-shadow: none;
+      }
+      .switchery-small>small {
+        top: -4px;
+      }
+      .no-padding {
+        padding: 0px;
+      }
+      #map {
+        width: 400px;
+        height: 300px;
+        border: 2px solid blue;
+      }
+    </style>
+
+  </head>
+  <body>
+      <div class="clearfix">
+        
+      
+      </div>
+      <a href=""></a> <!--Hack-->
+
+      <div id="map"></div>
+
+    <!--
+      - JavaScript and HTML must be in separate files: see our Content Security
+      - Policy documentation[1] for details and explanation.
+      -
+      - [1]: http://developer.chrome.com/extensions/contentSecurityPolicy.html
+     -->
+     <!-- Bootstrap Core JavaScript -->
+     <script src="google-analytics-bundle.js"></script>
+     <script src="jquery-1.9.1.min.js"></script>
+     <script src="js/bootstrap.min.js"></script>
+     <script src="js/moment.js"></script>
+     <script src="background.js"></script>
+     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&callback=LeaveNow.init" async defer></script>
+
+  </body>
+</html>
+

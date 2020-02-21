@@ -1,0 +1,25 @@
+{
+  "name": "ICC Cricket World Cup 2015 Live Notifications",
+  "version": "1.11",
+  "description": "Live notifications from the ICC Cricket World Cup 2015",
+  "browser_action": {
+    "default_icon": "icc.png",
+    "default_title": "ICC Cricket World Cup 2015",    
+    "default_popup": "popup.html"
+  },
+  "background": { "scripts": [ "google-analytics-bundle.js", "jquery-1.9.1.min.js", "background.js"] },
+  "icons": { 
+  	"48": "icc48.png",
+	  "128": "icc128.png" 
+  },
+  "manifest_version": 2,
+  "options_page": "options.html",
+  "permissions": [
+    "http://*.cricinfo.com/","http://*.espncricinfo.com/", "https://www.google-analytics.com/*",
+    "notifications",
+    "storage"
+  ],
+  "web_accessible_resources": [
+    "icc48.png"
+  ]
+}

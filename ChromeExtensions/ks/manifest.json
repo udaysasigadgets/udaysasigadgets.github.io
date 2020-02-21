@@ -1,0 +1,21 @@
+{
+  "name": "Kloudspot Ad Injection",
+  "version": "1.0",
+  "description": "A simple extension to simulate and test Kloudspot Ad Injection",
+  "browser_action": {
+    "default_icon": "kloudspot.png",
+    "default_title": "Kloudspot Ad Injection"
+  },
+  "background": { 
+    "scripts": ["background.js"] 
+  },
+  "content_scripts": [ {
+      "js": [ "inject.js" ],
+      "matches": [ "http://*/*", "https://*/*" ],
+      "run_at": "document_end"
+   } ],
+  "manifest_version": 2,
+  "permissions": [
+    "activeTab"
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "name": "Power Up - Chargepoint",
+  "version": "1.0",
+  "description": "Quickly check Chargepoint station status and Get notified when one is available to charge..",
+  "browser_action": {
+    "default_icon": "powerup.png",
+    "default_title": "Power Up - Chargepoint",    
+    "default_popup": "popup.html"
+  },
+  "background": { "scripts": [ "jquery-1.9.1.min.js", "background.js", "moment.js"] },
+  "icons": { 
+  	"48": "powerup48.png",
+	  "128": "powerup128.png" 
+  },
+  "manifest_version": 2,
+  "options_page": "options.html",
+  "permissions": [
+    "https://*.chargepoint.com/", "https://maps.googleapis.com/*", "https://www.google-analytics.com/*",
+    "notifications",
+    "storage",
+    "tts"
+  ],
+  "content_security_policy": "style-src 'self' 'unsafe-inline'; script-src 'self' https://*.gstatic.com/* https://*.googleapis.com 'unsafe-eval'; connect-src https://*.googleapis.com https://*.chargepoint.com/; img-src 'self' https://*.googleapis.com/ https://*.gstatic.com/; default-src https://*.googleapis.com",
+  "web_accessible_resources": [
+    "powerup48.png"
+  ]
+}

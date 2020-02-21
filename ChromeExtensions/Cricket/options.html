@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Cricket Live Notifications</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-switch.css" rel="stylesheet">
+    <link href="css/bootstrap-select.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/grayscale.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
+
+    <!-- Intro Header -->
+    <header class="intro">
+        <div class="intro-body">
+            <div class="container">
+                <div class="row" style="margin-top:10px">
+                    <div class="col-md-12 text-center" style="  color: #337ab7;background-color: white;opacity: 0.8;padding: 20px 0px;">
+                        <h2 style="margin:10px 0px">Cricket Live Notifications - Options</h2>
+                        <div style="padding:5px 50px;">Want too many or too little notifications? Select the events for which you would like to be notified. Also, if you are interested in following any team in particular, make sure you have that selected to receive notifications.. </div>
+                    </div>
+                    <div class="col-sm-6 text-center" style="margin-top:50px">
+                    	<div class="step">Events</div>
+                    	<select class="selectpicker" id="selectedevents" multiple>
+							<option value="FOUR">Boundaries</option>
+						    <option value="SIX">Sixes</option>
+						    <option value="OUT">Wickets</option>
+						    <option value="1 leg bye,2 leg byes,3 leg byes,4 leg byes">Leg Byes</option>
+						    <option value="1 no ball,2 no balls,3 no balls,4 no balls">No-Balls</option>
+						    <option value="1 wide,2 wides,3 wides,4 wides,5 wides">Wides</option>
+						    <option value="1 run,2 runs,3 runs,4 runs,5 runs">Any runs scored</option>
+						</select>
+                    </div>	
+                    <div class="col-sm-6 text-center" style="margin-top:50px">
+                    	<div class="step">Teams</div>
+                    	<select class="selectpicker" id="selectedteams" multiple>
+                    		<optgroup label="International">
+								<option>England</option>
+							    <option>Australia</option>
+							    <option>India</option>
+							    <option>South Africa</option>
+							    <option>Sri Lanka</option>
+							    <option>New Zealand</option>
+							    <option>Pakistan</option>
+							    <option>West Indies</option>
+							    <option>Bangladesh</option>
+							    <option>Zimbabwe</option>
+							    <option>Ireland</option>
+							    <option>Afghanistan</option>
+							    <option>Scotland</option>
+							    <option>United Arab Emirates</option>
+							</optgroup>
+							<optgroup label="IPL">
+								<option>Mumbai Indians</option>
+							    <option>Rajasthan Royals</option>
+							    <option>Chennai Super Kings</option>
+								<option>Kolkata Knight Riders</option>
+								<option>Kings XI Punjab</option>
+								<option>Sunrisers Hyderabad</option>
+								<option>Royal Challengers Bangalore</option>
+								<option>Delhi Daredevils</option>
+                            </optgroup>
+                            <optgroup label="Under-19s World Cup">
+								<option>India Under-19s</option>
+                                <option>New Zealand Under-19s</option>
+                                <option>Japan Under-19s</option>
+                                <option>Sri Lanka Under-19s</option>
+                                <option>West Indies Under-19s</option>
+                                <option>Australia Under-19s</option>
+                                <option>England Under-19s</option>
+                                <option>Nigeria Under-19s</option>
+                                <option>Bangladesh Under-19s</option>
+                                <option>Pakistan Under-19s</option>
+                                <option>Zimbabwe Under-19s</option>
+                                <option>Scotland Under-19s</option>
+                                <option>Afghanistan Under-19s</option>
+                                <option>South Africa Under-19s</option>
+                                <option>United Arab Emirates Under-19s</option>
+                                <option>Canada Under-19s</option>
+                            </optgroup>
+                            <optgroup label="Big Bash League">
+                                <option>Melbourne Stars</option>
+                                <option>Adelaide Strikers</option>
+                                <option>Sydney Sixers</option>
+                                <option>Perth Scorchers</option>
+                                <option>Sydney Thunder</option>
+                                <option>Brisbane Heat</option>
+                                <option>Hobart Hurricanes</option>
+                                <option>Melbourne Renegades</option>
+                            </optgroup>
+                            <optgroup label="Ranji Trophy">
+                                <option>Andhra</option>
+                                <option>Gujarat</option>
+                                <option>Bengal</option>
+                                <option>Saurashtra</option>
+                                <option>Punjab</option>
+                                <option>Vidarbha</option>
+                                <option>Karnataka</option>
+                                <option>Delhi</option>
+                                <option>Baroda</option>
+                                <option>Uttar Pradesh</option>
+                                <option>Railways</option>
+                                <option>Mumbai</option>
+                                <option>Tamil Nadu</option>
+                                <option>Himachal Pradesh</option>
+                                <option>Rajasthan</option>
+                                <option>Kerala</option>
+                                <option>Madhya Pradesh</option>
+                                <option>Hyderabad (India)</option>
+                                <option>Jammu & Kashmir</option>
+                                <option>Odisha</option>
+                                <option>Jharkhand</option>
+                                <option>Haryana</option>
+                                <option>Services</option>
+                                <option>Chhattisgarh</option>
+                                <option>Maharashtra</option>
+                                <option>Assam</option>
+                                <option>Tripura</option>
+                                <option>Uttarakhand</option>
+                                <option>Puducherry</option>
+                                <option>Goa</option>
+                                <option>Chandigarh</option>
+                                <option>Meghalaya</option>
+                                <option>Nagaland</option>
+                                <option>Bihar</option>
+                                <option>Manipur</option>
+                                <option>Mizoram</option>
+                                <option>Sikkim</option>
+                                <option>Arunachal Pradesh</option>
+                            </optgroup>
+						</select>
+                    </div>	
+                    <!-- <div class="col-xs-4 text-center">
+                    	<div class="step">3</div>
+                    	<span style="color:white"><h4>Sit back and get notified..</h4></span>
+                    </div>	 -->
+
+                </div>
+
+            </div>
+        </div>
+        <div class="clearfix"/>
+        <div class="text-center" style="display:table-row">
+        	<small style="bottom: 5px;position: absolute;right: 10px;">Designed and Developed by <a href="https://www.linkedin.com/in/udaysasi" target="_blank">Uday Kumar Pyda</a></small>
+        </div>
+    </header>
+
+
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/bootstrap-switch.js"></script>
+    <script src="js/bootstrap-select.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="js/grayscale.js"></script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,212 @@
+<html>
+<head><title>Global Index Watch Chrome Extension - Options</title>
+<style type="text/css">
+    a { color:#0000DD;}
+    a:visited { color:#0000DD;}
+    body { font-family: arial,sans-serif;}
+    div.floatDiv {
+        position:relative;
+        margin:5px;
+        padding:2px;
+        border:2px solid #ffffff;
+        background-color:#ffffff;
+        width:120px;
+        display:table;
+        float:left;
+        color: #000000;
+    }
+
+    div.floatDiv:hover{
+        border:2px solid #777777;
+        cursor: hand;
+    }
+
+    div.floatDivSelected:hover{
+        border:2px solid #77AA77;
+        cursor: hand;
+    }
+
+    div.floatDivSelected {
+        position:relative;
+        margin:5px;
+        padding:2px;
+        border:2px solid #77AA77;
+        background-color:#CCCCCC;
+        width:120px;
+        display:table;
+        float:left;
+    }
+
+    #optionStatus {
+      width: 300;
+      padding:5px;
+      margin-left: auto;
+      margin-right: auto;
+      background-color:#FFFFC7;
+      text-align:center;
+      font-weight:bold;
+      font-size: small;
+    }
+
+    #msg {
+        text-align: center;
+        align:center;
+    }
+
+</style>
+
+</head>
+
+<body>
+
+<div align="center"><b><font size="5">Global Index Watch - Chrome Extension - Help</font></b></div>
+
+<hr width="95%">
+
+            <font size="-1">
+            <p>Thank you for trying out my Chrome Extension. <b>Global Index Watch</b> is an extension that is created on top of the iGoogle gadget <b><a href="http://www.google.com/ig/directory?url=udaysasi-gadgets.googlecode.com/svn/trunk/globalIndexWatch.xml">Global Index Watch</a></b>
+            which is an extremely simple module that tracks the indices of most of the markets in North America, Latin America, Europe, Asia and Australia.
+            </p>
+            </font>
+            <br>
+
+            <font size="-1">
+            You can customize the extension by choosing the options on this page.
+            </font>
+            <br>
+
+                <div id="msg">&nbsp;<span id="optionStatus" style="display:none"></span></div><br>
+                <table width="850" align="center" style="border:1px solid #cccccc;border-top:2px solid #0000C2" cellpadding="10" cellspacing="0">
+                    <tr bgcolor="#C2C2FF"><th colspan="2">Extension Options</th></tr>
+<!--
+                    <tr>
+                        <td align="right" nowrap><font size="-1">Show Market Indices:</font></td>
+                        <td align="left">
+                            <select id="marketType">
+                                <option value="1">Americas</option>
+                                <option value="2">Europe</option>
+                                <option value="3">Asia Pacific</option>
+                                <option value="-1">All</option>
+                            </select>
+                        </td>
+                    </tr>
+-->
+                    <tr valign="top">
+                        <td align="left" width="100"><font size="-1"><b>Select Markets:</b><br>(To select or unselect, Click on the country you are interested in)</font></td>
+                        <td align="left" class="allCountries">
+                            <div class="floatDiv">Argentina</div>
+                            <div class="floatDiv">Australia</div>
+                            <div class="floatDiv">Austria</div>
+                            <div class="floatDiv">Belgium</div>
+                            <div class="floatDiv">Brazil</div>
+                            <div class="floatDiv">Canada</div>
+                            <div class="floatDiv">Chile</div>
+                            <div class="floatDiv">China</div>
+                            <div class="floatDiv">Denmark</div>
+                            <div class="floatDiv">France</div>
+                            <div class="floatDiv">Germany</div>
+                            <div class="floatDiv">Hong Kong</div>
+                            <div class="floatDiv">India</div>
+                            <div class="floatDiv">Indonesia</div>
+                            <div class="floatDiv">Ireland</div>
+                            <div class="floatDiv">Israel</div>
+                            <div class="floatDiv">Italy</div>
+                            <div class="floatDiv">Japan</div>
+                            <div class="floatDiv">Korea</div>
+                            <div class="floatDiv">Malaysia</div>
+                            <div class="floatDiv">Mexico</div>
+                            <div class="floatDiv">Netherlands</div>
+                            <div class="floatDiv">New Zealand</div>
+                            <div class="floatDiv">Norway</div>
+                            <div class="floatDiv">Philippines</div>
+                            <div class="floatDiv">Portugal</div>
+                            <div class="floatDiv">Singapore</div>
+                            <div class="floatDiv">Spain</div>
+                            <div class="floatDiv">Sri Lanka</div>
+                            <div class="floatDiv">Sweden</div>
+                            <div class="floatDiv">Switzerland</div>
+                            <div class="floatDiv">Taiwan</div>
+                            <div class="floatDiv">UK</div>
+                            <div class="floatDiv">United States</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" nowrap><font size="-1"><b>Hide Columns:</b></font></td>
+                        <td align="left">
+                            <select id="hideColumns">
+                                <option value="1">Change</option>
+                                <option value="2">Percent Change</option>
+                                <option value="-1">None</option>
+                            </select>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="2" align="center"><input type="button" id="save" value="Save"/></td>
+                    </tr>
+
+                </table>
+
+<!--
+                    <p><b><font size="3">Support for Global Index Watch</font></b></p>
+
+                    <table border="0" width="100%">
+                        <tr>
+                            <td align="left">
+                                <font size="-1">
+                                Global Index Watch currently tracks indices from most of the markets in the following countries :<br/>
+                                <div class="floatDiv">Argentina</div>
+                                <div class="floatDiv">Australia</div>
+                                <div class="floatDiv">Austria</div>
+                                <div class="floatDiv">Belgium</div>
+                                <div class="floatDiv">Brazil</div>
+                                <div class="floatDiv">Canada</div>
+                                <div class="floatDiv">Chile</div>
+                                <div class="floatDiv">China</div>
+                                <div class="floatDiv">Denmark</div>
+                                <div class="floatDiv">Egypt</div>
+                                <div class="floatDiv">France</div>
+                                <div class="floatDiv">Germany</div>
+                                <div class="floatDiv">Hong Kong</div>
+                                <div class="floatDiv">India</div>
+                                <div class="floatDiv">Ireland</div>
+                                <div class="floatDiv">Israel</div>
+                                <div class="floatDiv">Italy</div>
+                                <div class="floatDiv">Japan</div>
+                                <div class="floatDiv">Korea</div>
+                                <div class="floatDiv">Malaysia</div>
+                                <div class="floatDiv">Mexico</div>
+                                <div class="floatDiv">Netherlands</div>
+                                <div class="floatDiv">New Zealand</div>
+                                <div class="floatDiv">Norway</div>
+                                <div class="floatDiv">Philippines</div>
+                                <div class="floatDiv">Portugal</div>
+                                <div class="floatDiv">Singapore</div>
+                                <div class="floatDiv">Spain</div>
+                                <div class="floatDiv">Sri Lanka</div>
+                                <div class="floatDiv">Switzerland</div>
+                                <div class="floatDiv">Taiwan</div>
+                                <div class="floatDiv">Turkey</div>
+                                <div class="floatDiv">UK</div>
+                                <div class="floatDiv">United States</div>
+
+                                </font>
+                            </td>
+                        </tr>
+                    </table>
+-->
+
+                    <p><b><font size="3">Feedback</font></b></p>
+                    <font size="-1">If you have any questions, concerns, comments or suggestions, please feel free to post them on the <a href="https://chrome.google.com/extensions/detail/mjgpfpphpgdhgodebieknbmnlncfpnek">Global Index Watch extension homepage</a>.</font>
+
+
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <script src="options.js"></script>
+
+</body>
+</html>

@@ -1,6 +1,6 @@
 {
   "name": "Cricket Live Notifications",
-  "version": "1.3",
+  "version": "1.4",
   "description": "Live notifications from any ongoing cricket match - Tests, One-Days, T20, IPL and more..",
   "browser_action": {
     "default_icon": "cricket.png",

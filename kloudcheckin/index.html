@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+    
+<head>
+    <title>Checkin with Kloudspot</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/ionicons.min.css">
+    <link rel="stylesheet" href="css/materialize.min.css">
+    <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="blue-grey lighten-5">
+    <nav class="blue pl30">
+        <div class="nav-wrapper">
+          <a href="#" class="brand-logo">KloudCheckin</a>
+        </div>
+    </nav>
+    
+    <section id="banner" class="justify container">
+        <h3>COVID - 19 Health Screening</h3>
+        <p>Please review and answer the following questions prior to entering the facility. If the
+            answer is “Yes” to any of the questions, please do not enter the facility. Information regarding signs and
+            symptoms of COVID-19 can be found on the SAMHD website
+            at: <a
+                href="https://covid19.sanantonio.gov/What-YOU-Can-Do/Symptoms">https://covid19.sanantonio.gov/What-YOU-Can-Do/Symptoms</a>.
+            For questions regarding symptoms of COVID-19
+            please contact your healthcare provider.
+        </p>
+    </section>
+    <section class="row left-align container">
+        <br>
+        <div class="row">
+            <form class="col s12 m8 offset-m2">
+                <div class="row">
+                    <div class="col s12">
+                        <ol>
+                            <li>
+                                Have you recently begun experiencing any of the following symptoms in a way that is not normal for you?<br>
+                                <ul class="browser-default">
+                                    <li>Cough</li>
+                                    <li>Shortness of breath</li>
+                                    <li>Difficulty breathing</li>
+                                    <li>Feeling feverish or a measured temperature greater than or equal to 100.0 degrees Fahrenheit</li>
+                                    <li>Loss of taste or smell</li>
+                                    <li>Headache</li>
+                                    <li>Chills</li>
+                                    <li>Sore throat</li>
+                                    <li>Shaking or exaggerated shivering</li>
+                                    <li>Significant muscle pain or ache</li>
+                                    <li>Diarrhea</li>
+                                    <li>Nausea or vomiting</li>
+                                    <li>Congestion or runny nose</li>
+                                </ul>
+                                <p>
+                                    <label class="mr30">
+                                      <input class="with-gap" name="symptoms" type="radio" />
+                                      <span class="black-text"><b>Yes</b></span>
+                                    </label>
+                                    <label class="mr30">
+                                        <input class="with-gap" name="symptoms" type="radio" />
+                                        <span class="black-text"><b>No</b></span>
+                                    </label>
+                                </p>
+                            </li>
+                            <li>
+                                Within the last 14 days, have you been in contact with someone who has tested positive for COVID - 19, or has shown any of the above symptoms?<br>
+                                <p>
+                                    <label class="mr30">
+                                      <input class="with-gap" name="contact" type="radio" />
+                                      <span class="black-text"><b>Yes</b></span>
+                                    </label>
+                                    <label class="mr30">
+                                        <input class="with-gap" name="contact" type="radio" />
+                                        <span class="black-text"><b>No</b></span>
+                                    </label>
+                                </p>
+                            </li>
+                            <li>
+                                Within the last 14 days, have you traveled outside of the United States?<br>
+                                <p>
+                                    <label class="mr30">
+                                      <input class="with-gap" name="travel" type="radio" />
+                                      <span class="black-text"><b>Yes</b></span>
+                                    </label>
+                                    <label class="mr30">
+                                        <input class="with-gap" name="travel" type="radio" />
+                                        <span class="black-text"><b>No</b></span>
+                                    </label>
+                                </p>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input id="first_name" type="text" class="validate">
+                        <label for="first_name">First Name</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input id="last_name" type="text" class="validate">
+                        <label for="last_name">Last Name</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input id="phone_number" type="tel" class="validate">
+                        <label for="phone_number">Phone Number</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input id="email_address" type="email" class="validate">
+                        <label for="email_address">Email address</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="address" type="tel" class="validate">
+                        <label for="address">Address</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s12 mb20">Please take a picture of yourself for identification<br></div>
+                    <div class="col s12 clearfix" style="position: relative;">
+                        <div class="file-field input-field" style="opacity: 0; min-height: 400px; z-index: 1000">
+                            <div class="btn btn-small blue">
+                                <span>Picture</span>
+                                <input type="file" id="photo">
+                            </div>
+                            <div class="file-path-wrapper">
+                                <input class="file-path validate" type="text">
+                            </div>
+                        </div>
+                        <div id="photo-upload" class="center" style="text-align: center; min-height: 400px; position: absolute; top : 0; left: 0; right: 0; border: 1px solid lightgray;">
+                            <div class="pt80 blue-text text-lighten-2">Click to take a photo</div>
+                        </div>
+                        <div class="center" style="min-height: 200px; position: absolute; top : 0; left: 0; right: 0; ">
+                            <img id="photo-preview" src="" style="display: none; max-width: 400px" alt="Photo preview...">
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+                <div class="row mt30">
+                    <div class="col s12 center">
+                        <div class="btn btn-large green">
+                            <i class="icon ion-android-send right"></i><span>Submit</span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <footer class="page-footer p0">
+        <div class="footer-copyright blue">
+            <div class="container">
+                © 2017 Copyright Text
+                <a class="grey-text text-lighten-4 right" href="#!">Powered by Kloudspot</a>
+            </div>
+        </div>
+    </footer>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/materialize.min.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>

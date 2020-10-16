@@ -50,6 +50,15 @@
 		position: absolute;
 		cursor: pointer;
 	}
+	.display {
+		width: 400px;
+	    height: 300px;
+	    border-radius: 30px;
+	    position: absolute;
+	    cursor: pointer;
+	    top: 30%;
+	    left: 48%;
+	}
 	.legend {
 		height: 38px;
 		border-radius: 30px;
@@ -161,6 +170,31 @@
 			]
 		};
 		
+		var displays = {
+			"one": [],
+			"two": [
+				{ 
+					"wrap": {"top": "30%", "left": "48%"}, 
+					"frame": { 
+						"css": {"clip-path": "polygon(2% 0%, 95% 7%, 92% 92%, 2% 80%)", "height": "200px"},
+						"url": "https://vkd-stage.kloudspot.com/0a0a0a00008e/index.html?fs9htdbq=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIwYTowYTowYTowMDowMDo4ZSIsImF1dGgiOiJST0xFX0FDQ09VTlRfVVNFUiIsImV4cCI6MTY0NDYwNjQ4N30.zUFymqKUB3n5fN4DMIVI3rx-wHAKFWZVBzNQG3xvUYKm-7F0xjbDjCdhiJPZZEFlQ1KJ8kBPfNp87o5bIuDGVw"
+					}
+				}
+			],
+			"three": [],
+			"four": [
+				{ 
+					"wrap": {"top": "15%", "left": "23%", }, 
+					"frame": { 
+						"css": {"clip-path": "polygon(2% 2%, 90% 7%, 91% 81%, 3% 77%)", "height": "130px", "width": "140px"},
+						"url": "http://192.168.0.205:8080/"
+					}
+				}
+			],
+			"five": [],
+			"six": []
+		};
+		
 		function loadScene() {
 			var id = window.location.hash;
 			id = id.substring(1);
@@ -176,6 +210,15 @@
 			externalcontents[id].forEach(function(d) {
 				$("<div>").addClass("detail").css(d).attr("data-src", d.src).attr("data-type", d.type).appendTo($("#wrapper"));
 			});
+			
+			$(".display").remove();
+			displays[id].forEach(function(d) {
+				const display = $("<div>").addClass("display").css(d.wrap);
+				const iframe = $("<iframe>").attr("src", d.frame.url).css(d.frame.css).css(d);
+				iframe.appendTo(display);
+				display.appendTo($("#wrapper"));
+			});
+			
 		}
 		
 		$("body").on("click", ".navigation", function(e) {

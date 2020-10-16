@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Kloudspot Virtual Experience</title>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+<style>
+	html, 
+	body {
+	  height: 100%;
+	  overflow: auto;
+	  margin: 0;
+	}
+	body { /* can also be whatever container */
+	  display: flex;
+	  display: -webkit-flex;
+	  -webkit-align-items: center;
+	  align-items: center;
+	  
+	  /* -webkit-justify-content: center;
+	  justify-content: center; */
+	}
+	#wrapper {
+	  padding: 0px;
+	  background: #000;
+	  position: relative;
+	  margin: auto;
+	}
+	#wrapper #scene-image{
+	  /* width: 100%; */
+	}
+	.navigation {
+		width: 40px;
+		height: 40px;
+		background-color: white;
+		border: 4px solid red;
+		position: absolute;
+		cursor: pointer;
+		background-image: url('https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_directions_walk_48px-32.png');
+	}
+	.detail {
+		width: 30px;
+		height: 30px;
+		border-radius: 30px;
+		background-color: red;
+		border: 5px solid white;
+		position: absolute;
+		cursor: pointer;
+	}
+	.legend {
+		height: 38px;
+		border-radius: 30px;
+		background-color: white;
+		border: 2px solid white;
+		border-radius: 5px;
+		position: absolute;
+		right: 3%;
+		bottom: 3%;
+		width: 300px;
+		text-align: center;
+	}
+</style>
+</head>
+<body>
+
+<div id="wrapper">
+  <img id="scene-image" src="">
+  <div class="legend">
+  		<img src="https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_directions_walk_48px-32.png" style="width: 24px">  Navigation 
+  		<div style="width: 23px;height: 23px;border-radius: 30px;background-color: red;vertical-align: text-bottom;display: inline-block; margin-left: 30px"></div> Information
+  </div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="detailModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Details</h4>
+      </div>
+      <div class="modal-body">
+        <!-- <iframe id="externalcontent" style="width:100%; min-height: 100%"></iframe> -->
+        <span id="externalcontenturl"></span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script>
+	$(function() {
+		
+		/*
+		"one": "https://s3.amazonaws.com/nikeinc/assets/30600/Nike_Gangnam_15_hd_1600.jpg?1402588639",
+		"two": "https://i.pinimg.com/originals/e1/67/d4/e167d43f8f6dd0ea507c7f31d71fbf9a.jpg",
+		"three": "https://previews.123rf.com/images/tea/tea1711/tea171100179/88872869-busan-south-korea-may-25-2017-inside-nike-store-at-lotte-mall-in-busan-.jpg"
+		*/
+		var images = {
+			"one": "media/PXL_20201016_044641914.jpg",
+			"two": "media/PXL_20201016_044705289.jpg",
+			"three": "media/PXL_20201016_044717574.jpg",
+			"four": "media/PXL_20201016_044727969.jpg",
+			"five": "media/PXL_20201016_044751414.jpg",
+			"six": "media/PXL_20201016_044808379.jpg"
+		};
+		
+		var navigations = {
+			"one": [
+				{"top": "50%", "left": "5%", "destination": "four"},
+				{"top": "50%", "right": "5%", "destination": "two"}
+			],
+			"two": [
+				{"top": "50%", "left": "10%", "destination": "one"},
+				{"top": "50%", "right": "5%", "destination": "three"}
+			],
+			"three": [
+				{"top": "50%", "left": "15%", "destination": "two"},
+				{"bottom": "50%", "right": "5%", "destination": "four"}
+			],
+			"four": [
+				{"top": "50%", "left": "15%", "destination": "five"},
+				{"bottom": "50%", "right": "34%", "destination": "six"},
+				{"bottom": "5%", "right": "50%", "destination": "three"}
+			],
+			"five": [
+				{"top": "50%", "left": "15%", "destination": "four"},
+				{"bottom": "50%", "right": "25%", "destination": "six"}
+			],
+			"six": [
+				{"bottom": "50%", "left": "25%", "destination": "five"},
+				{"bottom": "50%", "right": "25%", "destination": "four"}
+			]
+		};
+		
+		var externalcontents = {
+			"one": [
+				{"top": "46%", "right": "12%", "type": "text", "src": "Family picture"},
+				{"top": "10%", "left": "35%", "type": "text", "src": "5-piece poster<br>Source: <a href='https://nichecanvas.com/products/boardwalk-paradise' target='new'>nichecanvas.com</a><br>Price: $179.00"}
+			],
+			"two": [
+				{"top": "37%", "left": "57%", "type": "text", "src": "40-inch Samsung TV<br>Source: <a href='https://smile.amazon.com/SAMSUNG-43-inch-Crystal-TU-8000-Built/dp/B084JHKT7S/ref=sr_1_3?crid=2CFQ18B2WLCVD&dchild=1&keywords=40+inch+samsung+tv&qid=1602827193&sprefix=40+inch+samsung%2Caps%2C248&sr=8-3' target='new'>Amazon</a>"}
+			],
+			"three": [
+				{"top": "10%", "left": "62%", "type": "text", "src": "Wall Art<br>Source: <a href='https://www.shilparamam.in/home/' target='new'>Shilparamam, Hyderabad, India</a><br>Price: Unknown"},
+				{"top": "48%", "left": "41%", "type": "text", "src": "Yamaha Psr-E363 61-Key Portable Keyboard<br>Source: <a href='https://www.bhphotovideo.com/c/product/1368365-REG/yamaha_psr_e363_61_key_portable_keyboard.html' target='new'>B&H Photo</a><br>Price: $244.95"}
+			],
+			"four": [],
+			"five": [
+				{"top": "70%", "left": "41%", "type": "text", "src": "simplehuman® Stainless Steel 45-Liter Semi-Round Liner Rim Step Trash Can<br>Source: <a href='https://www.bedbathandbeyond.com/store/product/simplehuman-reg-stainless-steel-45-liter-semi-round-liner-rim-step-trash-can/3290446?categoryId=14368' target='new'>Bed Bath & Beyond</a><br>Price: $99.99"}
+			],
+			"six": [
+				{"top": "75%", "left": "32%", "type": "text", "src": "Surya Pyda<br>Super naughty 😜"},
+				{"top": "17%", "right": "26%", "type": "text", "src": "Lord Ganesha<br>Source: <a href='https://engrave.in/' target='new'>engrave.in</a>"},
+			]
+		};
+		
+		function loadScene() {
+			var id = window.location.hash;
+			id = id.substring(1);
+			
+			$("#scene-image").attr("src", images[id]);
+			
+			$(".navigation").remove();
+			navigations[id].forEach(function(d) {
+				$("<div>").addClass("navigation").css(d).attr("data-destination", d.destination).appendTo($("#wrapper"));
+			});
+			
+			$(".detail").remove();
+			externalcontents[id].forEach(function(d) {
+				$("<div>").addClass("detail").css(d).attr("data-src", d.src).attr("data-type", d.type).appendTo($("#wrapper"));
+			});
+		}
+		
+		$("body").on("click", ".navigation", function(e) {
+			var destination = $(e.target).attr("data-destination");
+			window.location.hash = "#"+destination;
+			loadScene();
+		});
+		
+		$("body").on("click", ".detail", function(e) {
+			var type = $(e.target).attr("data-type");
+			var src = $(e.target).attr("data-src");
+			$("#externalcontenturl").html(src);
+			
+			$('#detailModal').modal('show');
+		});
+		
+		window.location.hash = "#one";
+		loadScene();
+	});
+</script>
+
+</body>
+</html>

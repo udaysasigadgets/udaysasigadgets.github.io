@@ -71,6 +71,16 @@
 		width: 300px;
 		text-align: center;
 	}
+	.directory {
+		border-radius: 30px;
+		background-color: white;
+		border-radius: 5px;
+		position: fixed;
+		right: 2%;
+		top: 2%;
+		width: 150px;
+		text-align: center;
+	}
 </style>
 </head>
 <body>
@@ -80,6 +90,16 @@
   <div class="legend">
   		<img src="https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_directions_walk_48px-32.png" style="width: 24px">  Navigation 
   		<div style="width: 23px;height: 23px;border-radius: 30px;background-color: red;vertical-align: text-bottom;display: inline-block; margin-left: 30px"></div> Information
+  </div>
+  <div class="directory">
+  	<select class="form-control" id="jumpto">
+  		<option value="one">Jump To View</option>
+  		<option value="one">Living Room</option>
+  		<option value="two">Television</option>
+  		<option value="four">Hallway</option>
+  		<option value="six">Toys</option>
+  		<option value="five">Kitchen</option>
+  	</select>
   </div>
 </div>
 
@@ -151,7 +171,7 @@
 		var externalcontents = {
 			"one": [
 				{"top": "46%", "right": "12%", "type": "text", "src": "Family picture"},
-				{"top": "10%", "left": "35%", "type": "text", "src": "5-piece poster<br>Source: <a href='https://nichecanvas.com/products/boardwalk-paradise' target='new'>nichecanvas.com</a><br>Price: $179.00"}
+				{"top": "10%", "left": "35%", "type": "text", "src": "5-piece canvas art<br>Source: <a href='https://nichecanvas.com/products/boardwalk-paradise' target='new'>nichecanvas.com</a><br>Price: $179.00"}
 			],
 			"two": [
 				{"top": "37%", "left": "57%", "type": "text", "src": "40-inch Samsung TV<br>Source: <a href='https://smile.amazon.com/SAMSUNG-43-inch-Crystal-TU-8000-Built/dp/B084JHKT7S/ref=sr_1_3?crid=2CFQ18B2WLCVD&dchild=1&keywords=40+inch+samsung+tv&qid=1602827193&sprefix=40+inch+samsung%2Caps%2C248&sr=8-3' target='new'>Amazon</a>"}
@@ -176,17 +196,17 @@
 				{ 
 					"wrap": {"top": "30%", "left": "48%"}, 
 					"frame": { 
-						"css": {"clip-path": "polygon(2% 0%, 95% 7%, 92% 92%, 2% 80%)", "height": "200px"},
-						"url": "https://vkd-stage.kloudspot.com/0a0a0a00008e/index.html?fs9htdbq=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIwYTowYTowYTowMDowMDo4ZSIsImF1dGgiOiJST0xFX0FDQ09VTlRfVVNFUiIsImV4cCI6MTY0NDYwNjQ4N30.zUFymqKUB3n5fN4DMIVI3rx-wHAKFWZVBzNQG3xvUYKm-7F0xjbDjCdhiJPZZEFlQ1KJ8kBPfNp87o5bIuDGVw"
+						"css": {"clip-path": "polygon(2% 0%, 95% 7%, 92% 92%, 2% 80%)", "height": "205px", "width": "322px"},
+						"url": "http://192.168.0.205:8080/"
 					}
 				}
 			],
 			"three": [],
 			"four": [
 				{ 
-					"wrap": {"top": "15%", "left": "23%", }, 
+					"wrap": {"top": "15%", "left": "23%", "width": "139px", "height": "110px"}, 
 					"frame": { 
-						"css": {"clip-path": "polygon(2% 2%, 90% 7%, 91% 81%, 3% 77%)", "height": "130px", "width": "140px"},
+						"css": {"clip-path": "polygon(2% 3%, 94% 7%, 95% 85%, 4% 81%)", "height": "137px", "width": "146px"},
 						"url": "http://192.168.0.205:8080/"
 					}
 				}
@@ -198,8 +218,13 @@
 		function loadScene() {
 			var id = window.location.hash;
 			id = id.substring(1);
-			
-			$("#scene-image").attr("src", images[id]);
+			var image = $("#scene-image");
+			//Fade in new image
+			image.fadeOut('fast', function () {
+		        image.attr('src', images[id]);
+		        image.fadeIn('fast');
+		    });
+			//$("#scene-image").attr("src", images[id]);
 			
 			$(".navigation").remove();
 			navigations[id].forEach(function(d) {
@@ -237,6 +262,11 @@
 		
 		window.location.hash = "#one";
 		loadScene();
+		
+		$("#jumpto").change(function() {
+			window.location.hash = "#"+$(this).val();
+			loadScene();
+		});
 	});
 </script>
 

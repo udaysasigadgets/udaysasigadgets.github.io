@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width, shrink-to-fit=no">
+    <title>Panolens.js panorama image panorama</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
+    <style>
+      html, body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background-color: #000;
+      }
+
+      a:link, a:visited{
+        color: #bdc3c7;
+      }
+
+      .credit{
+        position: absolute;
+        text-align: center;
+        width: 300px;
+        padding: 15px 0;
+        color: #fff;
+        margin: 5px auto;
+        left: 50%;
+        transform: translate(-150px);
+        background-color: rgb(102, 51, 153, 0.5)
+      }
+
+      #desc-container {
+        max-width: 500px;
+        max-height: 500px;
+        min-width: 400px;
+        min-height: 80px;
+        background: rebeccapurple;
+        color: white;
+        border-radius: 3px;
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      #desc-container > iframe {
+        border: none;
+        width:100%;
+        height: 100%;
+      }
+
+      .title {
+        font-size: 1.5em;
+        text-align: center;
+        padding: 5px;
+      }
+
+      #controls {
+        font-size: 32px;
+        position: absolute;
+        width: 175px;
+        top: 20px;
+        right: 20px;
+        background-color: rgb(102, 51, 153, 0.3);
+        color: white;
+        text-align: left;
+        padding: 10px 30px;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <div class="credit">Powered by <a href="https://kloudspot.com">Kloudspot</a> - 
+        <select id="switcher">
+            <option value = "1">One</option>
+            <option value = "2">Two</option>
+            <option value = "3">Three</option>
+            <option value = "4">Four</option>
+            <option value = "5">Five</option>
+            <option value = "6">Six</option>
+            <option value = "7">Seven</option>
+        </select>
+    </div>
+       
+    <div id="controls" style="display:none">
+        <div id="selecteduser"></div>
+        <div>
+            <img src="../example/asset/nesic/phone.png">
+            <img src="../example/asset/nesic/email.png">
+            <img src="../example/asset/nesic/zoom.png">
+            <img src="../example/asset/nesic/slack.png">
+            <img src="../example/asset/nesic/hangouts.png">
+            <img src="../example/asset/nesic/teams.png">
+            <img src="../example/asset/nesic/whatsapp.png">
+        </div>
+    </div>
+    <div id="desc-container" style="display:none">
+        <!-- <iframe src="https://www.youtube.com/embed/2BBsigqnpA8"></iframe> -->
+        <iframe src="http://192.168.0.205:8080/"></iframe>
+        <div class="title">KloudDisplay</div>
+    </div>
+    
+    <script src="../node_modules/three/build/three.min.js"></script>
+    <script src="../build/panolens.js"></script>
+    <script src="../node_modules/jquery/dist/jquery.js"></script>
+    <script>
+
+        $(function() {
+            const panorama = new PANOLENS.ImagePanorama( '../example/asset/nesic/1_22F-NESIC.jpg' );
+            const viewer = new PANOLENS.Viewer( { output: 'overlay', controlButtons: ["fullscreen"], autoHideInfospot: false, autoRotate: false, autoRotateSpeed: -1, autoRotateActivationDuration: 10000, viewIndicator: true } );
+            viewer.add( panorama );
+
+            panorama.addEventListener( 'click', function(evt){ 
+                console.log('User clicked on the panorama');
+                $("#controls").hide();
+            });
+
+            //Add info spot at 4699.09, -985.01, 1361.60
+            
+            /*
+            for(var i=0; i<3; i++) {
+                const infospot = new PANOLENS.Infospot(400, "https://media-exp1.licdn.com/dms/image/C4D03AQEMym65fYYP1w/profile-displayphoto-shrink_100_100/0/1516313657581?e=1613001600&v=beta&t=T82VEjtvu-le90Q9zIUanJKFOB0ne7JS3kpgggFER3w");
+                infospot.position.set( Math.random()*5000, -1*Math.random()*2000, 3000*Math.random() );
+                infospot.addHoverText( 'Random Person '+i );
+                panorama.add(infospot);  
+            }
+            */
+            const ids = ["Nitya", "Surya", "Amma", "Nanna"];
+            ids.forEach((d, i) => {
+                setTimeout(() => {
+                    console.log('Adding image');
+                    //const infospot = new PANOLENS.Infospot(400, "https://media-exp1.licdn.com/dms/image/C4D03AQEMym65fYYP1w/profile-displayphoto-shrink_100_100/0/1516313657581?e=1613001600&v=beta&t=T82VEjtvu-le90Q9zIUanJKFOB0ne7JS3kpgggFER3w");
+                    const infospot = new PANOLENS.Infospot(400, "../example/asset/nesic/"+d.toLowerCase()+".png");
+                    infospot.position.set( Math.random()*5000, -1*Math.random()*2000, 3000*Math.random() );
+                    infospot.addHoverText( d );
+                    infospot.addEventListener( 'click', function(evt){ 
+                        console.log('Infospot clicked on '+d);
+                        $("#selecteduser").text(d);
+                        $("#controls").show();
+                    });
+                    panorama.add(infospot);
+                }, i*200);
+            });
+            
+            /*
+            const infospot = new PANOLENS.Infospot(1500, "../example/asset/nesic/person.png");
+            infospot.position.set( 4699.09, -985.01, 1361.60 );
+            //infospot.material.rotation = 30 * Math.PI / 180;
+            infospot.addHoverText( 'The is where Uday sits' );
+            panorama.add(infospot);
+            */
+            /*
+            const infospot = new PANOLENS.Infospot(400, "https://media-exp1.licdn.com/dms/image/C4D03AQEMym65fYYP1w/profile-displayphoto-shrink_100_100/0/1516313657581?e=1613001600&v=beta&t=T82VEjtvu-le90Q9zIUanJKFOB0ne7JS3kpgggFER3w");
+            infospot.position.set( 1588.89, -871.76, -4653.56 );
+            infospot.addHoverText( 'Uday' );
+            panorama.add(infospot);
+            */
+            
+            const infospot2 = new PANOLENS.Infospot(300, PANOLENS.DataImage.Info);
+            infospot2.position.set( 1207.22, -1157.19, -4705.05 );
+            infospot2.addHoverElement( document.getElementById( 'desc-container' ), 200 );
+            panorama.add(infospot2);
+            
+            $("#switcher").change(function() {
+                var filename = "../example/asset/nesic/"+$(this).val()+"_22F-NESIC.jpg";
+                console.log(filename);
+                panorama.load(filename);
+                $(this).blur();
+            });
+        });
+      
+
+    </script>
+
+  </body>
+</html>

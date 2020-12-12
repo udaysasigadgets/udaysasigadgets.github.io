@@ -81,6 +81,16 @@
 		width: 150px;
 		text-align: center;
 	}
+	.ghost {
+		background: url(https://svg-clipart.com/clipart/outline/tGsPJ2H-human-body-silhouette-medical-illustration-clipart.png);
+	    position: absolute;
+	    z-index: 100000;
+	    top: 53%;
+	    left: 55%;
+	    width: 25%;
+	    height: 44%;
+	    background-size: contain;
+	}
 </style>
 </head>
 <body>
@@ -101,6 +111,7 @@
   		<option value="five">Kitchen</option>
   	</select>
   </div>
+  <div class="ghost"></div>
 </div>
 
 <div class="modal fade" tabindex="-1" role="dialog" id="detailModal">
@@ -212,7 +223,15 @@
 				}
 			],
 			"five": [],
-			"six": []
+			"six": [
+				{ 
+					"wrap": {"top": "35%", "right": "50%", "width": "36%", "height": "110px"}, 
+					"frame": { 
+						"css": {"width": "36%", "height": "110px"},
+						"url": "http://192.168.0.205:8080/"
+					}
+				}
+			]
 		};
 		
 		function loadScene() {

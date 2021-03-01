@@ -126,7 +126,7 @@
     "jquery": "3.5.1"
   },
   "dependencies": {
-    "three": "^0.105.2"
+    "three": "^0.125.0"
   },
   "jspm": {
     "files": [
